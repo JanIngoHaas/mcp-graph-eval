@@ -29,17 +29,8 @@ class EntityNode:
     type_uri: str
     uuid: str # The unique identifier (URI in real RDF)
 
-def filter_out_boring_stuff(uris: List[str]) -> List[str]:
-    """Filters out standard RDF/OWL/XSD namespaces from a list of URIs."""
-    boring_ns = [
-        "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-        "http://www.w3.org/2000/01/rdf-schema#",
-        "http://www.w3.org/2002/07/owl#",
-        "http://www.w3.org/2001/XMLSchema#"
-    ]
-    return [uri for uri in uris if not any(uri.startswith(ns) for ns in boring_ns)]
-
-from .utils import humanize_label
+from .language_utils import humanize_label
+from .sparql_utils import filter_out_boring_stuff, group_properties
 
 # Global persistent cache for all SPARQL queries
 _QUERY_CACHE: Dict[str, List[Dict[Any, Any]]] = {}
@@ -92,7 +83,7 @@ class OntologySampler:
         _QUERY_CACHE[sparql] = results
         return results
 
-    def _get_label(self, uri: str) -> str:
+    def get_label(self, uri: str) -> str:
         """Attempts to find a professional label for a URI."""
         sparql = f"""
         SELECT ?label WHERE {{
@@ -115,7 +106,7 @@ class OntologySampler:
     def get_random_class(self) -> ClassNode:
         """Fetches a random class that has actual instances in the graph, skipping boring namespaces."""
         # Query cache handles the heavy lifting
-        sparql = "SELECT DISTINCT ?type WHERE { [] a ?type . }"
+        sparql = "SELECT DISTINCT ?type WHERE { ?s a ?type . }"
         results = self._query(sparql)
         if not results:
             raise RuntimeError(f"No classes found in knowledge graph at {self.endpoint_url}")
@@ -124,40 +115,43 @@ class OntologySampler:
         filtered = filter_out_boring_stuff(uris)
         uri = random.choice(filtered) if filtered else uris[0]
 
-        label = self._get_label(uri)
+        label = self.get_label(uri)
         plural = f"{label}s" if not label.endswith('s') else label
         return ClassNode(uri, label, plural)
 
     def get_entity_properties(self, entity_uri: str) -> List[PropertyNode]:
-        """Returns properties and all their objects that are actually OUTGOING from this specific entity."""
-        sparql = f"""
-        SELECT DISTINCT ?p ?o WHERE {{
-            <{entity_uri}> ?p ?o .
-        }}
-        """
-        results = self._query(sparql)
-        
-        # Group by property to detect range and collect all values
-        p_data = {}
-        for res in results:
-            p_uri = res["p"]["value"]
-            if p_uri in [self.prefixes["rdf"] + "type", self.prefixes["rdfs"] + "label"]:
-                continue
-            
-            val_node = res["o"]
-            if p_uri not in p_data:
-                p_data[p_uri] = {"is_uri": False, "values": []}
-            
-            p_data[p_uri]["values"].append(val_node["value"])
-            if val_node["type"] == "uri":
-                p_data[p_uri]["is_uri"] = True
+        """Returns all properties (data and object) outgoing from this entity."""
+        return self.get_entity_data_properties(entity_uri) + self.get_entity_object_properties(entity_uri)
 
+    def get_entity_data_properties(self, entity_uri: str) -> List[PropertyNode]:
+        """Properties pointing to Literals or 'dead-end' IRIs."""
+        return self._discover_properties(entity_uri, "out", "isLiteral(?o) || (isIRI(?o) && NOT EXISTS { ?o ?p2 ?o2 })", "Literal")
+
+    def get_entity_object_properties(self, entity_uri: str) -> List[PropertyNode]:
+        """Properties pointing to entities with internal structure."""
+        return self._discover_properties(entity_uri, "out", "isIRI(?o) && EXISTS { ?o ?p2 ?o2 }", "Class")
+
+    def get_incoming_properties(self, entity_uri: str) -> List[PropertyNode]:
+        """Properties and their subjects pointing TO this specific entity."""
+        # Ensure the subject has at least one OTHER property so the hop is worth it (and is not a blank node)
+        filter_expr = f"isIRI(?s) && EXISTS {{ ?s ?p2 ?o2 . FILTER(?o2 != <{entity_uri}>) }}"
+        return self._discover_properties(entity_uri, "in", filter_expr, "Class")
+
+    def _discover_properties(self, entity_uri: str, direction: str, sparql_filter: str, range_label: str) -> List[PropertyNode]:
+        """Unified helper to fetch and group properties in either direction."""
+        val_key = "o" if direction == "out" else "s"
+        pattern = f"<{entity_uri}> ?p ?o" if direction == "out" else f"?s ?p <{entity_uri}>"
+        
+        sparql = f"SELECT DISTINCT ?p ?{val_key} WHERE {{ {pattern} . FILTER({sparql_filter}) }}"
+        results = self._query(sparql)
+        groups = group_properties(results, val_key, self.prefixes)
+        
         props = []
-        for p_uri, info in p_data.items():
+        for p_uri, nodes in groups.items():
             if filter_out_boring_stuff([p_uri]):
-                label = self._get_label(p_uri)
-                range_type = "Class" if info["is_uri"] else "Literal"
-                props.append(PropertyNode(p_uri, label, range_type, values=info["values"]))
+                label = self.get_label(p_uri)
+                values = [n["value"] for n in nodes]
+                props.append(PropertyNode(p_uri, label, range_label, values=values))
         return props
 
     def get_random_entity(self, type_uri: str) -> EntityNode:
@@ -165,6 +159,9 @@ class OntologySampler:
         sparql = f"""
         SELECT ?s ?label WHERE {{
             ?s a <{type_uri}> .
+            FILTER(isIRI(?s))
+            # Skip skolemized/internal IDs that look like 'bn123' or 'node123'
+            FILTER(!regex(str(?s), "(bn|node)[0-9]+|:_|#bn", "i"))
             OPTIONAL {{ ?s rdfs:label ?label }}
         }} ORDER BY RAND() LIMIT 1
         """
@@ -174,7 +171,7 @@ class OntologySampler:
             
         res = results[0]
         uri = res["s"]["value"]
-        label = res.get("label", {}).get("value") or self._get_label(uri)
+        label = res.get("label", {}).get("value") or self.get_label(uri)
         return EntityNode(uri, label, type_uri, uri)
 
 
@@ -189,13 +186,14 @@ class OntologySampler:
         results = self._query(sparql)
         if not results:
              # Fallback if no type is found
-             label = self._get_label(uri)
+             label = self.get_label(uri)
              return EntityNode(uri, label, self.prefixes["owl"] + "Thing", uri)
             
         res = results[0]
-        label = res.get("label", {}).get("value") or self._get_label(uri)
+        label = res.get("label", {}).get("value") or self.get_label(uri)
         type_uri = res["type"]["value"]
         return EntityNode(uri, label, type_uri, uri)
+
 
     def sample_random_literal_value(self, prop_uri: str) -> str:
         """Samples a literal value for a given property."""

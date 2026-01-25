@@ -1,31 +1,33 @@
 import json
-from src.vm.core import GeneratorVM, GrammarBreak
+from src.vm.core import GeneratorVM
 import src.grammar.definitions as rules
 
 def generate_sample():
-    vm = GeneratorVM()
+    vm = GeneratorVM(initial_ctx={
+        'nl': [],
+        'trace': [],
+        's_entities': [],
+        's_facts': []
+    })
     root_node = rules.root()
     
     # Retry a few times if the grammar breaks at the top level
     for _ in range(5):
+        vm.reset()
         try:
             root_node.expand(vm)
-            break
-        except GrammarBreak:
-            vm = GeneratorVM() # reset
+            
+            # Construct final result
+            nl_stack = vm.get_ctx('nl') or []
+            nl_question = "".join(nl_stack)
+            trace = vm.get_ctx('trace') or []
+            
+            return {
+                "question": nl_question,
+                "trace": trace
+            }
+        except Exception:
             continue
-        except Exception as e:
-            raise e
-
-    # Construct final result
-    nl_stack = vm.get_ctx('nl') or []
-    nl_question = "".join(nl_stack)
-    trace = vm.get_ctx('trace') or []
-    
-    return {
-        "question": nl_question,
-        "trace": trace
-    }
 
 def main():
     num_samples = 5

@@ -1,90 +1,124 @@
 [
   {
-    "question": "I'd like to know more about 'Trevor M. Harris'. I'd like to see the info for this. I'm looking for its primary creator name.",
+    "question": "Can you find some information about 'Yundi Zhang et al.: NN-Based Joint Mitigation of IQ Imbalance and PA Nonlinearity With Multiple States. (2025)'? Then, tell me more about its stream. Can you provide details on its webpage and its stream title?",
     "trace": [
       {
         "tool": "search",
-        "query": "Trevor M. Harris"
+        "query": "Yundi Zhang et al.: NN-Based Joint Mitigation of IQ Imbalance and PA Nonlinearity With Multiple States. (2025)"
       },
       {
         "tool": "inspect",
-        "uri": "https://dblp.org/pid/172/5587"
-      },
-      {
-        "tool": "fact",
-        "subject": "https://dblp.org/pid/172/5587",
-        "predicate": "https://dblp.org/rdf/schema#primaryCreatorName",
-        "object": "Trevor M. Harris"
-      }
-    ]
-  },
-  {
-    "question": "What can you tell me about 'International Journal of Pervasive Computing and Communications'? Please look at the main details... what are its webpage and wikidata?",
-    "trace": [
-      {
-        "tool": "search",
-        "query": "International Journal of Pervasive Computing and Communications"
+        "uri": "https://dblp.org/rec/journals/wcl/ZhangCC25"
       },
       {
         "tool": "inspect",
-        "uri": "https://dblp.org/streams/journals/ijpcc"
+        "uri": "https://dblp.org/streams/journals/wcl"
       },
       {
         "tool": "fact",
-        "subject": "https://dblp.org/streams/journals/ijpcc",
-        "predicate": "https://dblp.org/rdf/schema#wikidata",
-        "object": "http://www.wikidata.org/entity/Q15756852"
+        "subject": "https://dblp.org/streams/journals/wcl",
+        "predicate": "https://dblp.org/rdf/schema#streamTitle",
+        "object": "IEEE Wireless Communications Letters"
       },
       {
         "tool": "fact",
-        "subject": "https://dblp.org/streams/journals/ijpcc",
+        "subject": "https://dblp.org/streams/journals/wcl",
         "predicate": "https://dblp.org/rdf/schema#webpage",
-        "object": "https://www.emerald.com/insight/publication/issn/1742-7371"
+        "object": "https://www.comsoc.org/publications/journals/ieee-wcl"
       }
     ]
   },
   {
-    "question": "I'd like to know more about 'bn3424647'. I'd like to see the info for this. Could you provide more context for 'bn3424647'?",
+    "question": "Can you find some information about 'oci:06302525559-06903086087'? Could you find the cited entity for me? What info exists on its url?",
     "trace": [
       {
         "tool": "search",
-        "query": "bn3424647"
+        "query": "oci:06302525559-06903086087"
       },
       {
         "tool": "inspect",
-        "uri": "bn3424647"
-      }
-    ]
-  },
-  {
-    "question": "I'd like to know more about 'bn10915249'. Could you provide more context for 'bn10915249'?",
-    "trace": [
-      {
-        "tool": "search",
-        "query": "bn10915249"
+        "uri": "https://w3id.org/oc/index/ci/06302525559-06903086087"
       },
       {
         "tool": "inspect",
-        "uri": "bn10915249"
-      }
-    ]
-  },
-  {
-    "question": "What can you tell me about 'International Journal of Pervasive Computing and Communications'? Please look at the main details... I'm looking for its issn.",
-    "trace": [
-      {
-        "tool": "search",
-        "query": "International Journal of Pervasive Computing and Communications"
-      },
-      {
-        "tool": "inspect",
-        "uri": "https://dblp.org/streams/journals/ijpcc"
+        "uri": "https://w3id.org/oc/meta/br/06903086087"
       },
       {
         "tool": "fact",
-        "subject": "https://dblp.org/streams/journals/ijpcc",
-        "predicate": "https://dblp.org/rdf/schema#issn",
-        "object": "http://issn.org/resource/ISSN/1742-7371"
+        "subject": "https://w3id.org/oc/meta/br/06903086087",
+        "predicate": "https://schema.org/url",
+        "object": "https://doi.org/10.1137/100796406"
+      }
+    ]
+  },
+  {
+    "question": "What can you tell me about 'Privacy. (2009)'? Now, please look into its part of. Regarding that, who published?",
+    "trace": [
+      {
+        "tool": "search",
+        "query": "Privacy. (2009)"
+      },
+      {
+        "tool": "inspect",
+        "uri": "https://dblp.org/rec/reference/bio/X09xbl"
+      },
+      {
+        "tool": "inspect",
+        "uri": "https://dblp.org/rec/reference/bio/2009"
+      },
+      {
+        "tool": "fact",
+        "subject": "https://dblp.org/rec/reference/bio/2009",
+        "predicate": "https://dblp.org/rdf/schema#publishedBy",
+        "object": "Springer US"
+      }
+    ]
+  },
+  {
+    "question": "I'd like to know more about 'Yundi Zhang et al.: NN-Based Joint Mitigation of IQ Imbalance and PA Nonlinearity With Multiple States. (2025)'. I'd like to check its journal issue and its year of publication.",
+    "trace": [
+      {
+        "tool": "search",
+        "query": "Yundi Zhang et al.: NN-Based Joint Mitigation of IQ Imbalance and PA Nonlinearity With Multiple States. (2025)"
+      },
+      {
+        "tool": "inspect",
+        "uri": "https://dblp.org/rec/journals/wcl/ZhangCC25"
+      },
+      {
+        "tool": "fact",
+        "subject": "https://dblp.org/rec/journals/wcl/ZhangCC25",
+        "predicate": "https://dblp.org/rdf/schema#yearOfPublication",
+        "object": "2025"
+      },
+      {
+        "tool": "fact",
+        "subject": "https://dblp.org/rec/journals/wcl/ZhangCC25",
+        "predicate": "https://dblp.org/rdf/schema#publishedInJournalVolumeIssue",
+        "object": "11"
+      }
+    ]
+  },
+  {
+    "question": "Can you find some information about 'oci:06320437388-0690354198'? I'm also interested in its cited entity. What info exists on its url?",
+    "trace": [
+      {
+        "tool": "search",
+        "query": "oci:06320437388-0690354198"
+      },
+      {
+        "tool": "inspect",
+        "uri": "https://w3id.org/oc/index/ci/06320437388-0690354198"
+      },
+      {
+        "tool": "inspect",
+        "uri": "https://w3id.org/oc/meta/br/0690354198"
+      },
+      {
+        "tool": "fact",
+        "subject": "https://w3id.org/oc/meta/br/0690354198",
+        "predicate": "https://schema.org/url",
+        "object": "https://doi.org/10.1016/J.DSP.2013.11.010"
       }
     ]
   }

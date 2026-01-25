@@ -1,0 +1,446 @@
+@prefix hypmol: <https://hypmol.net/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+@prefix mmo: <http://purl.obolibrary.org/obo/MMO_> .
+@prefix oboe: <http://purl.obolibrary.org/obo/OBOE_> .
+@prefix chemrof: <https://w3id.org/chemrof/> .
+@prefix schema: <http://schema.org/> .
+
+# ===============================
+# HYPMOL Ontology Metadata
+# ===============================
+<https://hypmol.net/>
+    a owl:Ontology ;
+    rdfs:label "HYPMOL - Laboratory Protocol Ontology"@en ;
+    rdfs:comment "Clean speaking URIs for laboratory protocols with mappings to existing ontologies"@en ;
+    owl:versionInfo "1.0" .
+
+# ===============================
+# ChemicalSubstance
+# ===============================
+hypmol:ChemicalSubstance
+    a owl:Class ;
+    rdfs:label "chemical substance"@en ;
+    rdfs:comment "A chemical substance used in laboratory experiments"@en .
+
+hypmol:chemicalName
+    a owl:DatatypeProperty ;
+    rdfs:label "chemical name"@en ;
+    rdfs:domain hypmol:ChemicalSubstance ;
+    rdfs:range xsd:string ;
+    owl:equivalentProperty rdfs:label .
+
+hypmol:molecularFormula
+    a owl:DatatypeProperty ;
+    rdfs:label "molecular formula"@en ;
+    rdfs:domain hypmol:ChemicalSubstance ;
+    rdfs:range xsd:string ;
+    owl:equivalentProperty chemrof:molecular_formula .
+
+hypmol:molarMass
+    a owl:DatatypeProperty ;
+    rdfs:label "molar mass"@en ;
+    rdfs:domain hypmol:ChemicalSubstance ;
+    rdfs:range xsd:decimal ;
+    owl:equivalentProperty chemrof:molecular_mass .
+
+# ===============================
+# SubstanceUsageInformation
+# ===============================
+
+hypmol:SubstanceUsageInformation 
+    a owl:Class ;
+    rdfs:label "usage"@en ;
+    rdfs:comment "Information about how a chemical substance was used in a specific experiment, including quantities, concentrations, and calculated amounts"@en .
+
+hypmol:hasChemicalSubstance 
+    a owl:ObjectProperty ;
+    rdfs:label "has chemical substance"@en;
+    rdfs:comment "the actual substance used in the experiment"@en ;
+    rdfs:domain hypmol:SubstanceUsageInformation ;
+    rdfs:range hypmol:ChemicalSubstance .
+
+hypmol:usedMass
+    a owl:DatatypeProperty ;
+    rdfs:label "mass used in experiment"@en ;
+    rdfs:comment "The actual mass of this chemical substance used in the experiment"@en ;
+    rdfs:domain hypmol:SubstanceUsageInformation ;
+    rdfs:range xsd:decimal .
+
+hypmol:usedVolume
+    a owl:DatatypeProperty ;
+    rdfs:label "volume used in experiment"@en ;
+    rdfs:comment "The actual volume of this chemical substance used in the experiment"@en ;
+    rdfs:domain hypmol:SubstanceUsageInformation ;
+    rdfs:range xsd:decimal .
+
+hypmol:concentration
+    a owl:DatatypeProperty ;
+    rdfs:label "prepared concentration"@en ;
+    rdfs:comment "The concentration of this chemical substance as prepared for the experiment"@en ;
+    rdfs:domain hypmol:SubstanceUsageInformation ;
+    rdfs:range xsd:decimal .
+
+hypmol:amountOfSubstance
+    a owl:DatatypeProperty ;
+    rdfs:label "amount of substance"@en ;
+    rdfs:comment "The amount of this substance (in moles) calculated for the experiment"@en ;
+    rdfs:domain hypmol:SubstanceUsageInformation ;
+    rdfs:range xsd:decimal .
+
+# ===============================
+# Experiment
+# ===============================
+hypmol:Experiment
+    a owl:Class ;
+    rdfs:label "experiment"@en ;
+    rdfs:comment "A laboratory experiment or procedure"@en .
+
+hypmol:experimentName
+    a owl:DatatypeProperty ;
+    rdfs:label "experiment name"@en ;
+    rdfs:comment "The name or title of the experiment"@en ;
+    rdfs:domain hypmol:Experiment ;
+    rdfs:range xsd:string ;
+    owl:equivalentProperty rdfs:label .
+
+hypmol:equipment
+    a owl:DatatypeProperty ;
+    rdfs:label "equipment and apparatus"@en ;
+    rdfs:comment "Laboratory equipment and apparatus used in the experiment"@en ;
+    rdfs:domain hypmol:Experiment ;
+    rdfs:range xsd:string .
+
+hypmol:experimentDesignation
+    a owl:DatatypeProperty ;
+    rdfs:label "experiment designation"@en ;
+    rdfs:comment "Designation or number identifying the experiment"@en ;
+    rdfs:domain hypmol:Experiment ;
+    rdfs:range xsd:string .
+
+hypmol:substitutionCheck
+    a owl:DatatypeProperty ;
+    rdfs:label "substitution check"@en ;
+    rdfs:comment "Documentation of chemical substitution assessment"@en ;
+    rdfs:domain hypmol:Experiment ;
+    rdfs:range xsd:string .
+
+hypmol:reactionEquation
+    a owl:DatatypeProperty ;
+    rdfs:label "reaction equation"@en ;
+    rdfs:comment "Chemical reaction equation for the experiment"@en ;
+    rdfs:domain hypmol:Experiment ;
+    rdfs:range xsd:string .
+
+hypmol:experimentNotes
+    a owl:DatatypeProperty ;
+    rdfs:label "experiment notes"@en ;
+    rdfs:comment "Additional notes or special observations about the experiment itself"@en ;
+    rdfs:domain hypmol:Experiment ;
+    rdfs:range xsd:string ;
+    owl:equivalentProperty rdfs:comment .
+    # Equvilanet Property: rdfs:comment
+
+hypmol:hasProcedureStep
+    a owl:ObjectProperty ;
+    rdfs:label "has procedure step"@en ;
+    rdfs:comment "Links an experiment to its procedure steps"@en ;
+    rdfs:domain hypmol:Experiment ;
+    rdfs:range hypmol:ProcedureStep .
+
+
+hypmol:hasMeasurement
+    a owl:ObjectProperty ;
+    rdfs:label "has measurement"@en ;
+    rdfs:comment "Links an experiment to its analytical measurements"@en ;
+    rdfs:domain hypmol:Experiment ;
+    rdfs:range hypmol:Measurement .
+
+hypmol:hasUsageInformation
+    a owl:ObjectProperty ;
+    rdfs:label "has usage information"@en ;
+    rdfs:comment "Links an experiment to substance usage information"@en ;
+    rdfs:domain hypmol:Experiment ;
+    rdfs:range hypmol:SubstanceUsageInformation .
+
+# ===============================
+# Measurement
+# ===============================
+hypmol:Measurement
+    a owl:Class ;
+    rdfs:label "measurement"@en ;
+    rdfs:comment "An analytical measurement or observation"@en .
+
+hypmol:measurementMethod
+    a owl:DatatypeProperty ;
+    rdfs:label "measurement method"@en ;
+    rdfs:domain hypmol:Measurement ;
+    rdfs:range xsd:string ;
+    owl:equivalentProperty mmo:0000000 ;
+    owl:equivalentProperty rdfs:label .
+
+hypmol:measurementResult
+    a owl:DatatypeProperty ;
+    rdfs:label "measurement result"@en ;
+    rdfs:domain hypmol:Measurement ;
+    rdfs:range xsd:string ;
+    owl:equivalentProperty sosa:hasResult .
+
+# ===============================
+# ProcedureStep
+# ===============================
+hypmol:ProcedureStep
+    a owl:Class ;
+    rdfs:label "procedure step"@en ;
+    rdfs:comment "A single step in a laboratory procedure"@en .
+
+hypmol:procedureDate
+    a owl:DatatypeProperty ;
+    rdfs:label "procedure date"@en ;
+    rdfs:domain hypmol:ProcedureStep ;
+    rdfs:range xsd:date ;
+    owl:equivalentProperty dcterms:date .
+
+hypmol:stepDescription
+    a owl:DatatypeProperty ;
+    rdfs:label "step description"@en ;
+    rdfs:domain hypmol:ProcedureStep ;
+    rdfs:range xsd:string ;
+    owl:equivalentProperty sosa:usedProcedure .
+
+hypmol:observation
+    a owl:DatatypeProperty ;
+    rdfs:label "experimental observation"@en ;
+    rdfs:comment "Observations made during this procedure step"@en ;
+    rdfs:domain hypmol:ProcedureStep ;
+    rdfs:range xsd:string ;
+    owl:equivalentProperty oboe:00000406 .
+
+hypmol:stepOrder
+    a owl:DatatypeProperty ;
+    rdfs:label "step order"@en ;
+    rdfs:comment "The sequential order of a procedure step within an experiment"@en ;
+    rdfs:domain hypmol:ProcedureStep ;
+    rdfs:range xsd:integer .
+
+# ===============================
+# Dataset (schema.org)
+# ===============================
+schema:Dataset
+    a owl:Class ;
+    rdfs:label "Dataset"@en ;
+    rdfs:comment "A body of structured information describing some topic(s) of interest"@en .
+
+schema:datePublished
+    a owl:DatatypeProperty ;
+    rdfs:label "datePublished"@en ;
+    rdfs:comment "Date of first publication"@en ;
+    rdfs:domain schema:Dataset ;
+    rdfs:range xsd:dateTime .
+
+schema:description
+    a owl:DatatypeProperty ;
+    rdfs:label "description"@en ;
+    rdfs:comment "A description of the item"@en ;
+    rdfs:domain schema:Dataset ;
+    rdfs:range xsd:string .
+
+schema:hasPart
+    a owl:ObjectProperty ;
+    rdfs:label "hasPart"@en ;
+    rdfs:comment "Indicates an item or CreativeWork that is part of this item"@en ;
+    rdfs:domain schema:Dataset ;
+    rdfs:range schema:Dataset .
+
+schema:identifier
+    a owl:DatatypeProperty ;
+    rdfs:label "identifier"@en ;
+    rdfs:comment "The identifier property represents any kind of identifier"@en ;
+    rdfs:domain schema:Dataset ;
+    rdfs:range xsd:string .
+
+schema:license
+    a owl:ObjectProperty ;
+    rdfs:label "license"@en ;
+    rdfs:comment "A license document that applies to this content"@en ;
+    rdfs:domain schema:Dataset ;
+    rdfs:range xsd:anyURI .
+
+schema:name
+    a owl:DatatypeProperty ;
+    rdfs:label "name"@en ;
+    rdfs:comment "The name of the item"@en ;
+    rdfs:domain schema:Dataset ;
+    rdfs:range xsd:string ;
+    owl:equivalentProperty rdfs:label .
+
+schema:author
+    a owl:ObjectProperty ;
+    rdfs:label "author"@en ;
+    rdfs:comment "The author of this content"@en ;
+    rdfs:domain schema:Dataset ;
+    rdfs:range schema:Person .
+
+schema:dateCreated
+    a owl:DatatypeProperty ;
+    rdfs:label "dateCreated"@en ;
+    rdfs:comment "The date on which the CreativeWork was created"@en ;
+    rdfs:domain schema:Dataset ;
+    rdfs:range xsd:dateTime .
+
+schema:dateModified
+    a owl:DatatypeProperty ;
+    rdfs:label "dateModified"@en ;
+    rdfs:comment "The date on which the CreativeWork was most recently modified"@en ;
+    rdfs:domain schema:Dataset ;
+    rdfs:range xsd:dateTime .
+
+schema:encodingFormat
+    a owl:DatatypeProperty ;
+    rdfs:label "encodingFormat"@en ;
+    rdfs:comment "Media type typically expressed using a MIME format"@en ;
+    rdfs:domain schema:Dataset ;
+    rdfs:range xsd:string .
+
+schema:genre
+    a owl:DatatypeProperty ;
+    rdfs:label "genre"@en ;
+    rdfs:comment "Genre of the creative work"@en ;
+    rdfs:domain schema:Dataset ;
+    rdfs:range xsd:string .
+
+schema:keywords
+    a owl:DatatypeProperty ;
+    rdfs:label "keywords"@en ;
+    rdfs:comment "Keywords or tags used to describe this content"@en ;
+    rdfs:domain schema:Dataset ;
+    rdfs:range xsd:string .
+
+schema:text
+    a owl:DatatypeProperty ;
+    rdfs:label "text"@en ;
+    rdfs:comment "The textual content of this CreativeWork"@en ;
+    rdfs:domain schema:Dataset ;
+    rdfs:range xsd:string .
+
+schema:url
+    a owl:DatatypeProperty ;
+    rdfs:label "url"@en ;
+    rdfs:comment "URL of the item"@en ;
+    rdfs:domain schema:Dataset ;
+    rdfs:range xsd:anyURI .
+
+hypmol:hasExperiment
+    a owl:ObjectProperty ;
+    rdfs:label "has experiment"@en ;
+    rdfs:comment "Links a dataset to its experiments"@en ;
+    rdfs:domain schema:Dataset ;
+    rdfs:range hypmol:Experiment .
+
+# ===============================
+# Person (schema.org)
+# ===============================
+schema:Person
+    a owl:Class ;
+    rdfs:label "Person"@en ;
+    rdfs:comment "A person"@en .
+
+schema:email
+    a owl:DatatypeProperty ;
+    rdfs:label "email"@en ;
+    rdfs:comment "Email address"@en ;
+    rdfs:domain schema:Person ;
+    rdfs:range xsd:string .
+
+schema:familyName
+    a owl:DatatypeProperty ;
+    rdfs:label "familyName"@en ;
+    rdfs:comment "Family name"@en ;
+    rdfs:domain schema:Person ;
+    rdfs:range xsd:string .
+    #owl:equivalentProperty rdfs:label .
+
+schema:givenName
+    a owl:DatatypeProperty ;
+    rdfs:label "givenName"@en ;
+    rdfs:comment "Given name"@en ;
+    rdfs:domain schema:Person ;
+    rdfs:range xsd:string .
+    #owl:equivalentProperty rdfs:label .
+
+hypmol:position
+    a owl:DatatypeProperty ;
+    rdfs:label "position"@en ;
+    rdfs:comment "The academic or professional position of a person"@en ;
+    rdfs:domain schema:Person ;
+    rdfs:range xsd:string .
+
+hypmol:involvedInProject
+    a owl:ObjectProperty ;
+    rdfs:label "involved in project"@en ;
+    rdfs:comment "Links a person to a project they are involved in"@en ;
+    rdfs:domain schema:Person ;
+    rdfs:range hypmol:Project ;
+    owl:inverseOf hypmol:hasParticipant .
+
+# ===============================
+# Publication
+# ===============================
+hypmol:Publication
+    a owl:Class ;
+    rdfs:label "Publication"@en ;
+    rdfs:comment "A scientific publication"@en .
+
+hypmol:publicationTitle
+    a owl:DatatypeProperty ;
+    rdfs:label "publication title"@en ;
+    rdfs:comment "The title of a publication"@en ;
+    rdfs:domain hypmol:Publication ;
+    rdfs:range xsd:string .
+
+hypmol:hasAuthor
+    a owl:ObjectProperty ;
+    rdfs:label "has author"@en ;
+    rdfs:comment "Links a publication to its authors"@en ;
+    rdfs:domain hypmol:Publication ;
+    rdfs:range schema:Person .
+
+hypmol:hasPrimaryAuthor
+    a owl:ObjectProperty ;
+    rdfs:label "has primary author"@en ;
+    rdfs:comment "Links a publication to its primary (first) author"@en ;
+    rdfs:domain hypmol:Publication ;
+    rdfs:range schema:Person .
+
+# ===============================
+# Project
+# ===============================
+hypmol:Project
+    a owl:Class ;
+    rdfs:label "Project"@en ;
+    rdfs:comment "A research project within the HypMol initiative"@en .
+
+hypmol:projectCode
+    a owl:DatatypeProperty ;
+    rdfs:label "project code"@en ;
+    rdfs:comment "The short identifier code for a project (e.g., A1, B2, Z1, iRTG, INF)"@en ;
+    rdfs:domain hypmol:Project ;
+    rdfs:range xsd:string .
+
+hypmol:projectTitle
+    a owl:DatatypeProperty ;
+    rdfs:label "project title"@en ;
+    rdfs:comment "The full title of the project"@en ;
+    rdfs:domain hypmol:Project ;
+    rdfs:range xsd:string .
+
+hypmol:hasParticipant
+    a owl:ObjectProperty ;
+    rdfs:label "has participant"@en ;
+    rdfs:comment "Links a project to a person participating in it"@en ;
+    rdfs:domain hypmol:Project ;
+    rdfs:range schema:Person ;
+    owl:inverseOf hypmol:involvedInProject .

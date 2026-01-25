@@ -1,20 +1,28 @@
 import random
 import collections
+import copy
 from typing import Any, Dict, List, Callable, Tuple, Optional
 
-class GrammarBreak(Exception):
-    """Exception raised to break out of grammar rules up to the nearest loop."""
-    pass
-
-BREAK = "!!BREAK!!"
+class RetrySignal(Exception):
+    """Exception raised to trigger a retry or break out of loops."""
+    def __init__(self, reason: Optional[str] = None):
+        self.reason = reason
+        super().__init__(reason)
 
 class GeneratorVM:
     """
     Virtual Machine for generating Question/Trace pairs.
     Internal state is a single unified dictionary (ctx).
     """
-    def __init__(self):
+    def __init__(self, initial_ctx: Optional[Dict[str, Any]] = None):
+        self.initial_ctx = initial_ctx or {}
         self.ctx: Dict[str, Any] = collections.defaultdict(lambda: None)
+        self.reset()
+
+    def reset(self):
+        """Resets the VM state to a fresh copy of the initial context."""
+        self.ctx.clear()
+        self.ctx.update(copy.deepcopy(self.initial_ctx))
 
     def get_ctx(self, key: str) -> Any:
         return self.ctx[key]
@@ -57,8 +65,34 @@ class MANY(Node):
                 if random.random() > self.probability:
                     break
                 self.node.expand(vm)
-        except GrammarBreak:
+        except RetrySignal:
             pass
+
+class RETRY(Node):
+    """Retries a node N times, catching RetrySignal or Exception, with state rollback."""
+    def __init__(self, node: Node, n: int = 3):
+        self.node = node
+        self.n = n
+
+    def expand(self, vm: GeneratorVM) -> None:
+        last_err = None
+        for i in range(self.n):
+            # Snapshot state for rollback
+            snapshot = copy.deepcopy(vm.ctx)
+            try:
+                self.node.expand(vm)
+                return
+            except (RetrySignal, Exception) as e:
+                last_err = e
+                # Rollback state
+                vm.ctx = snapshot
+                
+                reason = getattr(e, 'reason', str(e))
+                print(f"  [RETRY {i+1}/{self.n}] Backtracking due to: {reason}")
+                continue
+        
+        # If we exhausted retries, bubble up the last error
+        raise last_err or Exception(f"RETRY exhausted after {self.n} attempts")
 
 class APPLY(Node):
     """
@@ -71,15 +105,12 @@ class APPLY(Node):
 
     def expand(self, vm: GeneratorVM) -> None:
         if not self.access_keys:
-            result = self.func()
+            self.func()
         else:
             data = {k: vm.get_ctx(k) for k in self.access_keys}
-            result = self.func(data)
+            self.func(data)
             for k, v in data.items():
                 vm.set_ctx(k, v)
-
-        if result is BREAK:
-            raise GrammarBreak()
 
 # --- Ergonomic Helpers (Constructing optimized APPLY nodes) ---
 
@@ -88,6 +119,9 @@ def Rule(*steps: Node) -> Node:
 
 def Choice(*options: Tuple[Node, float]) -> Node:
     return OR(list(options))
+
+def Retry(node: Node, n: int = 5) -> Node:
+    return RETRY(node, n=n)
 
 def Push(target: str, read: str) -> Node:
     """Helper: appends/adds context[read] into context[target]."""

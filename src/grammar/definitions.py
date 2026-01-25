@@ -1,37 +1,50 @@
-from src.vm.core import Rule, Choice, MANY, APPLY, Push, Pop, Literal
+from src.vm.core import Rule, Choice, MANY, APPLY, Push, Pop, Literal, Retry
 import src.grammar.actions as ops
 
 # -- GRAMMAR RULES --
 
 def root():
     return Choice(
-        (Rule_one_hop(), 1.0),
-        (Rule_two_hop(), 0.0)
+        (Rule_direct(), 0.3),
+        (Rule_forward_hop(), 0.35),
+        (Rule_backward_hop_sequence(), 0.35)
     )
 
-def Rule_one_hop():
-    return Rule(
+def Rule_direct():
+    """Simple direct fact lookup about an entity."""
+    return Retry(Rule(
         Rule_search(),
         Rule_inspect_anchor(),
-        MANY(
-            Rule_fact_step(),
-            probability=0.4,
-        ),
-        Rule_finale()
-    )
+        Rule_sample_facts(),
+        Rule_fact_finale()
+    ), n=5)
 
-def Rule_two_hop():
-    return Rule(
+def Rule_forward_hop():
+    """Starts at an entity, hops to a related entity, and asks about it."""
+    return Retry(Rule(
         Rule_search(),
         Rule_inspect_anchor(),
         Rule_hop(),
         Rule_inspect_anchor(),
-        MANY(
-            Rule_fact_step(),
-            probability=0.4,
-        ),
-        Rule_finale()
-    )
+        Rule_sample_facts(),
+        Rule_fact_finale()
+    ), n=5)
+
+def Rule_backward_hop_sequence():
+    """Starts at an entity, hops backwards to an incoming link, and asks about it."""
+    return Retry(Rule(
+        Rule_search(),
+        # No initial inspect needed for backward hops! 
+        # (Identifying the target is enough to search for its incoming links)
+        Rule_backward_hop_action(),
+        Rule_inspect_anchor(),
+        Rule_sample_facts(),
+        Rule_fact_finale()
+    ), n=5)
+
+def Rule_sample_facts(max_facts: int = 2):
+    """Samples properties and values for the current focal entity."""
+    return APPLY(ops.gen_random_facts(max_facts=max_facts), access=["s_entities", "trace", "s_facts"])
 
 def Rule_search():
     """Initial discovery step."""
@@ -48,25 +61,10 @@ def Rule_hop():
     """Transitions from the current entity to a related one."""
     return APPLY(ops.sel_hop_target, access=["s_entities", "nl"])
 
-def Rule_fact_step():
-    """A single step of finding and recording a property-value fact."""
-    return Rule(
-        # a. Discovery
-        APPLY(ops.sel_valid_property_of_entity, access=["s_entities", "current_property"]),
-        APPLY(ops.sample_fact_value, access=["s_entities", "current_property", "current_value"]),
-        
-        # b. Recording
-        APPLY(ops.gen_fact_trace, access=["s_entities", "current_property", "current_value", "trace"]),
-        
-        # c. State management (Update seen properties on the top entity object)
-        APPLY(lambda data: data["s_entities"][-1].seen_properties.add(data["current_property"].uri), 
-              access=["s_entities", "current_property"]),
-        
-        # d. Accumulation for Question
-        APPLY(ops.combine_prop_val, access=["current_property", "current_value", "current_fact"]),
-        Push("s_facts", read="current_fact")
-    )
+def Rule_backward_hop_action():
+    """Transitions from the current entity to one that points to it."""
+    return APPLY(ops.sel_backward_hop_target, access=["s_entities", "nl"])
 
-def Rule_finale():
+def Rule_fact_finale():
     """Generates the final question based on gathered facts."""
     return APPLY(ops.make_question, access=["s_entities", "s_facts", "nl"])
