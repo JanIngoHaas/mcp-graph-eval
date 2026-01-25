@@ -1,11 +1,12 @@
 from dataclasses import dataclass, field
 import random
-from typing import Optional, List, Any
-from src.grammar.ontology import OntologySampler, EntityNode, PropertyNode
+from typing import Optional, List, Any, Set
+from rdflib import URIRef, Literal
+from src.grammar.ontology import OntologySampler, TypeNode, EntityNode, PropertyNode, PropertyRange
 from src.grammar.language_utils import (
-    classify_property, get_hop_phrases, get_backward_hop_phrases,
-    format_property_as_noun_phrase,
-    get_search_phrases, compose_question
+    classify_property, get_hop_phrases,
+    format_property_as_noun_phrase, humanize_label,
+    get_search_phrases, compose_question, compose_qb_question
 )
 from src.vm.core import RetrySignal
 
@@ -18,13 +19,17 @@ def get_sampler() -> OntologySampler:
         _sampler = OntologySampler()
     return _sampler
 
+# --- Configuration ---
+PROB_QB_DEEP_FILTER = 0.3
+DEFAULT_QUERY_LIMIT = 10
+
 # --- State Objects ---
 
 @dataclass
 class WorkingEntity:
     """Wraps an EntityNode with session-specific state, like seen properties."""
     node: EntityNode
-    seen_properties: set = field(default_factory=set)
+    seen_properties: Set[URIRef] = field(default_factory=set)
     
     @property
     def label(self): return self.node.label
@@ -32,6 +37,43 @@ class WorkingEntity:
     def uri(self): return self.node.uri
     @property
     def type_uri(self): return self.node.type_uri
+
+def resolve_operator_and_value(term: Any) -> tuple[str, str]:
+    """Determines appropriate SPARQL operator and potentially transforms value based on type."""
+    # Default: string conversion
+    val_str = str(term.toPython()) if isinstance(term, Literal) else str(term)
+    
+    if isinstance(term, Literal):
+        py_val = term.toPython()
+        # 1. Numeric Logic
+        if isinstance(py_val, (int, float)):
+            # We can't use '!=', '<', '>' because we need to keep the matching.
+            # For instance '>' would be semantically different from what we can only express
+            return random.choice(["=", ">=", "<=",]), val_str
+        
+        # 2. String Logic
+        if isinstance(py_val, str):
+            # Shorten long strings for 'contains' to look like a search snippet
+            if len(val_str) > 20:
+                words = val_str.split()
+                if len(words) > 4:
+                    # Pick a window of 2-4 words
+                    window_size = random.randint(2, 4)
+                    start = random.randint(0, len(words) - window_size)
+                    val_str = " ".join(words[start : start + window_size])
+            return "contains", val_str
+             
+    # 3. Object Logic (URIRef)
+    return random.choice(["=", "!="]), val_str
+
+@dataclass
+class QueryBuilderState:
+    """State for constructing a complex query."""
+    root_type: URIRef
+    filters: List[dict] = field(default_factory=list)
+    projects: List[URIRef] = field(default_factory=list)
+    anchor_entity: Optional[WorkingEntity] = None
+
 
 def _peek(data: dict) -> Optional[WorkingEntity]:
     stack = data.get("s_entities")
@@ -42,14 +84,14 @@ def _peek(data: dict) -> Optional[WorkingEntity]:
 def sel_random_entity(data: dict):
     """Samples a random entity and pushes it onto the focal stack."""
     s = get_sampler()
-    cls = s.get_random_class()
-    node = s.get_random_entity(cls.uri)
+    type_node = s.get_random_type()
+    node = s.get_random_entity(type_node.uri)
     data["s_entities"].append(WorkingEntity(node))
 
 def gen_random_facts(min_facts: int = 1, max_facts: int = 3):
     """Factory that returns an action sampling [min_facts, max_facts] for the focal entity."""
     def _gen_facts_logic(data: dict) -> Any:
-        ent = _peek(data)
+        ent: EntityNode = _peek(data)
         if not ent: raise RetrySignal("No focal entity to sample facts from")
 
         s = get_sampler()
@@ -77,9 +119,9 @@ def gen_random_facts(min_facts: int = 1, max_facts: int = 3):
             # Record trace
             data["trace"].append({
                 "tool": "fact",
-                "subject": ent.uri,
-                "predicate": prop.uri,
-                "object": val
+                "subject": str(ent.uri),
+                "predicate": str(prop.uri),
+                "object": str(val)
             })
             
             # Accumulate for question generation
@@ -105,43 +147,23 @@ def sel_hop_target(data: dict) -> Any:
         target_uri = random.choice(prop.values)
         
         # Proper entity resolution instead of a partial node
-        target_node = s.get_entity_node(target_uri)
+        target_node = s.resolve_entity(target_uri)
         
-        # Only provide target label if there is ambiguity (multiple values for the same property)
-        target_label_for_nl = target_node.label if len(prop.values) > 1 else None
+        # Record the connection fact first
+        data["trace"].append({
+            "tool": "fact",
+            "subject": str(ent.uri),
+            "predicate": str(prop.uri),
+            "object": str(target_node.uri)
+        })
         
-        phrases = get_hop_phrases(prop.label, target_label_for_nl)
+        phrases = get_hop_phrases(prop.label, target_node.label)
         data["nl"].append(random.choice(phrases))
         # Push new focus
         data["s_entities"].append(WorkingEntity(target_node))
         return
 
     raise RetrySignal(f"Entity {ent.label} has no outgoing links (object properties) to hop to")
-
-def sel_backward_hop_target(data: dict) -> Any:
-    """Transitions the focus by pushing an entity that points TO the current focal entity."""
-    ent = _peek(data)
-    if not ent: raise RetrySignal("No focal entity to backward-hop from")
-
-    s = get_sampler()
-    # Get subjects pointing to this entity
-    in_props = s.get_incoming_properties(ent.uri)
-    random.shuffle(in_props)
-    
-    if in_props:
-        prop = in_props[0]
-        # values here are subjects
-        target_uri = random.choice(prop.values)
-        
-        target_node = s.get_entity_node(target_uri)
-        
-        phrases = get_backward_hop_phrases(prop.label, target_node.label)
-        data["nl"].append(random.choice(phrases))
-        # Push new focus
-        data["s_entities"].append(WorkingEntity(target_node))
-        return
-
-    raise RetrySignal(f"Entity {ent.label} has no incoming links to backward-hop from")
 
 
 # --- Action Functions (for APPLY) ---
@@ -171,8 +193,6 @@ def make_question(data: dict):
     facts = [item for item in reversed(s_facts) if isinstance(item, tuple)]
     
     if facts:
-        is_plural = len(facts) > 1
-        
         # Determine if we are "deep" in a hop to add connective particles
         stack_depth = len(data.get("s_entities", []))
         prefix = ""
@@ -201,3 +221,162 @@ def make_question(data: dict):
         nl.append(question)
     else:
         nl.append(f"Could you provide more context for '{ent.label}'?")
+
+
+# --- Query Builder Actions ---
+
+def qb_init_from_anchor(data: dict):
+    """Initializes a Query Builder session based on the current focal entity."""
+    ent = _peek(data)
+    if not ent: raise RetrySignal("No anchor entity for QB")
+    
+    qb = QueryBuilderState(
+        root_type=ent.type_uri,
+        anchor_entity=ent
+    )
+    data["qb"] = qb
+
+def qb_filter_generator(prob_deep: Optional[float] = None):
+    """Factory that returns an action adding a filter to the query builder."""
+    p_deep = prob_deep if prob_deep is not None else PROB_QB_DEEP_FILTER
+    
+    def _qb_add_filter_logic(data: dict) -> Any:
+        qb: QueryBuilderState = data.get("qb")
+        if not qb or not qb.anchor_entity: return
+        
+        ent = qb.anchor_entity
+        s = get_sampler()
+        
+        # Decide on filter depth (direct vs 1-hop)
+        is_deep = random.random() < p_deep
+        existing_paths = {f["path_uri"] for f in qb.filters}
+
+        if is_deep:
+            # 1-Hop Filter: ent -> p1 -> ent2 -> p2 -> val
+            obj_props = s.get_entity_object_properties(ent.uri)
+            if not obj_props: 
+                raise RetrySignal(f"Anchor {ent.label} has no object properties for deep filter")
+            
+            # Find a path that isn't already used
+            random.shuffle(obj_props)
+            p1 = None
+            p2 = None
+            val_term = None
+            
+            for candidate_p1 in obj_props:
+                if not candidate_p1.values: continue
+                target_uri = random.choice(candidate_p1.values)
+                target_props = s.get_entity_data_properties(target_uri)
+                
+                # Check for unique second hop
+                for candidate_p2 in target_props:
+                    path_uri = f"<{candidate_p1.uri}>.<{candidate_p2.uri}>"
+                    if path_uri not in existing_paths:
+                        p1, p2 = candidate_p1, candidate_p2
+                        val_term = random.choice(p2.values)
+                        break
+                if p1: break
+            
+            if not p1:
+                raise RetrySignal("No unique deep paths found from anchor")
+            
+            op, val_str = resolve_operator_and_value(val_term)
+            qb.filters.append({
+                "path_uri": f"<{p1.uri}>.<{p2.uri}>",
+                "path_display": f"{p1.label}.{p2.label}",
+                "operator": op,
+                "value": val_str,
+                "type": "deep"
+            })
+            
+        else:
+            # Direct Filter: ent -> p1 -> val
+            all_props = s.get_entity_properties(ent.uri)
+            if not all_props: 
+                raise RetrySignal(f"Anchor {ent.label} has no properties for filter")
+            
+            candidates = [p for p in all_props if f"<{p.uri}>" not in existing_paths]
+            if not candidates:
+                 raise RetrySignal(f"No unique properties left for filter on {ent.label}")
+
+            p1 = random.choice(candidates)
+            if not p1.values: 
+                raise RetrySignal(f"Property {p1.label} on {ent.label} has no values")
+            
+            val_term = random.choice(p1.values)
+            op, val_str = resolve_operator_and_value(val_term)
+            
+            qb.filters.append({
+                "path_uri": f"<{p1.uri}>",
+                "path_display": p1.label,
+                "operator": op,
+                "value": val_str,
+                "type": "direct"
+            })
+    return _qb_add_filter_logic
+
+def qb_projection_generator():
+    """Factory that returns an action adding a projection field to the query."""
+    def _qb_add_projection_logic(data: dict) -> Any:
+        qb: QueryBuilderState = data.get("qb")
+        if not qb: return
+        
+        s = get_sampler()
+        # Randomly select a data property of the root type to project
+        all_props = s.get_entity_data_properties(qb.anchor_entity.uri)
+        if not all_props: 
+            raise RetrySignal(f"Anchor {qb.anchor_entity.label} has no data properties to project")
+        
+        p = random.choice(all_props)
+        
+        # Avoid projecting the same thing twice
+        if p.uri in qb.projects:
+            return
+            
+        qb.projects.append(p.uri)
+    return _qb_add_projection_logic
+
+def qb_finalize_question(data: dict):
+    """Constructs the query_builder tool call and the NL question."""
+    qb: QueryBuilderState = data.get("qb")
+    if not qb or not qb.filters or not qb.projects:
+        # Fallback if generation failed
+        raise RetrySignal("Logic failed to generate valid QB state")
+        
+    # 1. Build JSON Tool Call
+    # Map our internal state to the tool schema
+    tool_filters = []
+    for f in qb.filters:
+        tool_filters.append({
+            "path": f["path_uri"],
+            "operator": f["operator"],
+            "value": f["value"]
+        })
+    
+    # Add label projection if not present (users usually want labels)
+    from rdflib.namespace import RDFS
+    if RDFS.label not in qb.projects:
+        qb.projects.insert(0, RDFS.label)
+        
+    tool_call = {
+        "tool": "query_builder",
+        "type": str(qb.root_type),
+        "filters": tool_filters,
+        "project": [f"<{p}>" for p in qb.projects],
+        "limit": DEFAULT_QUERY_LIMIT
+    }
+    
+    data["trace"].append(tool_call)
+    
+    # 2. Build Natural Language Question
+    root_type_node = TypeNode(qb.root_type, get_sampler().get_label(qb.root_type))
+    proj_labels = [get_sampler().get_label(p) for p in qb.projects]
+    
+    question = compose_qb_question(
+        root_plural=root_type_node.plural,
+        filters=qb.filters,
+        proj_labels=proj_labels,
+        existing_nl=data["nl"]
+    )
+    
+    data["nl"].append(question)

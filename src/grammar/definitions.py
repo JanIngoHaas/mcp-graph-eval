@@ -5,17 +5,36 @@ import src.grammar.actions as ops
 
 def root():
     return Choice(
-        (Rule_direct(), 0.3),
-        (Rule_forward_hop(), 0.35),
-        (Rule_backward_hop_sequence(), 0.35)
+        (Rule_direct(), 0.2),
+        (Rule_forward_hop(), 0.2),
+        (Rule_query_builder(), 0.6)
     )
 
-def Rule_direct():
+def Rule_query_builder(preamble=None):
+    """Generates a complex structured query. 'preamble' establishes the anchor entity."""
+    if preamble is None:
+        preamble = APPLY(ops.sel_random_entity, access=["s_entities"])
+
+    return Retry(Rule(
+        preamble,
+        APPLY(ops.qb_init_from_anchor, access=["s_entities", "qb", "nl"]),
+        MANY(
+            APPLY(ops.qb_filter_generator(), access=["qb"]),
+            min_count=1, max_count=2
+        ),
+        MANY(
+            APPLY(ops.qb_projection_generator(), access=["qb"]),
+            probability=0.25
+        ),
+        APPLY(ops.qb_finalize_question, access=["qb", "trace", "nl"])
+    ), n=5)
+
+def Rule_direct(max_facts=2):
     """Simple direct fact lookup about an entity."""
     return Retry(Rule(
         Rule_search(),
         Rule_inspect_anchor(),
-        Rule_sample_facts(),
+        Rule_sample_facts(max_facts=max_facts),
         Rule_fact_finale()
     ), n=5)
 
@@ -25,18 +44,6 @@ def Rule_forward_hop():
         Rule_search(),
         Rule_inspect_anchor(),
         Rule_hop(),
-        Rule_inspect_anchor(),
-        Rule_sample_facts(),
-        Rule_fact_finale()
-    ), n=5)
-
-def Rule_backward_hop_sequence():
-    """Starts at an entity, hops backwards to an incoming link, and asks about it."""
-    return Retry(Rule(
-        Rule_search(),
-        # No initial inspect needed for backward hops! 
-        # (Identifying the target is enough to search for its incoming links)
-        Rule_backward_hop_action(),
         Rule_inspect_anchor(),
         Rule_sample_facts(),
         Rule_fact_finale()
@@ -60,10 +67,6 @@ def Rule_inspect_anchor():
 def Rule_hop():
     """Transitions from the current entity to a related one."""
     return APPLY(ops.sel_hop_target, access=["s_entities", "nl"])
-
-def Rule_backward_hop_action():
-    """Transitions from the current entity to one that points to it."""
-    return APPLY(ops.sel_backward_hop_target, access=["s_entities", "nl"])
 
 def Rule_fact_finale():
     """Generates the final question based on gathered facts."""

@@ -1,4 +1,5 @@
 import re
+import random
 from typing import Optional
 
 def classify_property(label: str) -> str:
@@ -39,14 +40,31 @@ def classify_property(label: str) -> str:
     # 5. direct / noun / simple verb
     return "direct"
 
-def humanize_label(s: str) -> Optional[str]:
-    """Converts camelCase or snake_case technical names into spaced, lowercase words."""
-    if not any(c.isalpha() for c in s):
-        return None
+def humanize_label(s: str) -> str:
+    """Converts technical names (camelCase, snake_case) into spaced, lowercase words."""
+    if not s:
+        return ""
+    
+    # Split camelCase and replace separators
+    processed = re.sub(r'([a-z0-9])([A-Z])', r'\1 \2', s)
+    processed = processed.replace('_', ' ').replace('-', ' ')
+    processed = processed.lower().strip()
+    
+    # Fallback to simple lowercase if humanizing didn't produce letters (e.g. "123")
+    return processed or s.lower().strip()
 
-    s = re.sub(r'([a-z0-9])([A-Z])', r'\1 \2', s)
-    s = s.replace('_', ' ').replace('-', ' ')
-    return s.lower().strip()
+def humanize_operator(op: str) -> str:
+    """Converts technical SPARQL/QueryBuilder operators into natural language phrases."""
+    mapping = {
+        "=": "is",
+        "!=": "is not",
+        ">": "is greater than",
+        "<": "is less than",
+        ">=": "is at least",
+        "<=": "is at most",
+        "contains": "contains"
+    }
+    return mapping.get(op, op)
 
 def get_hop_phrases(label: str, target_label: Optional[str] = None) -> list[str]:
     """Returns phrases for forward transition hops. Target label is optional to avoid spoilers."""
@@ -74,18 +92,8 @@ def get_hop_phrases(label: str, target_label: Optional[str] = None) -> list[str]
             f"Could you find the {phrase}{target_info} for me? "
         ]
 
-def get_backward_hop_phrases(label: str, target_label: str) -> list[str]:
-    """Returns a list of natural language phrases for backward transition hops including target."""
-    action_phrase = format_backward_property_as_phrase(label)
-    # action_phrase typically defines the relationship relative to 'this' (the current anchor)
-    # e.g. "what was authored by this"
-    
-    return [
-        f"For this, I'm curious {action_phrase}: Specifically, I'm looking for '{target_label}'. ",
-        f"Regarding that, {action_phrase}? Please identify '{target_label}'. ",
-        f"Looking back, can you find the entry '{target_label}' that {label} this? ",
-        f"I want to know {action_phrase}, specifically '{target_label}': "
-    ]
+
+
 
 def format_property_as_noun_phrase(label: str) -> str:
     """Formats a property label into a clean noun phrase for a question."""
@@ -115,48 +123,9 @@ def format_property_as_noun_phrase(label: str) -> str:
         if p_label.endswith((" in", " at", " on")):
              return f"where it was {p_label.rsplit(' ', 1)[0]}"
         return f"what it was {p_label}"
-        
-    elif p_class == "compound_passive":
-        # "published in journal issue" -> "journal issue"
-        # We strip the leading passive part to get a clean noun, but NOT for "of"
-        # (e.g., "year of event" should stay "year of event")
-        words = p_label.split()
-        # "of" usually connects two halves of a single noun phrase
-        stripping_prepositions = {"in", "at", "on", "from", "to", "for", "with", "into", "as"}
-        for i, w in enumerate(words):
-            if w in stripping_prepositions:
-                return " ".join(words[i+1:])
-        return p_label
-
     else:
         return p_label
 
-def format_backward_property_as_phrase(label: str) -> str:
-    """Formats a property label for a reverse-direction hop (subject focal)."""
-    p_label = label.lower()
-    p_class = classify_property(label)
-    words = p_label.split()
-    
-    # 1. passive_by: "authored by" -> "what was authored by this"
-    if p_class == "passive_by":
-        # Usually ends in "by"
-        return f"what was {p_label} this"
-
-    # 2. Passive types: "published in", "published in journal issue" -> "what was published in this"
-    if p_class in ["passive_article", "compound_passive"]:
-        prepositions = {"in", "at", "on", "from", "to", "for", "with", "into", "as", "of"}
-        found_prep_idx = -1
-        for i, w in enumerate(words):
-            if w in prepositions:
-                found_prep_idx = i
-                break
-        
-        if found_prep_idx != -1:
-            base = " ".join(words[:found_prep_idx + 1])
-            return f"what was {base} this"
-        
-    # Generic fallback: "what relates to this via [label]"
-    return f"what relates to this via '{p_label}'"
 
 def get_search_phrases(label: str) -> list[str]:
     """Returns user-to-agent phrases for initial discovery."""
@@ -166,10 +135,6 @@ def get_search_phrases(label: str) -> list[str]:
         f"I'd like to know more about '{label}'. ",
         f"What can you tell me about '{label}'? "
     ]
-
-
-
-import random
 
 def compose_question(property_labels: list[str], prefix: str, article: str, ent_label: str) -> str:
     """Assembles the final natural language question from gathered facts."""
@@ -220,3 +185,49 @@ def compose_question(property_labels: list[str], prefix: str, article: str, ent_
         ]
     
     return random.choice(questions)
+
+def compose_qb_question(
+    root_plural: str, 
+    filters: list[dict], 
+    proj_labels: list[str], 
+    existing_nl: list[str]
+) -> str:
+    """Assembles the complex natural language question for a Query Builder tool call."""
+    def _clean_label(label: str) -> str:
+        human = humanize_label(label)
+        if human.lower().startswith("has "):
+            return human[4:].strip()
+        return human
+
+    nl_filters = []
+    for f in filters:
+        # Better path humanization for deep filters: "hasProcedureStep.stepOrder" -> "procedure step's step order"
+        parts = f["path_display"].split(".")
+        if len(parts) > 1:
+            p_label = f"{_clean_label(parts[0])}'s {_clean_label(parts[1])}"
+        else:
+            p_label = _clean_label(parts[0])
+            
+        val = f["value"]
+        op = f["operator"]
+        
+        display_val = val
+        
+        h_op = humanize_operator(op)
+        
+        if op == "contains":
+            nl_filters.append(f"whose {p_label} {h_op} '{display_val}'")
+        else:
+            nl_filters.append(f"where the {p_label} {h_op} '{display_val}'")
+            
+    filter_str = " and ".join(nl_filters)
+    proj_str = ", ".join(proj_labels)
+    
+    question = f"find all {root_plural} {filter_str}. Then show me their {proj_str}."
+    
+    # Capitalize surgicaly (only the first character) to avoid lowercasing everything else
+    if not existing_nl or existing_nl[-1].endswith((". ", "? ", "! ")):
+        if question:
+            question = question[0].upper() + question[1:]
+    
+    return question

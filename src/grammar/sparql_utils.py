@@ -1,19 +1,16 @@
+from typing import List, Dict, Any
 import collections
-from typing import List, Dict
+from rdflib.namespace import RDF, RDFS, OWL, XSD
 
 def filter_out_boring_stuff(uris: List[str]) -> List[str]:
     """Filters out standard RDF/OWL/XSD namespaces from a list of URIs."""
-    boring_ns = [
-        "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-        "http://www.w3.org/2000/01/rdf-schema#",
-        "http://www.w3.org/2002/07/owl#",
-        "http://www.w3.org/2001/XMLSchema#"
-    ]
+    boring_ns = {RDF, RDFS, OWL, XSD}
     
     filtered = []
-    for uri in uris:
+    for val in uris:
+        uri = str(val)
         # Skip standard technical namespaces
-        if any(uri.startswith(ns) for ns in boring_ns):
+        if any(uri.startswith(str(ns)) for ns in boring_ns):
             continue
             
         # Skip common internal/blank-node ID patterns
@@ -24,14 +21,13 @@ def filter_out_boring_stuff(uris: List[str]) -> List[str]:
         filtered.append(uri)
     return filtered
 
-def group_properties(results: List[Dict], val_key: str, prefixes: Dict[str, str]) -> Dict[str, List[Dict]]:
-    """Groups SPARQL results by property (p) and returns a list of raw nodes for each."""
+def group_by_predicate(results: List[Any]) -> Dict[Any, List[Any]]:
+    """Groups rdflib SPARQL results by the first element (predicate) and returns lists of the second element."""
     groups = collections.defaultdict(list)
-    skip_uris = {prefixes["rdf"] + "type", prefixes["rdfs"] + "label"}
-    for res in results:
-        p_uri = res["p"]["value"]
+    skip_uris = {RDF.type, RDFS.label}
+    for row in results:
+        p_uri, val = row[0], row[1]
         if p_uri in skip_uris:
             continue
-        groups[p_uri].append(res[val_key])
+        groups[p_uri].append(val)
     return dict(groups)
-

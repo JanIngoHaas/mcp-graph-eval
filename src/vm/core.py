@@ -55,18 +55,34 @@ class OR(Node):
         selected_node.expand(vm)
 
 class MANY(Node):
-    def __init__(self, node: Node, probability: float = 0.5):
+    def __init__(self, node: Node, probability: Optional[float] = None, min_count: Optional[int] = None, max_count: Optional[int] = None):
         self.node = node
         self.probability = probability
+        self.min_count = min_count
+        self.max_count = max_count
+        
+        # Guard: At least one repetition strategy must be defined
+        if self.probability is None and (self.min_count is None or self.max_count is None):
+            raise Exception("MANY node requires either an explicit 'probability' OR both 'min_count' and 'max_count'")
+
     def expand(self, vm: GeneratorVM) -> None:
-        try:
-            self.node.expand(vm)
-            while True:
-                if random.random() > self.probability:
-                    break
+        if self.min_count is not None and self.max_count is not None:
+             # Count-based mode
+             num = random.randint(self.min_count, self.max_count)
+             for _ in range(num):
+                  self.node.expand(vm)
+             return
+
+        if self.probability is not None:
+            # Probabilistic mode (always runs at least once)
+            try:
                 self.node.expand(vm)
-        except RetrySignal:
-            pass
+                while True:
+                    if random.random() > self.probability:
+                        break
+                    self.node.expand(vm)
+            except RetrySignal:
+                pass
 
 class RETRY(Node):
     """Retries a node N times, catching RetrySignal or Exception, with state rollback."""

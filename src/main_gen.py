@@ -12,7 +12,7 @@ def generate_sample():
     root_node = rules.root()
     
     # Retry a few times if the grammar breaks at the top level
-    for _ in range(5):
+    for _ in range(10):
         vm.reset()
         try:
             root_node.expand(vm)
@@ -30,7 +30,7 @@ def generate_sample():
             continue
 
 def main():
-    num_samples = 5
+    num_samples = 1000
     print(f"Generating {num_samples} samples...")
     samples = []
     
@@ -38,8 +38,11 @@ def main():
         print(f"--- Generating Sample {i+1}/{num_samples} ---")
         try:
             sample = generate_sample()
-            samples.append(sample)
-            print("Question:", sample["question"])
+            if sample:
+                samples.append(sample)
+                print("Question:", sample["question"])
+            else:
+                print(f"Failed to generate sample {i+1} after all retries.")
         except Exception as e:
             print(f"Error generating sample {i+1}: {e}")
 
