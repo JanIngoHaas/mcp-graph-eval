@@ -1,0 +1,91 @@
+[
+  {
+    "question": "I'd like to know more about 'Trevor M. Harris'. I'd like to see the info for this. I'm looking for its primary creator name.",
+    "trace": [
+      {
+        "tool": "search",
+        "query": "Trevor M. Harris"
+      },
+      {
+        "tool": "inspect",
+        "uri": "https://dblp.org/pid/172/5587"
+      },
+      {
+        "tool": "fact",
+        "subject": "https://dblp.org/pid/172/5587",
+        "predicate": "https://dblp.org/rdf/schema#primaryCreatorName",
+        "object": "Trevor M. Harris"
+      }
+    ]
+  },
+  {
+    "question": "What can you tell me about 'International Journal of Pervasive Computing and Communications'? Please look at the main details... what are its webpage and wikidata?",
+    "trace": [
+      {
+        "tool": "search",
+        "query": "International Journal of Pervasive Computing and Communications"
+      },
+      {
+        "tool": "inspect",
+        "uri": "https://dblp.org/streams/journals/ijpcc"
+      },
+      {
+        "tool": "fact",
+        "subject": "https://dblp.org/streams/journals/ijpcc",
+        "predicate": "https://dblp.org/rdf/schema#wikidata",
+        "object": "http://www.wikidata.org/entity/Q15756852"
+      },
+      {
+        "tool": "fact",
+        "subject": "https://dblp.org/streams/journals/ijpcc",
+        "predicate": "https://dblp.org/rdf/schema#webpage",
+        "object": "https://www.emerald.com/insight/publication/issn/1742-7371"
+      }
+    ]
+  },
+  {
+    "question": "I'd like to know more about 'bn3424647'. I'd like to see the info for this. Could you provide more context for 'bn3424647'?",
+    "trace": [
+      {
+        "tool": "search",
+        "query": "bn3424647"
+      },
+      {
+        "tool": "inspect",
+        "uri": "bn3424647"
+      }
+    ]
+  },
+  {
+    "question": "I'd like to know more about 'bn10915249'. Could you provide more context for 'bn10915249'?",
+    "trace": [
+      {
+        "tool": "search",
+        "query": "bn10915249"
+      },
+      {
+        "tool": "inspect",
+        "uri": "bn10915249"
+      }
+    ]
+  },
+  {
+    "question": "What can you tell me about 'International Journal of Pervasive Computing and Communications'? Please look at the main details... I'm looking for its issn.",
+    "trace": [
+      {
+        "tool": "search",
+        "query": "International Journal of Pervasive Computing and Communications"
+      },
+      {
+        "tool": "inspect",
+        "uri": "https://dblp.org/streams/journals/ijpcc"
+      },
+      {
+        "tool": "fact",
+        "subject": "https://dblp.org/streams/journals/ijpcc",
+        "predicate": "https://dblp.org/rdf/schema#issn",
+        "object": "http://issn.org/resource/ISSN/1742-7371"
+      }
+    ]
+  }
+]
