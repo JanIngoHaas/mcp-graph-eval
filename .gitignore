@@ -10,3 +10,4 @@ wheels/
 .venv
 *hypmol.*
 *samples*.json
+.env

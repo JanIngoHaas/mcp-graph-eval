@@ -8,8 +8,7 @@ def generate_sample():
         'nl': [],
         'trace': [],
         's_entities': [],
-        's_facts': [],
-        'answer_triples': []
+        's_facts': []
     })
     root_node = rules.root()
     
@@ -24,12 +23,9 @@ def generate_sample():
             nl_question = "".join(nl_stack)
             trace = vm.get_ctx('trace') or []
             
-            answer_triples = vm.get_ctx('answer_triples') or []
-            
             return {
                 "question": nl_question,
-                "trace": trace,
-                "answer_triples": answer_triples
+                "trace": trace
             }
         except Exception:
             continue

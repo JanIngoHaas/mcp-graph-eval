@@ -139,6 +139,37 @@ class OntologySampler:
         label = self.get_label(uri)
         return TypeNode(uri, label)
 
+    def get_all_properties(self) -> List[PropertyNode]:
+        """Returns ALL properties in the graph (both data and object properties) defined via types."""
+        sparql = """
+        SELECT DISTINCT ?p WHERE {
+            VALUES ?t { owl:ObjectProperty owl:DatatypeProperty rdf:Property }
+            ?p a ?t .
+        }
+        """
+        results = self._query(sparql)
+        
+        props = []
+        for row in results:
+            p_uri = row[0]
+            label = self.get_label(p_uri)
+            props.append(PropertyNode(p_uri, label, PropertyRange.OBJECT, values=[]))
+        return props
+
+    def get_random_property_excluding(self, forbidden_uris: set[URIRef]) -> PropertyNode:
+        """
+        Returns a random property that is NOT in the forbidden set.
+        Used for generating 'impossible' questions.
+        """
+        all_props = self.get_all_properties()
+        
+        candidates = [p for p in all_props if p.uri not in forbidden_uris]
+        
+        if not candidates:
+            raise RetrySignal("No disjoint properties found for impossible question")
+            
+        return random.choice(candidates)
+
     def get_entity_properties(self, entity_uri: URIRef) -> List[PropertyNode]:
         """Returns all properties (data and object) outgoing from this entity."""
         return self.get_entity_data_properties(entity_uri) + self.get_entity_object_properties(entity_uri)

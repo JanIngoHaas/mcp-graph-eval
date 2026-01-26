@@ -22,7 +22,6 @@ def get_sampler() -> OntologySampler:
 
 # --- Configuration ---
 PROB_QB_DEEP_FILTER = 0.3
-DEFAULT_QUERY_LIMIT = 10
 
 # --- State Objects ---
 
@@ -122,24 +121,47 @@ def gen_random_facts(min_facts: int = 1, max_facts: int = 3):
                 "tool": "fact",
                 "subject": str(ent.uri),
                 "predicate": str(prop.uri),
-                "object": "_"
+                "object": str(val)
             })
             
             # Accumulate for question generation
             data["s_facts"].append((prop, val))
             
-            # Record essential answer triple
-            if "answer_triples" in data:
-                 data["answer_triples"].append({
-                    "subject": str(ent.uri),
-                    "predicate": str(prop.uri),
-                    "object": str(val)
-                })
-
             # Mark as seen
             ent.seen_properties.add(prop.uri)
         return
     return _gen_facts_logic
+
+def gen_impossible_fact(data: dict):
+    """
+    Selects a property that the current entity definitely DOES NOT have.
+    Used for generating 'impossible' questions.
+    """
+    ent = _peek(data)
+    if not ent: raise RetrySignal("No focal entity to sample impossible fact from")
+
+    s = get_sampler()
+    # 1. Get all properties ACTUALY present on the entity
+    actual_props = s.get_entity_properties(ent.uri)
+    actual_uris = {p.uri for p in actual_props}
+    
+    # 2. Pick a random property from the UNIVERSE that is NOT in actual_uris
+    impossible_prop = s.get_random_property_excluding(actual_uris)
+    
+    # 3. Record trace - the agent effectively "checks" this property
+    data["trace"].append({
+        "tool": "fact",
+        "subject": str(ent.uri),
+        "predicate": str(impossible_prop.uri),
+        "object": "_"
+    })
+    
+    # 4. Add to s_facts for question generation -> (prop, None) implies no value found
+    data["s_facts"].append((impossible_prop, None))
+    
+    # 5. NO answer_triples (or maybe an explicit "I don't know" marker if needed later)
+    # The evaluator should see empty answer triples and "I don't know" in the model response
+    return
 
 def sel_hop_target(data: dict) -> Any:
     """Transitions the focus by pushing a related entity onto the stack."""
@@ -363,10 +385,9 @@ def qb_finalize_question(data: dict):
     
     # Discovery NL
     discovery_phrases = [
-        f"I'm looking into the available information for {pluralize(type_label)}.",
-        f"Let me check the database for {type_label} records.",
-        f"I'll start by exploring what we have on {pluralize(type_label)}.",
-        f"I'm curious about the {type_label} entries."
+        f"I'm looking into the available information for {pluralize(type_label)}. ",
+        f"I am currently checking the database for {type_label} records and have a task for you. ",
+        f"I'm curious about the {type_label} entries. "
     ]
     data["nl"].append(random.choice(discovery_phrases))
 
@@ -389,8 +410,7 @@ def qb_finalize_question(data: dict):
         "tool": "query_builder",
         "type": str(qb.root_type),
         "filters": tool_filters,
-        "project": [f"<{p}>" for p in qb.projects],
-        "limit": DEFAULT_QUERY_LIMIT
+        "project": [f"<{p}>" for p in qb.projects]
     }
     
     data["trace"].append(tool_call)

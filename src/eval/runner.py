@@ -1,15 +1,18 @@
 import json
 import asyncio
 import argparse
-import random
-from typing import List, Dict, Any, Set, Tuple
-from collections import Counter
+import os
+import traceback
 import Levenshtein
-from sklearn.metrics import precision_recall_fscore_support
-from abc import ABC, abstractmethod
+from typing import List, Dict, Any, Set, Tuple
 
 from src.eval.langchain_adapter import LangChainAdapter
 from src.eval.harness import AgentResult
+from src.eval.ground_truth import execute_trace_ground_truth
+from src.eval.ground_truth import extract_triples_from_subgraph
+
+EVAL_CONCURRENCY = int(os.getenv("EVAL_CONCURRENCY", "1"))
+EVAL_LLM_MODEL = os.getenv("EVAL_LLM_MODEL")
 
 # --- Metrics Calculation ---
 
@@ -18,11 +21,21 @@ def calculate_triple_f1(gold_triples: List[Dict], predicted_triples: List[Dict])
     Calculates Precision, Recall, and F1 for triples.
     Triples are normalized to (subject, predicate, object) strings for comparison.
     """
-    def normalize_triple(t):
-        return (str(t.get("subject")), str(t.get("predicate")), str(t.get("object")))
+    def get_all_triples(t_list):
+        all_triples = set()
+        for t in t_list:
+            subj = t.get("subject")
+            pred = t.get("predicate")
+            obj = t.get("object")
+            if subj:
+                all_triples.add((str(subj), str(pred), str(obj)))
+            elif "ttl" in t:
+                for s, p, o in extract_triples_from_subgraph(t["ttl"]):
+                    all_triples.add((str(s), str(p), str(o)))
+        return all_triples
 
-    gold_set = set(normalize_triple(t) for t in gold_triples)
-    pred_set = set(normalize_triple(t) for t in predicted_triples)
+    gold_set = get_all_triples(gold_triples)
+    pred_set = get_all_triples(predicted_triples)
 
     tp = len(gold_set.intersection(pred_set))
     fp = len(pred_set) - tp
@@ -120,104 +133,151 @@ def calculate_trace_similarity(gold_trace: List[Dict], predicted_trace: List[Dic
 
 # --- Main Runner ---
 
-async def main():
-    parser = argparse.ArgumentParser(description="Evaluate kg-mcp using LangChain adapter.")
-    parser.add_argument("--samples", type=str, default="produced_samples.json", help="Path to samples JSON")
-    parser.add_argument("--limit", type=int, default=5, help="Number of samples to run")
-    parser.add_argument("--offset", type=int, default=0, help="Offset to start from")
-    args = parser.parse_args()
+# --- Runner Helpers ---
 
-    print(f"Loading samples from {args.samples}...")
-    with open(args.samples, "r") as f:
-        data = json.load(f)
+def load_json(path: str) -> List:
+    if not os.path.exists(path):
+        return []
+    try:
+        with open(path, "r") as f:
+            return json.load(f)
+    except Exception as e:
+        print(f"Warning: Could not load {path}: {e}")
+        return []
 
-    # Filter samples that actually implement answer_triples (some might be empty check first)
-    # Actually, we should run on the valid ones.
-    
-    samples_to_run = data[args.offset : args.offset + args.limit]
-    
-    adapter = LangChainAdapter()
-    
-    total_f1 = 0.0
-    total_trace_sim = 0.0
-    success_count = 0
-    
-    print(f"\nStarting Evaluation of {len(samples_to_run)} samples...\n")
-    
-    results = []
+def save_json(path: str, data: List):
+    with open(path, "w") as f:
+        json.dump(data, f, indent=2)
 
-    for i, sample in enumerate(samples_to_run):
-        idx = args.offset + i
-        question = sample.get("question")
+def get_task_list(data: List, args) -> Tuple[List[int], List[Dict]]:
+    """Determine which sample IDs need to be processed, prioritizing unfinished ones."""
+    existing_results = load_json(args.output)
+    if existing_results:
+        print(f"Loaded {len(existing_results)} existing results from {args.output}.")
+    else:
+        print(f"No existing results found at {args.output}. Creating new file.")
+        existing_results = {"metadata": {"eval_model": EVAL_LLM_MODEL}, "output": []}
+
+    processed_ids = {r["id"] for r in existing_results if "id" in r}
+    
+    # Resume-friendly logic: Find the first X unfinished samples
+    todo_ids = []
+    for idx in range(len(data)):
+        if idx not in processed_ids:
+            todo_ids.append(idx)
+        if len(todo_ids) >= args.limit:
+            break
+
+    if not todo_ids:
+        choice = input(f"\nAll samples in the dataset are already processed.\nDo you want to FORCE re-run the first {args.limit} samples? [y/N]: ").lower()
+        if choice == 'y':
+            todo_ids = list(range(min(args.limit, len(data))))
+            # Filter results to remove the ones we are about to overwrite
+            existing_results = [r for r in existing_results if r.get("id") not in todo_ids]
+        else:
+            print("Everything is up to date.")
+
+    # Check existing results for model - must be the same as before
+    if existing_results and existing_results["metadata"].get("eval_model") != EVAL_LLM_MODEL:
+        raise ValueError("Existing results must be from the same model.")
+
+    return todo_ids, existing_results
+
+async def process_single_sample(
+    idx: int, 
+    sample: Dict, 
+    adapter: LangChainAdapter, 
+    results: List[Dict], 
+    output_path: str, 
+    semaphore: asyncio.Semaphore,
+    lock: asyncio.Lock
+):
+    """Processes a single sample through the evaluation pipeline."""
+    async with semaphore:
+        print(f"--- Starting Sample {idx} ---")
         gold_trace = sample.get("trace", [])
-        gold_triples = sample.get("answer_triples", [])
-        
-        print(f"--- Sample {idx} ---")
-        print(f"Q: {question}")
         
         try:
-            result = await adapter.answer_question(question)
-            
-            # 1. Triple Evaluation
-            if gold_triples:
-                prec, rec, f1 = calculate_triple_f1(gold_triples, result.citations_data)
-                f1_str = f"F1: {f1:.4f} (P: {prec:.4f}, R: {rec:.4f})"
-            else:
-                f1 = 0.0 # Or None? Let's treat as N/A but 0 for sum if simplistic
-                prec, rec = 0.0, 0.0
-                f1_str = "F1: N/A (No Gold Triples)"
-            
-            # 2. Trace Evaluation
-            trace_sim = calculate_trace_similarity(gold_trace, result.explanation_data)
-            
-            print(f"A: {result.answer[:100]}...")
-            print(f"   -> {f1_str}")
-            print(f"   -> Trace Sim: {trace_sim:.4f}")
-            
-            # Only count F1 in average if applicable? 
-            # For simplicity, if no gold triples, F1 is technically undefined or 1.0 if we cited nothing?
-            # Let's say: if gold is empty, and we cited nothing -> F1=1.0. If we cited something -> F1=0.
-            # But the user said "trace is enough". So let's just log it.
-            
-            if gold_triples:
-                total_f1 += f1
-                valid_f1_samples = locals().get("valid_f1_samples", 0) + 1
-            else:
-                 valid_f1_samples = locals().get("valid_f1_samples", 0)
-            
-            total_trace_sim += trace_sim
-            success_count += 1
-            
-            results.append({
+            # 1. Compute ground truth authoritative triples
+            gold_triples = await execute_trace_ground_truth(gold_trace, adapter.client)
+
+            entry = {
                 "id": idx,
-                "f1": f1 if gold_triples else None,
-                "trace_sim": trace_sim,
+                "question": sample.get("question"),
+                "expected": {
+                    "triples": gold_triples,
+                    "trace": gold_trace
+                },
+                "received": {"triples": [], "trace": []},
+                "answer": None,
                 "error": None
-            })
+            }
+
+            # 2. Answer question via agent
+            res = await adapter.answer_question(entry["question"])
+            entry["received"] = {
+                "triples": res.citations_data,
+                "trace": res.explanation_data
+            }
+            entry["answer"] = res.answer
+            print(f"--- Finished Sample {idx} (Received {len(res.citations_data)} triples) ---")
             
         except Exception as e:
-            import traceback
             traceback.print_exc()
-            results.append({
+            entry = {
                 "id": idx,
-                "f1": 0.0,
-                "trace_sim": 0.0,
+                "question": sample.get("question"),
+                "expected": {"triples": [], "trace": gold_trace},
+                "received": {"triples": [], "trace": []},
+                "answer": None,
                 "error": str(e)
-            })
+            }
+            print(f"--- Error on Sample {idx}: {e} ---")
 
-    # Global Metrics
-    n = len(samples_to_run)
-    n_f1 = locals().get("valid_f1_samples", 0)
+        # 3. Thread-safe incremental save
+        async with lock:
+            results["output"].append(entry)
+            results["output"].sort(key=lambda x: x.get("id", 0))
+            save_json(output_path, results)
+
+async def process_samples(todo_ids: List[int], all_data: List[Dict], results: List[Dict], output_path: str):
+    """Core evaluation loop with concurrency support."""
+    adapter = LangChainAdapter()
+    semaphore = asyncio.Semaphore(EVAL_CONCURRENCY)
+    lock = asyncio.Lock()
     
-    avg_f1 = total_f1 / n_f1 if n_f1 > 0 else 0.0
-    avg_trace_sim = total_trace_sim / n if n > 0 else 0.0
-    success_rate = (success_count / n) * 100 if n > 0 else 0.0
+    print(f"\nEvaluation Plan (Concurrency={EVAL_CONCURRENCY}):")
+    print(f"  - Total samples target: {len(todo_ids)}")
+    print(f"  - Output file         : {output_path}\n")
 
-    print("\n=== Evaluation Summary ===")
-    print(f"Samples: {n}")
-    print(f"Success Rate: {success_rate:.2f}%")
-    print(f"Avg Triple F1: {avg_f1:.4f} (over {n_f1} samples)")
-    print(f"Avg Trace Sim: {avg_trace_sim:.4f}")
+    tasks = []
+    for idx in todo_ids:
+        sample = all_data[idx]
+        tasks.append(process_single_sample(
+            idx, sample, adapter, results, output_path, semaphore, lock
+        ))
+    
+    await asyncio.gather(*tasks)
+
+async def main():
+    parser = argparse.ArgumentParser(description="Run kg-mcp evaluation and save raw results.")
+    parser.add_argument("--samples", type=str, default="produced_samples.json", help="Path to samples JSON")
+    parser.add_argument("--limit", type=int, default=None, help="Number of samples to run")
+    parser.add_argument("--output", type=str, default="eval_results_raw.json", help="Path to output raw results")
+    args = parser.parse_args()
+
+    all_data = load_json(args.samples)
+    if not all_data:
+        print(f"Error: No data found in {args.samples}")
+        return
+
+    args.limit = len(all_data) if args.limit is None else args.limit
+    todo_ids, results = get_task_list(all_data, args)
+    
+    if todo_ids:
+        await process_samples(todo_ids, all_data, results, args.output)
+    
+    print("\nDone.")
 
 if __name__ == "__main__":
     asyncio.run(main())

@@ -1,6 +1,6 @@
 import json
 import os
-import contextlib
+from typing import List, Dict, Any, Tuple
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage
@@ -9,6 +9,7 @@ from langchain_mcp_adapters.client import MultiServerMCPClient
 from langgraph.prebuilt import create_react_agent
 from src.eval.harness import AgentAdapter, AgentResult
 from src.eval.prompts import get_agent_system_prompt
+from src.eval.ground_truth import extract_citations
 
 load_dotenv()
 
@@ -32,7 +33,8 @@ class LangChainAdapter(AgentAdapter):
             model=LLM_MODEL,
             api_key=LLM_API_KEY,
             base_url=LLM_BASE_URL,
-            temperature=LLM_TEMPERATURE
+            temperature=LLM_TEMPERATURE,
+            seed=54837347
         )
 
         self.client = MultiServerMCPClient({
@@ -66,9 +68,9 @@ class LangChainAdapter(AgentAdapter):
             # 2. Create Agent using LangGraph with system prompt
             agent = create_react_agent(self.llm, tools=tools, prompt=self.system_prompt)
 
-            # 3. Invoke Agent
+            # 3. Invoke Agent with a step limit to prevent infinite loops
             inputs = {"messages": [HumanMessage(content=question)]}
-            result = await agent.ainvoke(inputs)
+            result = await agent.ainvoke(inputs, config={"recursion_limit": 50})
 
             # 4. Extract answer
             answer = result["messages"][-1].content
@@ -79,15 +81,16 @@ class LangChainAdapter(AgentAdapter):
             try:
                 citation_result = await session.read_resource("citation://session")
                 if citation_result and citation_result.contents:
-                    citations_data = json.loads(citation_result.contents[0].text)
+                    raw_citations = json.loads(citation_result.contents[0].text)
+                    # Extract actual triples from the TTL data
+                    citations_data = extract_citations(raw_citations)
 
                 explanation_result = await session.read_resource("explanation://session")
                 if explanation_result and explanation_result.contents:
                     explanation_data = json.loads(explanation_result.contents[0].text)
 
             except Exception as e:
-                # Silently handle resource errors or connection issues getting resources
-                print(f"Warning: Could not fetch resources: {e}")
+                print("WARNING: Could not fetch resources: ", e)
                 pass
 
             return AgentResult(

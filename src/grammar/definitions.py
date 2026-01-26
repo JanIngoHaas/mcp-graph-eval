@@ -7,8 +7,19 @@ def root():
     return Choice(
         (Rule_direct(), 0.2),
         (Rule_forward_hop(), 0.2),
-        (Rule_query_builder(), 0.6)
+        (Rule_impossible(), 0.1),
+        (Rule_query_builder(), 0.5)
     )
+
+def Rule_impossible():
+    """Generates a question about a property the entity does NOT have."""
+    return Retry(Rule(
+        APPLY(ops.sel_random_entity, access=["s_entities"]),
+        APPLY(ops.gen_search, access=["s_entities", "trace", "nl"]),
+        APPLY(ops.gen_inspect, access=["s_entities", "trace", "nl"]),
+        APPLY(ops.gen_impossible_fact, access=["s_entities", "trace", "s_facts", "answer_triples"]),
+        APPLY(ops.make_question, access=["s_entities", "s_facts", "nl"])
+    ), n=5)
 
 def Rule_query_builder(preamble=None):
     """Generates a complex structured query. 'preamble' establishes the anchor entity."""
