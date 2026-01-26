@@ -1,0 +1,1832 @@
+{
+  "metadata": {
+    "eval_model": "gpt-oss-120b"
+  },
+  "output": [
+    {
+      "id": 0,
+      "question": "I'm looking into the available information for persons. Find all persons whose position contains 'Senior Research Scientist'. Then show me their label, position.",
+      "expected": {
+        "triples": [
+          {
+            "subject": "https://hypmol.net/Person/0fdbef81-06fc-48c1-a520-58c441b3470c",
+            "predicate": "https://hypmol.net/position",
+            "object": "Senior Research Scientist"
+          },
+          {
+            "subject": "https://hypmol.net/Person/a421bf39-49d3-4f34-aa18-859dcd7e6eb3",
+            "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
+            "object": "Fiona Gallagher"
+          },
+          {
+            "subject": "https://hypmol.net/Person/c8d16687-e56c-4150-9258-450d4860ed41",
+            "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
+            "object": "Tomasz Kowalski"
+          },
+          {
+            "subject": "https://hypmol.net/Person/a421bf39-49d3-4f34-aa18-859dcd7e6eb3",
+            "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "object": "http://schema.org/Person"
+          },
+          {
+            "subject": "https://hypmol.net/Person/2a233d77-73e6-4ce6-a69a-1d4ede99dd58",
+            "predicate": "https://hypmol.net/position",
+            "object": "Senior Research Scientist"
+          },
+          {
+            "subject": "https://hypmol.net/Person/044bd6ac-e084-4197-9dc1-9f5aaad6cf88",
+            "predicate": "https://hypmol.net/position",
+            "object": "Senior Research Scientist"
+          },
+          {
+            "subject": "https://hypmol.net/Person/2a233d77-73e6-4ce6-a69a-1d4ede99dd58",
+            "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
+            "object": "Leila Al\u2011Bilad"
+          },
+          {
+            "subject": "https://hypmol.net/Person/16ecbdde-126c-489c-bd5a-58501a81d494",
+            "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "object": "http://schema.org/Person"
+          },
+          {
+            "subject": "https://hypmol.net/Person/3a6e2aca-39f9-4c54-937e-60bebce74fc8",
+            "predicate": "https://hypmol.net/position",
+            "object": "Senior Research Scientist"
+          },
+          {
+            "subject": "https://hypmol.net/Person/044bd6ac-e084-4197-9dc1-9f5aaad6cf88",
+            "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "object": "http://schema.org/Person"
+          },
+          {
+            "subject": "https://hypmol.net/Person/0fdbef81-06fc-48c1-a520-58c441b3470c",
+            "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "object": "http://schema.org/Person"
+          },
+          {
+            "subject": "https://hypmol.net/Person/a421bf39-49d3-4f34-aa18-859dcd7e6eb3",
+            "predicate": "https://hypmol.net/position",
+            "object": "Senior Research Scientist"
+          },
+          {
+            "subject": "https://hypmol.net/Person/0fdbef81-06fc-48c1-a520-58c441b3470c",
+            "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
+            "object": "Rinat Bakhsh"
+          },
+          {
+            "subject": "https://hypmol.net/Person/3a6e2aca-39f9-4c54-937e-60bebce74fc8",
+            "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "object": "http://schema.org/Person"
+          },
+          {
+            "subject": "https://hypmol.net/Person/2a233d77-73e6-4ce6-a69a-1d4ede99dd58",
+            "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "object": "http://schema.org/Person"
+          },
+          {
+            "subject": "https://hypmol.net/Person/3a6e2aca-39f9-4c54-937e-60bebce74fc8",
+            "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
+            "object": "Anna\u2011Bella Dupont"
+          },
+          {
+            "subject": "https://hypmol.net/Person/c8d16687-e56c-4150-9258-450d4860ed41",
+            "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "object": "http://schema.org/Person"
+          },
+          {
+            "subject": "https://hypmol.net/Person/16ecbdde-126c-489c-bd5a-58501a81d494",
+            "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
+            "object": "Jean-Luc Dubois"
+          },
+          {
+            "subject": "https://hypmol.net/Person/16ecbdde-126c-489c-bd5a-58501a81d494",
+            "predicate": "https://hypmol.net/position",
+            "object": "Senior Research Scientist"
+          },
+          {
+            "subject": "https://hypmol.net/Person/044bd6ac-e084-4197-9dc1-9f5aaad6cf88",
+            "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
+            "object": "Yara Ben Ahmed"
+          },
+          {
+            "subject": "https://hypmol.net/Person/c8d16687-e56c-4150-9258-450d4860ed41",
+            "predicate": "https://hypmol.net/position",
+            "object": "Senior Research Scientist"
+          }
+        ],
+        "trace": [
+          {
+            "tool": "search",
+            "query": "person"
+          },
+          {
+            "tool": "inspect",
+            "uri": "http://schema.org/Person"
+          },
+          {
+            "tool": "query_builder",
+            "type": "http://schema.org/Person",
+            "filters": [
+              {
+                "path": "<https://hypmol.net/position>",
+                "operator": "contains",
+                "value": "Senior Research Scientist"
+              }
+            ],
+            "project": [
+              "<http://www.w3.org/2000/01/rdf-schema#label>",
+              "<https://hypmol.net/position>"
+            ]
+          }
+        ]
+      },
+      "received": {
+        "triples": [],
+        "trace": []
+      },
+      "answer": "Sorry, need more steps to process this request.",
+      "error": null
+    },
+    {
+      "id": 1,
+      "question": "I'd like to know more about 'Mechanochemical Synthesis of Metal\u2011Organic Framework Precursors via Ball\u2011Milling Reactions'. what is its measurement method?",
+      "expected": {
+        "triples": [],
+        "trace": [
+          {
+            "tool": "search",
+            "query": "Mechanochemical Synthesis of Metal\u2011Organic Framework Precursors via Ball\u2011Milling Reactions"
+          },
+          {
+            "tool": "inspect",
+            "uri": "https://hypmol.net/Project/eeac8e8b-a7d9-4e03-9e44-926d28b0e8eb"
+          },
+          {
+            "tool": "fact",
+            "subject": "https://hypmol.net/Project/eeac8e8b-a7d9-4e03-9e44-926d28b0e8eb",
+            "predicate": "https://hypmol.net/measurementMethod",
+            "object": "_"
+          }
+        ]
+      },
+      "received": {
+        "triples": [],
+        "trace": []
+      },
+      "answer": "Sorry, need more steps to process this request.",
+      "error": null
+    },
+    {
+      "id": 2,
+      "question": "I'm curious about the experiment entries. Find all experiments whose equipment and apparatus contains 'vessel, inert atmosphere,'. Then show me their label, equipment and apparatus.",
+      "expected": {
+        "triples": [
+          {
+            "subject": "https://hypmol.net/Experiment/4ff484ba-c895-4034-a0a0-eb91d486b2f1",
+            "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
+            "object": "Synthesis of Thioether Amide via Reaction with Bis(1,3\u2011Diphenyl\u20112\u2011Pyridyl)disulfane"
+          },
+          {
+            "subject": "https://hypmol.net/Experiment/4ff484ba-c895-4034-a0a0-eb91d486b2f1",
+            "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "object": "https://hypmol.net/Experiment"
+          },
+          {
+            "subject": "https://hypmol.net/Experiment/4ff484ba-c895-4034-a0a0-eb91d486b2f1",
+            "predicate": "https://hypmol.net/equipment",
+            "object": "Flask (250\u202fmL), reflux condenser, magnetic stir bar, pressure vessel, inert atmosphere, 1\u2011pyridine for base, DMF (30\u202fmL)."
+          }
+        ],
+        "trace": [
+          {
+            "tool": "search",
+            "query": "experiment"
+          },
+          {
+            "tool": "inspect",
+            "uri": "https://hypmol.net/Experiment"
+          },
+          {
+            "tool": "query_builder",
+            "type": "https://hypmol.net/Experiment",
+            "filters": [
+              {
+                "path": "<https://hypmol.net/equipment>",
+                "operator": "contains",
+                "value": "vessel, inert atmosphere,"
+              }
+            ],
+            "project": [
+              "<http://www.w3.org/2000/01/rdf-schema#label>",
+              "<https://hypmol.net/equipment>"
+            ]
+          }
+        ]
+      },
+      "received": {
+        "triples": [
+          {
+            "subject": "https://hypmol.net/Experiment/4ff484ba-c895-4034-a0a0-eb91d486b2f1",
+            "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
+            "object": "Synthesis of Thioether Amide via Reaction with Bis(1,3\u2011Diphenyl\u20112\u2011Pyridyl)disulfane"
+          },
+          {
+            "subject": "https://hypmol.net/Experiment/4ff484ba-c895-4034-a0a0-eb91d486b2f1",
+            "predicate": "https://hypmol.net/equipment",
+            "object": "Flask (250\u202fmL), reflux condenser, magnetic stir bar, pressure vessel, inert atmosphere, 1\u2011pyridine for base, DMF (30\u202fmL)."
+          }
+        ],
+        "trace": [
+          {
+            "id": "d0580aee-a0a4-476b-ba8b-da4329e312af",
+            "sessionId": "4f745a29-d607-491b-9a9e-1e022f0da293",
+            "title": "Experiments with vessel and inert atmosphere",
+            "answer": "The only experiment whose equipment/apparatus contains \u201cvessel, inert atmosphere\u201d is **Synthesis of Thioether Amide via Reaction with Bis(1,3\u2011Diphenyl\u20112\u2011Pyridyl)disulfane** \u2013 equipment/apparatus: *Flask (250\u202fmL), reflux condenser, magnetic stir bar, pressure vessel, inert atmosphere, 1\u2011pyridine for base, DMF (30\u202fmL).*[Source](http://localhost:3000/citation/73f17d41-20f0-4a95-94d9-49e2d6c85e2e) [Source](http://localhost:3000/citation/ea83734e-78f1-450d-82a3-842b2780dffc)",
+            "stepCount": 4,
+            "steps": [
+              {
+                "description": "Search for phrase \"vessel, inert atmosphere\"",
+                "toolName": "search",
+                "toolParams": {
+                  "query": "\"vessel, inert atmosphere\"",
+                  "limit": 20,
+                  "offset": 0
+                },
+                "executionKey": "d4dac168-6b6c-44ee-9e1b-1301d8c1cb14"
+              },
+              {
+                "description": "Inspect experiment to view label and equipment",
+                "toolName": "inspect",
+                "toolParams": {
+                  "uri": "https://hypmol.net/Experiment/4ff484ba-c895-4034-a0a0-eb91d486b2f1",
+                  "expandProperties": []
+                },
+                "executionKey": "ba6388a2-0cfc-4c0d-bc62-e69b45f096cc"
+              },
+              {
+                "description": "Fact query for label",
+                "toolName": "fact",
+                "toolParams": {
+                  "subject": "https://hypmol.net/Experiment/4ff484ba-c895-4034-a0a0-eb91d486b2f1",
+                  "predicate": "rdfs:label",
+                  "object": "_",
+                  "limit": 100
+                },
+                "executionKey": "e316c5c4-cc79-41b4-afe2-a870cfb26469"
+              },
+              {
+                "description": "Fact query for equipment",
+                "toolName": "fact",
+                "toolParams": {
+                  "subject": "https://hypmol.net/Experiment/4ff484ba-c895-4034-a0a0-eb91d486b2f1",
+                  "predicate": "https://hypmol.net/equipment",
+                  "object": "_",
+                  "limit": 100
+                },
+                "executionKey": "635f7bcd-975d-489f-91db-5558cd0c496f"
+              }
+            ],
+            "createdAt": "2026-01-26T18:33:14.523Z",
+            "url": "http://localhost:3000/explain/d0580aee-a0a4-476b-ba8b-da4329e312af"
+          }
+        ]
+      },
+      "answer": "The only experiment whose equipment/apparatus contains \u201cvessel, inert atmosphere\u201d is **Synthesis of Thioether Amide via Reaction with Bis(1,3\u2011Diphenyl\u20112\u2011Pyridyl)disulfane** \u2013 equipment/apparatus: *Flask (250\u202fmL), reflux condenser, magnetic stir bar, pressure vessel, inert atmosphere, 1\u2011pyridine for base, DMF (30\u202fmL).*\u3010Source\u3011(http://localhost:3000/citation/73f17d41-20f0-4a95-94d9-49e2d6c85e2e)\u3010Source\u3011(http://localhost:3000/citation/ea83734e-78f1-450d-82a3-842b2780dffc)",
+      "error": null
+    },
+    {
+      "id": 3,
+      "question": "I'm looking into the available information for datasets. Find all datasets where the experiment is 'https://hypmol.net/Experiment/e35deb5e-19b9-495c-9bed-08951a07da16'. Then show me their label, name.",
+      "expected": {
+        "triples": [
+          {
+            "subject": "https://hypmol.net/Dataset/01e432c6-4d7a-4c7d-a52b-f86bd6ef0d76",
+            "predicate": "http://schema.org/name",
+            "object": "Dataset 8"
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/01e432c6-4d7a-4c7d-a52b-f86bd6ef0d76",
+            "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
+            "object": "Dataset 8"
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/01e432c6-4d7a-4c7d-a52b-f86bd6ef0d76",
+            "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "object": "http://schema.org/Dataset"
+          }
+        ],
+        "trace": [
+          {
+            "tool": "search",
+            "query": "dataset"
+          },
+          {
+            "tool": "inspect",
+            "uri": "http://schema.org/Dataset"
+          },
+          {
+            "tool": "query_builder",
+            "type": "http://schema.org/Dataset",
+            "filters": [
+              {
+                "path": "<https://hypmol.net/hasExperiment>",
+                "operator": "=",
+                "value": "https://hypmol.net/Experiment/e35deb5e-19b9-495c-9bed-08951a07da16"
+              }
+            ],
+            "project": [
+              "<http://www.w3.org/2000/01/rdf-schema#label>",
+              "<http://schema.org/name>"
+            ]
+          }
+        ]
+      },
+      "received": {
+        "triples": [
+          {
+            "subject": "https://hypmol.net/Dataset/01e432c6-4d7a-4c7d-a52b-f86bd6ef0d76",
+            "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
+            "object": "Dataset 8"
+          }
+        ],
+        "trace": [
+          {
+            "id": "3f211313-0f20-4133-a271-4c66ced0486b",
+            "sessionId": "44e99778-cfc0-4ec5-aca3-d088a4aec7bb",
+            "title": "Datasets linked to the specified experiment",
+            "answer": "The only dataset linked to the experiment https://hypmol.net/Experiment/e35deb5e-19b9-495c-9bed-08951a07da16 is **Dataset 8** (label: \u201cDataset 8\u201d, name: \u201cDataset 8\u201d) [Source](http://localhost:3000/citation/b26b2c8b-515a-4070-b35a-68d44b0c0c84) [Source](http://localhost:3000/citation/9cc823ed-1c57-425f-ba53-f42b8d163ce7).",
+            "stepCount": 2,
+            "steps": [
+              {
+                "description": "Retrieved rdfs:label of the dataset",
+                "toolName": "fact",
+                "toolParams": {
+                  "subject": "https://hypmol.net/Dataset/01e432c6-4d7a-4c7d-a52b-f86bd6ef0d76",
+                  "predicate": "rdfs:label",
+                  "object": "_",
+                  "limit": 100
+                },
+                "executionKey": "8e985992-e28a-4e85-bb59-e4263105c787"
+              },
+              {
+                "description": "Retrieved http://schema.org/name of the dataset",
+                "toolName": "fact",
+                "toolParams": {
+                  "subject": "https://hypmol.net/Dataset/01e432c6-4d7a-4c7d-a52b-f86bd6ef0d76",
+                  "predicate": "http://schema.org/name",
+                  "object": "_",
+                  "limit": 100
+                },
+                "executionKey": "55d6663c-f6ff-4294-b674-ee1b6a18c073"
+              }
+            ],
+            "createdAt": "2026-01-26T18:34:33.782Z",
+            "url": "http://localhost:3000/explain/3f211313-0f20-4133-a271-4c66ced0486b"
+          }
+        ]
+      },
+      "answer": "The only dataset linked to the experiment\u202fhttps://hypmol.net/Experiment/e35deb5e-19b9-495c-9bed-08951a07da16 is **Dataset\u202f8** (label\u202f\u201cDataset\u202f8\u201d, name\u202f\u201cDataset\u202f8\u201d)\u3010Source\u3011(http://localhost:3000/citation/b26b2c8b-515a-4070-b35a-68d44b0c0c84)\u3010Source\u3011(http://localhost:3000/citation/9cc823ed-1c57-425f-ba53-f42b8d163ce7).",
+      "error": null
+    },
+    {
+      "id": 4,
+      "question": "I'm curious about the project entries. Find all projects whose project code contains 'SSMI\u201118 (SS\u2011CI\u201101)'. Then show me their label, project title.",
+      "expected": {
+        "triples": [
+          {
+            "subject": "https://hypmol.net/Project/9eb0c9a5-63cd-435e-9476-05da40703d1f",
+            "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "object": "https://hypmol.net/Project"
+          },
+          {
+            "subject": "https://hypmol.net/Project/9eb0c9a5-63cd-435e-9476-05da40703d1f",
+            "predicate": "https://hypmol.net/projectTitle",
+            "object": "Solid\u2011Phase Synthesis of Chiral Sulfinamide\u2011Directed Enyne Cycloisomerizations"
+          },
+          {
+            "subject": "https://hypmol.net/Project/9eb0c9a5-63cd-435e-9476-05da40703d1f",
+            "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
+            "object": "Solid\u2011Phase Synthesis of Chiral Sulfinamide\u2011Directed Enyne Cycloisomerizations"
+          }
+        ],
+        "trace": [
+          {
+            "tool": "search",
+            "query": "project"
+          },
+          {
+            "tool": "inspect",
+            "uri": "https://hypmol.net/Project"
+          },
+          {
+            "tool": "query_builder",
+            "type": "https://hypmol.net/Project",
+            "filters": [
+              {
+                "path": "<https://hypmol.net/projectCode>",
+                "operator": "contains",
+                "value": "SSMI\u201118 (SS\u2011CI\u201101)"
+              }
+            ],
+            "project": [
+              "<http://www.w3.org/2000/01/rdf-schema#label>",
+              "<https://hypmol.net/projectTitle>"
+            ]
+          }
+        ]
+      },
+      "received": {
+        "triples": [
+          {
+            "subject": "https://hypmol.net/Project/9eb0c9a5-63cd-435e-9476-05da40703d1f",
+            "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
+            "object": "Solid\u2011Phase Synthesis of Chiral Sulfinamide\u2011Directed Enyne Cycloisomerizations"
+          }
+        ],
+        "trace": [
+          {
+            "id": "64d0c331-0594-41d2-9a82-39f77712e32a",
+            "sessionId": "3d6fb0d3-4ce3-4cc3-b6ca-bb57cd5e7cc7",
+            "title": "Projects with code SSMI\u201118 (SS\u2011CI\u201101)",
+            "answer": "Project label: Solid\u2011Phase Synthesis of Chiral Sulfinamide\u2011Directed Enyne Cycloisomerizations; Project title: Solid\u2011Phase Synthesis of Chiral Sulfinamide\u2011Directed Enyne Cycloisomerizations. [Label](http://localhost:3000/citation/b572dee6-5fb0-482f-8fc4-1f9fe3fbc40d) [Title](http://localhost:3000/citation/c6d35f26-6589-40a8-910b-69751798350b)",
+            "stepCount": 5,
+            "steps": [
+              {
+                "description": "Search for project code containing 'SSMI\u201118 (SS\u2011CI\u201101)'",
+                "toolName": "search",
+                "toolParams": {
+                  "query": "SSMI\u201118 (SS\u2011CI\u201101)",
+                  "limit": 20,
+                  "offset": 0
+                },
+                "executionKey": "092e4eaf-6ef1-46eb-9745-d85198397267"
+              },
+              {
+                "description": "Inspect the found project entity",
+                "toolName": "inspect",
+                "toolParams": {
+                  "uri": "https://hypmol.net/Project/9eb0c9a5-63cd-435e-9476-05da40703d1f",
+                  "expandProperties": []
+                },
+                "executionKey": "515d9042-371f-44e3-af6d-c3046a10d879"
+              },
+              {
+                "description": "Verify project code",
+                "toolName": "fact",
+                "toolParams": {
+                  "subject": "_",
+                  "predicate": "https://hypmol.net/projectCode",
+                  "object": "SSMI\u201118 (SS\u2011CI\u201101)",
+                  "limit": 1
+                },
+                "executionKey": "dbd46b83-f216-4a24-aab2-22300c69615b"
+              },
+              {
+                "description": "Retrieve project label",
+                "toolName": "fact",
+                "toolParams": {
+                  "subject": "https://hypmol.net/Project/9eb0c9a5-63cd-435e-9476-05da40703d1f",
+                  "predicate": "rdfs:label",
+                  "object": "_",
+                  "limit": 1
+                },
+                "executionKey": "af1f6eb8-765e-4d45-8c55-cd42bb2f3f30"
+              },
+              {
+                "description": "Retrieve project title",
+                "toolName": "fact",
+                "toolParams": {
+                  "subject": "https://hypmol.net/Project/9eb0c9a5-63cd-435e-9476-05da40703d1f",
+                  "predicate": "https://hypmol.net/projectTitle",
+                  "object": "_",
+                  "limit": 1
+                },
+                "executionKey": "d35ecc90-6db6-4671-9827-4884037352e3"
+              }
+            ],
+            "createdAt": "2026-01-26T18:34:05.929Z",
+            "url": "http://localhost:3000/explain/64d0c331-0594-41d2-9a82-39f77712e32a"
+          }
+        ]
+      },
+      "answer": "Project label: Solid\u2011Phase Synthesis of Chiral Sulfinamide\u2011Directed Enyne Cycloisomerizations; Project title: Solid\u2011Phase Synthesis of Chiral Sulfinamide\u2011Directed Enyne Cycloisomerizations.\u202f[Label](http://localhost:3000/citation/b572dee6-5fb0-482f-8fc4-1f9fe3fbc40d)\u202f[Title](http://localhost:3000/citation/c6d35f26-6589-40a8-910b-69751798350b)",
+      "error": null
+    },
+    {
+      "id": 5,
+      "question": "I'm looking into the available information for persons. Find all persons whose given name contains 'Lucia'. Then show me their label, given name.",
+      "expected": {
+        "triples": [
+          {
+            "subject": "https://hypmol.net/Person/4a96bf69-7119-4ef5-8e87-e32508da8f6c",
+            "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "object": "http://schema.org/Person"
+          },
+          {
+            "subject": "https://hypmol.net/Person/a79cd0b0-d3fa-4508-a20f-b26385b68adf",
+            "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "object": "http://schema.org/Person"
+          },
+          {
+            "subject": "https://hypmol.net/Person/a79cd0b0-d3fa-4508-a20f-b26385b68adf",
+            "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
+            "object": "Lucia Varela"
+          },
+          {
+            "subject": "https://hypmol.net/Person/a79cd0b0-d3fa-4508-a20f-b26385b68adf",
+            "predicate": "http://schema.org/givenName",
+            "object": "Lucia"
+          },
+          {
+            "subject": "https://hypmol.net/Person/4a96bf69-7119-4ef5-8e87-e32508da8f6c",
+            "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
+            "object": "Lucia Rivera"
+          },
+          {
+            "subject": "https://hypmol.net/Person/4a96bf69-7119-4ef5-8e87-e32508da8f6c",
+            "predicate": "http://schema.org/givenName",
+            "object": "Lucia"
+          }
+        ],
+        "trace": [
+          {
+            "tool": "search",
+            "query": "person"
+          },
+          {
+            "tool": "inspect",
+            "uri": "http://schema.org/Person"
+          },
+          {
+            "tool": "query_builder",
+            "type": "http://schema.org/Person",
+            "filters": [
+              {
+                "path": "<http://schema.org/givenName>",
+                "operator": "contains",
+                "value": "Lucia"
+              }
+            ],
+            "project": [
+              "<http://www.w3.org/2000/01/rdf-schema#label>",
+              "<http://schema.org/givenName>"
+            ]
+          }
+        ]
+      },
+      "received": {
+        "triples": [
+          {
+            "subject": "https://hypmol.net/Person/4a96bf69-7119-4ef5-8e87-e32508da8f6c",
+            "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "object": "http://schema.org/Person"
+          },
+          {
+            "subject": "https://hypmol.net/Person/a79cd0b0-d3fa-4508-a20f-b26385b68adf",
+            "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "object": "http://schema.org/Person"
+          },
+          {
+            "subject": "https://hypmol.net/Person/a79cd0b0-d3fa-4508-a20f-b26385b68adf",
+            "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
+            "object": "Lucia Varela"
+          },
+          {
+            "subject": "https://hypmol.net/Person/a79cd0b0-d3fa-4508-a20f-b26385b68adf",
+            "predicate": "http://schema.org/givenName",
+            "object": "Lucia"
+          },
+          {
+            "subject": "https://hypmol.net/Person/4a96bf69-7119-4ef5-8e87-e32508da8f6c",
+            "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
+            "object": "Lucia Rivera"
+          },
+          {
+            "subject": "https://hypmol.net/Person/4a96bf69-7119-4ef5-8e87-e32508da8f6c",
+            "predicate": "http://schema.org/givenName",
+            "object": "Lucia"
+          }
+        ],
+        "trace": [
+          {
+            "id": "51efcb21-0cfc-4afe-8e14-f546b7095c72",
+            "sessionId": "73fa0c34-9a33-4526-a1e1-a2edd018e71e",
+            "title": "Persons with given name containing 'Lucia'",
+            "answer": "The persons whose given name contains **Lucia** are:\n- **Lucia Rivera** \u2013 given name: Lucia [Source](http://localhost:3000/citation/ad20876e-614b-4b64-ac29-4a58caf54f33)\n- **Lucia Varela** \u2013 given name: Lucia [Source](http://localhost:3000/citation/ad20876e-614b-4b64-ac29-4a58caf54f33)",
+            "stepCount": 1,
+            "steps": [
+              {
+                "description": "Queried Person entities where givenName contains 'Lucia' and projected label and givenName.",
+                "toolName": "query_builder",
+                "toolParams": {
+                  "type": "http://schema.org/Person",
+                  "filters": [
+                    {
+                      "path": "<http://schema.org/givenName>",
+                      "operator": "contains",
+                      "value": "Lucia"
+                    }
+                  ],
+                  "project": [
+                    "rdfs:label",
+                    "<http://schema.org/givenName>"
+                  ],
+                  "limit": 100
+                },
+                "executionKey": "b71166b1-fa56-439b-9320-10cd0242aea0"
+              }
+            ],
+            "createdAt": "2026-01-26T18:34:47.339Z",
+            "url": "http://localhost:3000/explain/51efcb21-0cfc-4afe-8e14-f546b7095c72"
+          }
+        ]
+      },
+      "answer": "The persons whose given name contains **Lucia** are:\n\n- **Lucia Rivera** \u2013 given name: Lucia\u202f[Source](http://localhost:3000/citation/ad20876e-614b-4b64-ac29-4a58caf54f33)  \n- **Lucia Varela** \u2013 given name: Lucia\u202f[Source](http://localhost:3000/citation/ad20876e-614b-4b64-ac29-4a58caf54f33)  ",
+      "error": null
+    },
+    {
+      "id": 6,
+      "question": "I'm curious about 'Dae\u2011hyun Kim'. what is its position?",
+      "expected": {
+        "triples": [
+          {
+            "subject": "https://hypmol.net/Person/75997ec1-1105-4ca3-abae-8dff714506aa",
+            "predicate": "https://hypmol.net/position",
+            "object": "Lab Technician"
+          }
+        ],
+        "trace": [
+          {
+            "tool": "search",
+            "query": "Dae\u2011hyun Kim"
+          },
+          {
+            "tool": "inspect",
+            "uri": "https://hypmol.net/Person/75997ec1-1105-4ca3-abae-8dff714506aa"
+          },
+          {
+            "tool": "fact",
+            "subject": "https://hypmol.net/Person/75997ec1-1105-4ca3-abae-8dff714506aa",
+            "predicate": "https://hypmol.net/position",
+            "object": "Lab Technician"
+          }
+        ]
+      },
+      "received": {
+        "triples": [
+          {
+            "subject": "https://hypmol.net/Person/75997ec1-1105-4ca3-abae-8dff714506aa",
+            "predicate": "https://hypmol.net/position",
+            "object": "Lab Technician"
+          }
+        ],
+        "trace": [
+          {
+            "id": "49cc7a5e-2be7-45a8-8a12-812f0b3eb4e3",
+            "sessionId": "6608820e-9fe5-4c03-9a41-49f80d8d54c6",
+            "title": "Finding Dae\u2011hyun Kim's position",
+            "answer": "Dae\u2011hyun Kim is a **Lab Technician**.[Source](http://localhost:3000/citation/c6872e94-8896-484d-b472-1a58673889a1)",
+            "stepCount": 3,
+            "steps": [
+              {
+                "description": "Searched for \"Dae\u2011hyun Kim\" to locate the entity.",
+                "toolName": "search",
+                "toolParams": {
+                  "query": "\"Dae\u2011hyun Kim\"",
+                  "limit": 10,
+                  "offset": 0
+                },
+                "executionKey": "ebfec5ce-97f4-41df-a14d-4a47ab12039a"
+              },
+              {
+                "description": "Inspected the entity to view its properties, revealing the position property.",
+                "toolName": "inspect",
+                "toolParams": {
+                  "uri": "https://hypmol.net/Person/75997ec1-1105-4ca3-abae-8dff714506aa",
+                  "expandProperties": []
+                },
+                "executionKey": "18aa19a2-4d36-435e-b1b1-ff9ac0e622e6"
+              },
+              {
+                "description": "Verified the position using the fact tool.",
+                "toolName": "fact",
+                "toolParams": {
+                  "subject": "https://hypmol.net/Person/75997ec1-1105-4ca3-abae-8dff714506aa",
+                  "predicate": "https://hypmol.net/position",
+                  "object": "_",
+                  "limit": 100
+                },
+                "executionKey": "04298d97-5d9f-4e0a-8679-d7e0840fd21f"
+              }
+            ],
+            "createdAt": "2026-01-26T18:35:00.785Z",
+            "url": "http://localhost:3000/explain/49cc7a5e-2be7-45a8-8a12-812f0b3eb4e3"
+          }
+        ]
+      },
+      "answer": "Dae\u2011hyun Kim is a **Lab Technician**.[Source](http://localhost:3000/citation/c6872e94-8896-484d-b472-1a58673889a1)",
+      "error": null
+    },
+    {
+      "id": 7,
+      "question": "Can you find some information about 'Synthesis of a Polycyclic Fluorinated Lactone via Cascade Cyclization of (1,1\u2011Dimethyl\u20112,3\u2011dihydro\u20112,3\u2011diphenyl\u20111,4\u2011oxazepin\u20115\u2011yl)trimethylamine n\u2011oxide'? what is its email?",
+      "expected": {
+        "triples": [],
+        "trace": [
+          {
+            "tool": "search",
+            "query": "Synthesis of a Polycyclic Fluorinated Lactone via Cascade Cyclization of (1,1\u2011Dimethyl\u20112,3\u2011dihydro\u20112,3\u2011diphenyl\u20111,4\u2011oxazepin\u20115\u2011yl)trimethylamine n\u2011oxide"
+          },
+          {
+            "tool": "inspect",
+            "uri": "https://hypmol.net/Dataset/c819d5e0-dc26-4e95-8ed9-9b822493a6f4"
+          },
+          {
+            "tool": "fact",
+            "subject": "https://hypmol.net/Dataset/c819d5e0-dc26-4e95-8ed9-9b822493a6f4",
+            "predicate": "http://schema.org/email",
+            "object": "_"
+          }
+        ]
+      },
+      "received": {
+        "triples": [
+          {
+            "subject": "https://hypmol.net/Person/3183fadd-7c89-4e41-bb23-6cba6e4d3ba7",
+            "predicate": "http://schema.org/email",
+            "object": "sara.kim@photodir.net"
+          }
+        ],
+        "trace": [
+          {
+            "id": "93f05b9a-9ab6-4829-9d57-5fd53b90140a",
+            "sessionId": "fd9043e2-2f62-4e9a-906e-21366e7d72bb",
+            "title": "Finding email for author of the specified synthesis dataset",
+            "answer": "The email associated with the author of the dataset titled \"Synthesis of a Polycyclic Fluorinated Lactone via Cascade Cyclization of (1,1\u2011Dimethyl\u20112,3\u2011dihydro\u20112,3\u2011diphenyl\u20111,4\u2011oxazepin\u20115\u2011yl)trimethylamine n\u2011oxide\" is **sara.kim@photodir.net**.[Source](http://localhost:3000/citation/fa1707b1-8541-4ead-ac93-5d7a57123af0)",
+            "stepCount": 4,
+            "steps": [
+              {
+                "description": "Searched for the exact title and found the dataset URI.",
+                "toolName": "search",
+                "toolParams": {
+                  "query": "\"Synthesis of a Polycyclic Fluorinated Lactone via Cascade Cyclization of (1,1-Dimethyl-2,3-dihydro-2,3-diphenyl-1,4-oxazepin-5-yl)trimethylamine n-oxide\"",
+                  "limit": 10,
+                  "offset": 0
+                },
+                "executionKey": "1afe553d-0e65-4452-8682-372f99165e33"
+              },
+              {
+                "description": "Inspected the dataset to retrieve its author URI.",
+                "toolName": "inspect",
+                "toolParams": {
+                  "uri": "https://hypmol.net/Dataset/c819d5e0-dc26-4e95-8ed9-9b822493a6f4",
+                  "expandProperties": []
+                },
+                "executionKey": "1c4872ab-8977-47b9-bdd1-cdab8248720a"
+              },
+              {
+                "description": "Inspected the author entity to view properties, including email.",
+                "toolName": "inspect",
+                "toolParams": {
+                  "uri": "https://hypmol.net/Person/3183fadd-7c89-4e41-bb23-6cba6e4d3ba7",
+                  "expandProperties": []
+                },
+                "executionKey": "10e2cfcb-7096-4eb5-9e82-9869e8298d58"
+              },
+              {
+                "description": "Verified the email property via a fact query, obtaining a citation.",
+                "toolName": "fact",
+                "toolParams": {
+                  "subject": "https://hypmol.net/Person/3183fadd-7c89-4e41-bb23-6cba6e4d3ba7",
+                  "predicate": "http://schema.org/email",
+                  "object": "_",
+                  "limit": 1
+                },
+                "executionKey": "c439a451-bfc7-4535-84e6-dd3b131576d0"
+              }
+            ],
+            "createdAt": "2026-01-26T18:35:32.712Z",
+            "url": "http://localhost:3000/explain/93f05b9a-9ab6-4829-9d57-5fd53b90140a"
+          }
+        ]
+      },
+      "answer": "The email associated with the author of the dataset titled \u201cSynthesis of a Polycyclic Fluorinated Lactone via Cascade Cyclization of (1,1\u2011Dimethyl\u20112,3\u2011dihydro\u20112,3\u2011diphenyl\u20111,4\u2011oxazepin\u20115\u2011yl)trimethylamine n\u2011oxide\u201d is **sara.kim@photodir.net**\u3010Source\u3011.",
+      "error": null
+    },
+    {
+      "id": 8,
+      "question": "I am currently checking the database for dataset records and have a task for you. Find all datasets whose author's given name contains 'Jia'. Then show me their label, description.",
+      "expected": {
+        "triples": [
+          {
+            "subject": "https://hypmol.net/Dataset/9c98c8fc-be06-496b-b571-889d88a6e52f",
+            "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
+            "object": "Intramolecular Sulfonylation of a Tricyclic Alkyl Chloride to Form a Cyclic Sulfone"
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/76f91d08-63e1-4240-9aa7-e7f0fd6e6fc2",
+            "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
+            "object": "Suzuki\u2011Miyaura Coupling of Pentylchloride and Aromatic Boronate with Palladium Catalyst"
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/9cf68ab8-f077-4a66-8b56-aa2613b4cb85",
+            "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "object": "http://schema.org/Dataset"
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/05b97fd0-d473-4e54-85ec-1265a05182d8",
+            "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
+            "object": "Photochemical Synthesis of a Sulfonyl\u2011Activated Carbamate via 4\u2011(Trimethyl\u2011silyl)pyrrolidin\u20112\u2011yl)pentyl\u2011sulfonyl chloride"
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/fb691439-4d7e-411f-a283-ff84fc788c28",
+            "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
+            "object": "Formation of a Disulfide from a Bis\u2011Disulfane"
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/3c8c0c14-4824-4f47-b177-c3f52ddd2f85",
+            "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "object": "http://schema.org/Dataset"
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/9c98c8fc-be06-496b-b571-889d88a6e52f",
+            "predicate": "http://schema.org/description",
+            "object": "This study evaluates the intramolecular sulfonylation of 4\u2011(bromomethyl)\u2011tricyclo[5.4.0.0\u2074,\u00b9\u2070]decane using a bifunctional sulfonate reagent derived from (1,3,5\u2011tris(2,4\u2011dinitro\u20111,3,5\u2011triazolyl)benzene) under base\u2011mediated conditions, leading to a novel six\u2011membered sulfone ring with potential for polymer backbone units."
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/9d444d6e-abe2-4459-a14b-62b6db3acd4d",
+            "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "object": "http://schema.org/Dataset"
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/5c018d75-8acf-4692-9022-9af8f5620a45",
+            "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "object": "http://schema.org/Dataset"
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/76f91d08-63e1-4240-9aa7-e7f0fd6e6fc2",
+            "predicate": "http://schema.org/description",
+            "object": "In this experiment the cross\u2011coupling of pentylchloride with bromodicyclopentylboronate is investigated under Suzuki\u2011Miyaura conditions to generate a medium\u2011chain substituted heteroarylboronic acid derivative suitable for late\u2011stage functionalisation."
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/9d444d6e-abe2-4459-a14b-62b6db3acd4d",
+            "predicate": "http://schema.org/description",
+            "object": "The experiment demonstrates the conversion of 2\u2011(bis(1,2,4\u2011triazolyl)phosphine)\u2212(3\u2011tert\u2011butyl\u20111,1\u2011diphenyl)thianone to 2\u2011(trifluoromethyl)-4\u2011(tert\u2011butyl)\u20111,3,5\u2011triazine\u20112\u2011yl\u2011methyl\u2011imidazolidin\u20114\u2011one using sodium trifluoromethanesulfinate under Suzuki\u2011type conditions."
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/6a9bcc37-0b87-4c32-9f77-a90b2c64c4bf",
+            "predicate": "http://schema.org/description",
+            "object": "Investigating the thermal rearrangement of 2\u2011(bis(1,2,4\u2011triazolyl)phosphine)\u2212(3\u2011tert\u2011butyl\u20111,1\u2011diphenyl)thianone to form a phosphine-ligated thianone derivative."
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/9cf68ab8-f077-4a66-8b56-aa2613b4cb85",
+            "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
+            "object": "Dataset: Oxidative Nitration of (4\u2011(tert\u2011butyl)phenyl)\u00admethoxy\u2011n,n\u2032\u2011dimethyl\u2011pyridinium chloride with N,N\u2011dimethyl\u20113\u2011nitropropanamide"
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/05b97fd0-d473-4e54-85ec-1265a05182d8",
+            "predicate": "http://schema.org/description",
+            "object": "Exploring a visible\u2011light driven coupling of a silyl\u2011protected pyrrolidine with a sulfonyl chloride, examining the efficiency of the photoinduced radical opening of the sulfonyl chloride."
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/3c8c0c14-4824-4f47-b177-c3f52ddd2f85",
+            "predicate": "http://schema.org/description",
+            "object": "This routine evaluates the radical iodination of perfluoro(3\u2011ethyl\u20114\u2011methyl\u20111\u2011phenyl\u20111,2\u2011bis(ethoxy)ethane) using N\u2011iodosuccinimide (NIS) and AIBN initiator. The aim is the selective introduction of an iodine atom to generate a perfluoro\u2011iodo\u2011species for subsequent cross\u2011coupling."
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/9d444d6e-abe2-4459-a14b-62b6db3acd4d",
+            "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
+            "object": "Trifluoromethylation of Triazine\u2011Phosphine via Nucleophilic Substitution"
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/76f91d08-63e1-4240-9aa7-e7f0fd6e6fc2",
+            "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "object": "http://schema.org/Dataset"
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/5c018d75-8acf-4692-9022-9af8f5620a45",
+            "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
+            "object": "Dataset 16 - Synthesis of a Vinyl Sulfone via (1,2\u2011bis(4\u2011tert\u2011butylphenyl)phosphonyl)dimethyl\u20114\u2011methylbenzene"
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/9cf68ab8-f077-4a66-8b56-aa2613b4cb85",
+            "predicate": "http://schema.org/description",
+            "object": "Explores electrophilic aromatic nitration under oxidative conditions to generate a novel pyridinium nitro derivative. Reaction efficiency and side\u2011product distribution are quantified."
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/f5416222-e394-46b5-970f-4ad7f9b6ebac",
+            "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
+            "object": "Dataset 9"
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/fb691439-4d7e-411f-a283-ff84fc788c28",
+            "predicate": "http://schema.org/description",
+            "object": "Reduction of bis(1,3\u2011diphenyl\u20112\u2011pyridyl)disulfane to the corresponding thiol via a mild reductant (not listed) and subsequent disulfide formation."
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/f5416222-e394-46b5-970f-4ad7f9b6ebac",
+            "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "object": "http://schema.org/Dataset"
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/6a9bcc37-0b87-4c32-9f77-a90b2c64c4bf",
+            "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "object": "http://schema.org/Dataset"
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/9c98c8fc-be06-496b-b571-889d88a6e52f",
+            "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "object": "http://schema.org/Dataset"
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/3c8c0c14-4824-4f47-b177-c3f52ddd2f85",
+            "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
+            "object": "Radical Iodination of Perfluoroalkyl Ether"
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/05b97fd0-d473-4e54-85ec-1265a05182d8",
+            "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "object": "http://schema.org/Dataset"
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/5c018d75-8acf-4692-9022-9af8f5620a45",
+            "predicate": "http://schema.org/description",
+            "object": "Formation of a vinyl sulfone by reaction of an alkyl phosphonate with a sulfonyl chloride under basic conditions. The reaction investigates the influence of the tert\u2011butyl groups on sulfone conjugation."
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/f5416222-e394-46b5-970f-4ad7f9b6ebac",
+            "predicate": "http://schema.org/description",
+            "object": "Sulfone formation by condensation of a sulfonyl chloride with a diazo\u2011containing ester under catalytic conditions."
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/6a9bcc37-0b87-4c32-9f77-a90b2c64c4bf",
+            "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
+            "object": "Thermal Rearrangement of Phosphine\u2011Ligated Thianone"
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/fb691439-4d7e-411f-a283-ff84fc788c28",
+            "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "object": "http://schema.org/Dataset"
+          }
+        ],
+        "trace": [
+          {
+            "tool": "search",
+            "query": "dataset"
+          },
+          {
+            "tool": "inspect",
+            "uri": "http://schema.org/Dataset"
+          },
+          {
+            "tool": "query_builder",
+            "type": "http://schema.org/Dataset",
+            "filters": [
+              {
+                "path": "<http://schema.org/author>.<http://schema.org/givenName>",
+                "operator": "contains",
+                "value": "Jia"
+              }
+            ],
+            "project": [
+              "<http://www.w3.org/2000/01/rdf-schema#label>",
+              "<http://schema.org/description>"
+            ]
+          }
+        ]
+      },
+      "received": {
+        "triples": [],
+        "trace": []
+      },
+      "answer": "Sorry, need more steps to process this request.",
+      "error": null
+    },
+    {
+      "id": 9,
+      "question": "I'm curious about the experiment entries. Find all experiments where the usage information's mass used in experiment is '3.6' and where the procedure step's step order is at most '2'. Then show me their label, experiment name.",
+      "expected": {
+        "triples": [
+          {
+            "subject": "https://hypmol.net/Experiment/9f939d36-8cab-4ab0-b373-88c1f77ebcc6",
+            "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
+            "object": "Ethyl\u2011(1,1\u2011dimethylethyl)urea carbamoylation"
+          },
+          {
+            "subject": "https://hypmol.net/Experiment/9f939d36-8cab-4ab0-b373-88c1f77ebcc6",
+            "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "object": "https://hypmol.net/Experiment"
+          },
+          {
+            "subject": "https://hypmol.net/Experiment/9f939d36-8cab-4ab0-b373-88c1f77ebcc6",
+            "predicate": "https://hypmol.net/experimentName",
+            "object": "Ethyl\u2011(1,1\u2011dimethylethyl)urea carbamoylation"
+          }
+        ],
+        "trace": [
+          {
+            "tool": "search",
+            "query": "experiment"
+          },
+          {
+            "tool": "inspect",
+            "uri": "https://hypmol.net/Experiment"
+          },
+          {
+            "tool": "query_builder",
+            "type": "https://hypmol.net/Experiment",
+            "filters": [
+              {
+                "path": "<https://hypmol.net/hasUsageInformation>.<https://hypmol.net/usedMass>",
+                "operator": "=",
+                "value": "3.6"
+              },
+              {
+                "path": "<https://hypmol.net/hasProcedureStep>.<https://hypmol.net/stepOrder>",
+                "operator": "<=",
+                "value": "2"
+              }
+            ],
+            "project": [
+              "<http://www.w3.org/2000/01/rdf-schema#label>",
+              "<https://hypmol.net/experimentName>"
+            ]
+          }
+        ]
+      },
+      "received": {
+        "triples": [
+          {
+            "subject": "https://hypmol.net/Experiment/9f939d36-8cab-4ab0-b373-88c1f77ebcc6",
+            "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
+            "object": "Ethyl\u2011(1,1\u2011dimethylethyl)urea carbamoylation"
+          }
+        ],
+        "trace": [
+          {
+            "id": "b9c2faa3-33b2-486e-b746-23826dcd4298",
+            "sessionId": "2ae9bbaf-6d9d-4c8f-9de2-447369d4dea9",
+            "title": "Experiments with mass used 3.6 and step order \u22642",
+            "answer": "Ethyl\u2011(1,1\u2011dimethylethyl)urea carbamoylation \u2013 Ethyl\u2011(1,1\u2011dimethylethyl)urea carbamoylation ([Source](http://localhost:3000/citation/d06cf2d8-90b9-4e88-9aa0-87ff7289862e), [Source](http://localhost:3000/citation/8c20386a-f7f1-4495-a3a9-b8f98caef778))",
+            "stepCount": 3,
+            "steps": [
+              {
+                "description": "Attempted query_builder (failed) \u2013 then used SPARQL query to find experiments matching mass 3.6 and step order \u22642.",
+                "toolName": "query_builder",
+                "toolParams": {
+                  "type": "https://hypmol.net/Experiment",
+                  "filters": [
+                    {
+                      "path": "https://hypmol.net/hasUsageInformation.https://hypmol.net/usedMass",
+                      "operator": "=",
+                      "value": "\"3.6\"^^xsd:decimal"
+                    },
+                    {
+                      "path": "https://hypmol.net/hasProcedureStep.https://hypmol.net/stepOrder",
+                      "operator": "<=",
+                      "value": "\"2\"^^xsd:integer"
+                    }
+                  ],
+                  "project": [
+                    "rdfs:label",
+                    "https://hypmol.net/experimentName"
+                  ],
+                  "limit": 100
+                },
+                "executionKey": "5004174e-33ee-4e49-a4f6-05ff40192c1a"
+              },
+              {
+                "description": "Retrieved rdfs:label for the experiment.",
+                "toolName": "fact",
+                "toolParams": {
+                  "subject": "https://hypmol.net/Experiment/9f939d36-8cab-4ab0-b373-88c1f77ebcc6",
+                  "predicate": "rdfs:label",
+                  "object": "_",
+                  "limit": 100
+                },
+                "executionKey": "1b9e9db4-a43b-41b3-98e7-445ed701cb11"
+              },
+              {
+                "description": "Retrieved hypmol:experimentName for the experiment.",
+                "toolName": "fact",
+                "toolParams": {
+                  "subject": "https://hypmol.net/Experiment/9f939d36-8cab-4ab0-b373-88c1f77ebcc6",
+                  "predicate": "https://hypmol.net/experimentName",
+                  "object": "_",
+                  "limit": 100
+                },
+                "executionKey": "c1f1e6bb-8775-40cf-b451-0a1bed0c24b5"
+              }
+            ],
+            "createdAt": "2026-01-26T18:38:10.260Z",
+            "url": "http://localhost:3000/explain/b9c2faa3-33b2-486e-b746-23826dcd4298"
+          }
+        ]
+      },
+      "answer": "Ethyl\u2011(1,1\u2011dimethylethyl)urea carbamoylation \u2013 Ethyl\u2011(1,1\u2011dimethylethyl)urea carbamoylation ([Source](http://localhost:3000/citation/d06cf2d8-90b9-4e88-9aa0-87ff7289862e), [Source](http://localhost:3000/citation/8c20386a-f7f1-4495-a3a9-b8f98caef778))",
+      "error": null
+    },
+    {
+      "id": 10,
+      "question": "I'm looking into the available information for chemical substances. Find all chemical substances whose molecular formula contains 'C19H26NO2' and whose chemical name contains 'Methyl\u2011(tert\u2011butyl)carbamate\u20111\u2011(phenylmethyl)cyclopentyl ether'. Then show me their label, chemical name, molar mass.",
+      "expected": {
+        "triples": [],
+        "trace": [
+          {
+            "tool": "search",
+            "query": "chemical substance"
+          },
+          {
+            "tool": "inspect",
+            "uri": "https://hypmol.net/ChemicalSubstance"
+          },
+          {
+            "tool": "query_builder",
+            "type": "https://hypmol.net/ChemicalSubstance",
+            "filters": [
+              {
+                "path": "<https://hypmol.net/molecularFormula>",
+                "operator": "contains",
+                "value": "C19H26NO2"
+              },
+              {
+                "path": "<https://hypmol.net/chemicalName>",
+                "operator": "contains",
+                "value": "Methyl\u2011(tert\u2011butyl)carbamate\u20111\u2011(phenylmethyl)cyclopentyl ether"
+              }
+            ],
+            "project": [
+              "<http://www.w3.org/2000/01/rdf-schema#label>",
+              "<https://hypmol.net/chemicalName>",
+              "<https://hypmol.net/molarMass>"
+            ]
+          }
+        ]
+      },
+      "received": {
+        "triples": [
+          {
+            "subject": "https://hypmol.net/ChemicalSubstance/c816e3c9-a419-4332-be2e-8db30af2ab8b",
+            "predicate": "https://hypmol.net/chemicalName",
+            "object": "Methyl\u2011(tert\u2011butyl)carbamate\u20111\u2011(phenylmethyl)cyclopentyl ether"
+          },
+          {
+            "subject": "https://hypmol.net/ChemicalSubstance/c816e3c9-a419-4332-be2e-8db30af2ab8b",
+            "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
+            "object": "Methyl\u2011(tert\u2011butyl)carbamate\u20111\u2011(phenylmethyl)cyclopentyl ether"
+          },
+          {
+            "subject": "https://hypmol.net/ChemicalSubstance/c816e3c9-a419-4332-be2e-8db30af2ab8b",
+            "predicate": "https://hypmol.net/molarMass",
+            "object": "314.44"
+          }
+        ],
+        "trace": [
+          {
+            "id": "44f6ffa0-ef58-4946-9e48-25cf8f05bc69",
+            "sessionId": "dc1c449e-9029-497c-9ffa-5c370c5de18d",
+            "title": "Chemical substance matching formula and name",
+            "answer": "Label: Methyl\u2011(tert\u2011butyl)carbamate\u20111\u2011(phenylmethyl)cyclopentyl ether ([Source](http://localhost:3000/citation/64c118ef-b4f2-4b49-a0b9-b14d36f9e7b2))\nChemical name: Methyl\u2011(tert\u2011butyl)carbamate\u20111\u2011(phenylmethyl)cyclopentyl ether ([Source](http://localhost:3000/citation/2ed5a386-08a2-4e9f-a231-7ad5ab932258))\nMolar mass: 314.44 ([Source](http://localhost:3000/citation/0bdb61bf-43cb-4277-8837-cde74434e3b8))",
+            "stepCount": 6,
+            "steps": [
+              {
+                "description": "Search for chemical name",
+                "toolName": "search",
+                "toolParams": {
+                  "query": "\"Methyl\u2011(tert\u2011butyl)carbamate\u20111\u2011(phenylmethyl)cyclopentyl ether\"",
+                  "limit": 5,
+                  "offset": 0
+                },
+                "executionKey": "d094e3cd-1de5-4941-808e-d343750c19d6"
+              },
+              {
+                "description": "Inspect entity for properties",
+                "toolName": "inspect",
+                "toolParams": {
+                  "uri": "https://hypmol.net/ChemicalSubstance/c816e3c9-a419-4332-be2e-8db30af2ab8b",
+                  "expandProperties": []
+                },
+                "executionKey": "1729ed0d-75bf-4a21-a248-2dbff6f53fb3"
+              },
+              {
+                "description": "Search for molecular formula",
+                "toolName": "search",
+                "toolParams": {
+                  "query": "C19H26NO2",
+                  "limit": 20,
+                  "offset": 0
+                },
+                "executionKey": "d99cf620-b8a8-4e64-a827-c22c8cba58bf"
+              },
+              {
+                "description": "Fact for label",
+                "toolName": "fact",
+                "toolParams": {
+                  "subject": "https://hypmol.net/ChemicalSubstance/c816e3c9-a419-4332-be2e-8db30af2ab8b",
+                  "predicate": "rdfs:label",
+                  "object": "_",
+                  "limit": 1
+                },
+                "executionKey": "36a69ce1-2e49-4ba7-8849-189240ea5c8f"
+              },
+              {
+                "description": "Fact for chemical name",
+                "toolName": "fact",
+                "toolParams": {
+                  "subject": "https://hypmol.net/ChemicalSubstance/c816e3c9-a419-4332-be2e-8db30af2ab8b",
+                  "predicate": "https://hypmol.net/chemicalName",
+                  "object": "_",
+                  "limit": 1
+                },
+                "executionKey": "e6f5cf59-2806-4e93-a3df-28dfde30615b"
+              },
+              {
+                "description": "Fact for molar mass",
+                "toolName": "fact",
+                "toolParams": {
+                  "subject": "https://hypmol.net/ChemicalSubstance/c816e3c9-a419-4332-be2e-8db30af2ab8b",
+                  "predicate": "https://hypmol.net/molarMass",
+                  "object": "_",
+                  "limit": 1
+                },
+                "executionKey": "6c3f2c1a-1afb-46b0-82d7-9266fd5df6bd"
+              }
+            ],
+            "createdAt": "2026-01-26T18:40:04.233Z",
+            "url": "http://localhost:3000/explain/44f6ffa0-ef58-4946-9e48-25cf8f05bc69"
+          }
+        ]
+      },
+      "answer": "Label: Methyl\u2011(tert\u2011butyl)carbamate\u20111\u2011(phenylmethyl)cyclopentyl ether ([Source](http://localhost:3000/citation/64c118ef-b4f2-4b49-a0b9-b14d36f9e7b2))  \nChemical name: Methyl\u2011(tert\u2011butyl)carbamate\u20111\u2011(phenylmethyl)cyclopentyl ether ([Source](http://localhost:3000/citation/2ed5a386-08a2-4e9f-a231-7ad5ab932258))  \nMolar mass: 314.44\u202fg\u00b7mol\u207b\u00b9 ([Source](http://localhost:3000/citation/0bdb61bf-43cb-4277-8837-cde74434e3b8))",
+      "error": null
+    },
+    {
+      "id": 11,
+      "question": "Can you find some information about 'Dataset 8'? could you please identify its name?",
+      "expected": {
+        "triples": [
+          {
+            "subject": "https://hypmol.net/Dataset/01e432c6-4d7a-4c7d-a52b-f86bd6ef0d76",
+            "predicate": "http://schema.org/name",
+            "object": "Dataset 8"
+          }
+        ],
+        "trace": [
+          {
+            "tool": "search",
+            "query": "Dataset 8"
+          },
+          {
+            "tool": "inspect",
+            "uri": "https://hypmol.net/Dataset/01e432c6-4d7a-4c7d-a52b-f86bd6ef0d76"
+          },
+          {
+            "tool": "fact",
+            "subject": "https://hypmol.net/Dataset/01e432c6-4d7a-4c7d-a52b-f86bd6ef0d76",
+            "predicate": "http://schema.org/name",
+            "object": "Dataset 8"
+          }
+        ]
+      },
+      "received": {
+        "triples": [
+          {
+            "subject": "https://hypmol.net/Dataset/01e432c6-4d7a-4c7d-a52b-f86bd6ef0d76",
+            "predicate": "http://schema.org/name",
+            "object": "Dataset 8"
+          }
+        ],
+        "trace": [
+          {
+            "id": "65c3d1cd-d47f-42fe-bb7d-48a22ed88a3a",
+            "sessionId": "f928e352-3023-414f-855a-172c5f475bce",
+            "title": "Identifying the name of Dataset 8",
+            "answer": "The dataset\u2019s name is **Dataset 8**[Source](http://localhost:3000/citation/1c74fd87-eb26-4f06-87db-735fc2f4fa82).",
+            "stepCount": 1,
+            "steps": [
+              {
+                "description": "Retrieved the name property of the dataset URI.",
+                "toolName": "fact",
+                "toolParams": {
+                  "subject": "https://hypmol.net/Dataset/01e432c6-4d7a-4c7d-a52b-f86bd6ef0d76",
+                  "predicate": "http://schema.org/name",
+                  "object": "_",
+                  "limit": 1
+                },
+                "executionKey": "c00484d8-6048-471f-8e60-07d20bb2dee9"
+              }
+            ],
+            "createdAt": "2026-01-26T18:39:12.315Z",
+            "url": "http://localhost:3000/explain/65c3d1cd-d47f-42fe-bb7d-48a22ed88a3a"
+          }
+        ]
+      },
+      "answer": "The dataset\u2019s name is **Dataset\u202f8**\u3010Source\u3011.",
+      "error": null
+    },
+    {
+      "id": 12,
+      "question": "I'm curious about '3,5\u2011Bis(4\u2011tert\u2011butylphenyl)\u20111,3,5\u2011tris(2,4,6\u2011tert\u2011butyl)benzophenone'. please find its chemical name and its molar mass.",
+      "expected": {
+        "triples": [
+          {
+            "subject": "https://hypmol.net/ChemicalSubstance/65504d6b-486e-4f43-bab5-9f935b38f2c6",
+            "predicate": "https://hypmol.net/chemicalName",
+            "object": "3,5\u2011Bis(4\u2011tert\u2011butylphenyl)\u20111,3,5\u2011tris(2,4,6\u2011tert\u2011butyl)benzophenone"
+          }
+        ],
+        "trace": [
+          {
+            "tool": "search",
+            "query": "3,5\u2011Bis(4\u2011tert\u2011butylphenyl)\u20111,3,5\u2011tris(2,4,6\u2011tert\u2011butyl)benzophenone"
+          },
+          {
+            "tool": "inspect",
+            "uri": "https://hypmol.net/ChemicalSubstance/65504d6b-486e-4f43-bab5-9f935b38f2c6"
+          },
+          {
+            "tool": "fact",
+            "subject": "https://hypmol.net/ChemicalSubstance/65504d6b-486e-4f43-bab5-9f935b38f2c6",
+            "predicate": "https://hypmol.net/molarMass",
+            "object": "490.62"
+          },
+          {
+            "tool": "fact",
+            "subject": "https://hypmol.net/ChemicalSubstance/65504d6b-486e-4f43-bab5-9f935b38f2c6",
+            "predicate": "https://hypmol.net/chemicalName",
+            "object": "3,5\u2011Bis(4\u2011tert\u2011butylphenyl)\u20111,3,5\u2011tris(2,4,6\u2011tert\u2011butyl)benzophenone"
+          }
+        ]
+      },
+      "received": {
+        "triples": [
+          {
+            "subject": "https://hypmol.net/ChemicalSubstance/65504d6b-486e-4f43-bab5-9f935b38f2c6",
+            "predicate": "https://hypmol.net/molarMass",
+            "object": "490.62"
+          }
+        ],
+        "trace": [
+          {
+            "id": "b8d6d1a9-287e-4a0b-9ae8-e520e6cadc99",
+            "sessionId": "e41de880-b97b-4457-bb6a-cb8ca011db08",
+            "title": "Chemical name and molar mass of 3,5\u2011Bis(4\u2011tert\u2011butylphenyl)\u20111,3,5\u2011tris(2,4,6\u2011tert\u2011butyl)benzophenone",
+            "answer": "The chemical name is **3,5\u2011Bis(4\u2011tert\u2011butylphenyl)\u20111,3,5\u2011tris(2,4,6\u2011tert\u2011butyl)benzophenone**[Source](http://localhost:3000/citation/f8691791-415c-44fb-b1e7-d72b076950c7) and its molar mass is **490.62\u202fg\u00b7mol\u207b\u00b9**[Source](http://localhost:3000/citation/acd91902-fd5c-4196-b594-51e1d16fb9e0).",
+            "stepCount": 2,
+            "steps": [
+              {
+                "description": "Retrieved molar mass (490.62) for the substance.",
+                "toolName": "fact",
+                "toolParams": {
+                  "subject": "https://hypmol.net/ChemicalSubstance/65504d6b-486e-4f43-bab5-9f935b38f2c6",
+                  "predicate": "https://hypmol.net/molarMass",
+                  "object": "_",
+                  "limit": 1
+                },
+                "executionKey": "f7a5be30-30bb-4f87-a869-4a7c43aba9d5"
+              },
+              {
+                "description": "Retrieved chemical name for the substance.",
+                "toolName": "fact",
+                "toolParams": {
+                  "subject": "https://hypmol.net/ChemicalSubstance/65504d6b-486e-4f43-bab5-9f935b38f2c6",
+                  "predicate": "https://hypmol.net/chemicalName",
+                  "object": "_",
+                  "limit": 1
+                },
+                "executionKey": "e4cc96fa-45af-41ae-aae1-3377a829b4ba"
+              }
+            ],
+            "createdAt": "2026-01-26T18:39:47.336Z",
+            "url": "http://localhost:3000/explain/b8d6d1a9-287e-4a0b-9ae8-e520e6cadc99"
+          }
+        ]
+      },
+      "answer": "The chemical name is **3,5\u2011Bis(4\u2011tert\u2011butylphenyl)\u20111,3,5\u2011tris(2,4,6\u2011tert\u2011butyl)benzophenone**[Source](http://localhost:3000/citation/f8691791-415c-44fb-b1e7-d72b076950c7) and its molar mass is **490.62\u202fg\u00b7mol\u207b\u00b9**[Source](http://localhost:3000/citation/acd91902-fd5c-4196-b594-51e1d16fb9e0).",
+      "error": null
+    },
+    {
+      "id": 13,
+      "question": "I'm curious about 'Diazo Formation of Triazole Derivative'. What info exists on its keywords?",
+      "expected": {
+        "triples": [],
+        "trace": [
+          {
+            "tool": "search",
+            "query": "Diazo Formation of Triazole Derivative"
+          },
+          {
+            "tool": "inspect",
+            "uri": "https://hypmol.net/Experiment/7f317afc-b290-479d-815e-911a08b0cd44"
+          },
+          {
+            "tool": "fact",
+            "subject": "https://hypmol.net/Experiment/7f317afc-b290-479d-815e-911a08b0cd44",
+            "predicate": "http://schema.org/keywords",
+            "object": "_"
+          }
+        ]
+      },
+      "received": {
+        "triples": [
+          {
+            "subject": "https://hypmol.net/Experiment/7f317afc-b290-479d-815e-911a08b0cd44",
+            "predicate": "https://hypmol.net/hasUsageInformation",
+            "object": "https://hypmol.net/SubstanceUsageInformation/9e1c1bdb-5704-4a29-ab75-028aedfb8c1f"
+          },
+          {
+            "subject": "https://hypmol.net/Experiment/7f317afc-b290-479d-815e-911a08b0cd44",
+            "predicate": "https://hypmol.net/hasProcedureStep",
+            "object": "https://hypmol.net/ProcedureStep/4ccd82a4-235c-4348-b202-0fbf2de62e40"
+          },
+          {
+            "subject": "https://hypmol.net/Experiment/7f317afc-b290-479d-815e-911a08b0cd44",
+            "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "object": "https://hypmol.net/Experiment"
+          },
+          {
+            "subject": "https://hypmol.net/Experiment/7f317afc-b290-479d-815e-911a08b0cd44",
+            "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
+            "object": "Diazo Formation of Triazole Derivative"
+          },
+          {
+            "subject": "https://hypmol.net/Experiment/7f317afc-b290-479d-815e-911a08b0cd44",
+            "predicate": "https://hypmol.net/reactionEquation",
+            "object": "(3,5\u2011dichloro\u20112\u2011(tert\u2011butyl)phenyl)diazenyl\u2011benzo\u20111,4\u2011dioxan-2\u2011one + n,n\u2032\u2011bis(3\u2011chloro\u20114\u2011methyl\u20112\u2011pyridyl)carbamimidic acid \u2192 diazo triazole + by\u2011products"
+          },
+          {
+            "subject": "https://hypmol.net/Experiment/7f317afc-b290-479d-815e-911a08b0cd44",
+            "predicate": "https://hypmol.net/equipment",
+            "object": "Flask (80\u202fmL), magnetic stir bar, reflux condenser, nitrogen line, dry THF"
+          },
+          {
+            "subject": "https://hypmol.net/Experiment/7f317afc-b290-479d-815e-911a08b0cd44",
+            "predicate": "https://hypmol.net/hasUsageInformation",
+            "object": "https://hypmol.net/SubstanceUsageInformation/736405e6-ea6d-46b0-9f3d-bc2147c76286"
+          },
+          {
+            "subject": "https://hypmol.net/Experiment/7f317afc-b290-479d-815e-911a08b0cd44",
+            "predicate": "https://hypmol.net/experimentName",
+            "object": "Diazo Formation of Triazole Derivative"
+          },
+          {
+            "subject": "https://hypmol.net/Experiment/7f317afc-b290-479d-815e-911a08b0cd44",
+            "predicate": "https://hypmol.net/hasProcedureStep",
+            "object": "https://hypmol.net/ProcedureStep/ce472cd0-b677-4155-99a4-9fe0f2d2174f"
+          },
+          {
+            "subject": "https://hypmol.net/Experiment/7f317afc-b290-479d-815e-911a08b0cd44",
+            "predicate": "https://hypmol.net/hasProcedureStep",
+            "object": "https://hypmol.net/ProcedureStep/9bced452-4fb4-44aa-8ba8-12471915ae04"
+          },
+          {
+            "subject": "https://hypmol.net/Experiment/7f317afc-b290-479d-815e-911a08b0cd44",
+            "predicate": "https://hypmol.net/hasProcedureStep",
+            "object": "https://hypmol.net/ProcedureStep/c072e192-2ebe-472d-bfa5-4733d702d618"
+          }
+        ],
+        "trace": [
+          {
+            "id": "a5dd441f-d267-4014-a62a-116129c3d8bf",
+            "sessionId": "52426ba8-5bda-4456-80ef-c54606b71a43",
+            "title": "Keywords for Diazo Formation of Triazole Derivative",
+            "answer": "The knowledge graph does not contain any keyword information for the experiment **Diazo Formation of Triazole Derivative**. No `schema:keywords` or `hypmol:keywords` triples were found for this experiment. [Source](http://localhost:3000/citation/59622ccf-bd90-4f8d-839e-0c3624a9266a)",
+            "stepCount": 3,
+            "steps": [
+              {
+                "description": "Searched for the experiment and found its URI.",
+                "toolName": "search",
+                "toolParams": {
+                  "query": "Diazo formation of triazole derivative",
+                  "limit": 20,
+                  "offset": 0
+                },
+                "executionKey": "2e762cb8-c47f-4ea9-84e2-49f7cce97497"
+              },
+              {
+                "description": "Inspected the experiment to view all its properties.",
+                "toolName": "inspect",
+                "toolParams": {
+                  "uri": "https://hypmol.net/Experiment/7f317afc-b290-479d-815e-911a08b0cd44",
+                  "expandProperties": [
+                    "*"
+                  ]
+                },
+                "executionKey": "ae34641e-ad77-46ae-8c61-d4996ac5ec36"
+              },
+              {
+                "description": "Retrieved all triples for the experiment (no keywords present).",
+                "toolName": "fact",
+                "toolParams": {
+                  "subject": "https://hypmol.net/Experiment/7f317afc-b290-479d-815e-911a08b0cd44",
+                  "predicate": "_",
+                  "object": "_",
+                  "limit": 100
+                },
+                "executionKey": "be2e0b5f-da7b-4d21-bf63-f2957f11b996"
+              }
+            ],
+            "createdAt": "2026-01-26T18:41:55.341Z",
+            "url": "http://localhost:3000/explain/a5dd441f-d267-4014-a62a-116129c3d8bf"
+          }
+        ]
+      },
+      "answer": "The knowledge graph does not contain any keyword information for the experiment **Diazo Formation of Triazole Derivative**. No `schema:keywords` or `hypmol:keywords` triples were found for this experiment.\u202f[Source](http://localhost:3000/citation/59622ccf-bd90-4f8d-839e-0c3624a9266a)",
+      "error": null
+    },
+    {
+      "id": 14,
+      "question": "I'm looking into the available information for chemical substances. Find all chemical substances where the molar mass is '506.74'. Then show me their label, chemical name.",
+      "expected": {
+        "triples": [
+          {
+            "subject": "https://hypmol.net/ChemicalSubstance/48dcd3ea-34eb-48a2-9ad5-c7262b76a3dc",
+            "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "object": "https://hypmol.net/ChemicalSubstance"
+          },
+          {
+            "subject": "https://hypmol.net/ChemicalSubstance/48dcd3ea-34eb-48a2-9ad5-c7262b76a3dc",
+            "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
+            "object": "1,3,5\u2011Trimethyl\u20112,4,6\u2011tris(tert\u2011butyl)cyclohexyl\u20113\u2011(2,4,6\u2011tri\u00ad(tert\u2011butyl)phenyl)benzoate"
+          },
+          {
+            "subject": "https://hypmol.net/ChemicalSubstance/48dcd3ea-34eb-48a2-9ad5-c7262b76a3dc",
+            "predicate": "https://hypmol.net/chemicalName",
+            "object": "1,3,5\u2011Trimethyl\u20112,4,6\u2011tris(tert\u2011butyl)cyclohexyl\u20113\u2011(2,4,6\u2011tri\u00ad(tert\u2011butyl)phenyl)benzoate"
+          }
+        ],
+        "trace": [
+          {
+            "tool": "search",
+            "query": "chemical substance"
+          },
+          {
+            "tool": "inspect",
+            "uri": "https://hypmol.net/ChemicalSubstance"
+          },
+          {
+            "tool": "query_builder",
+            "type": "https://hypmol.net/ChemicalSubstance",
+            "filters": [
+              {
+                "path": "<https://hypmol.net/molarMass>",
+                "operator": "=",
+                "value": "506.74"
+              }
+            ],
+            "project": [
+              "<http://www.w3.org/2000/01/rdf-schema#label>",
+              "<https://hypmol.net/chemicalName>"
+            ]
+          }
+        ]
+      },
+      "received": {
+        "triples": [
+          {
+            "subject": "https://hypmol.net/ChemicalSubstance/48dcd3ea-34eb-48a2-9ad5-c7262b76a3dc",
+            "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
+            "object": "1,3,5\u2011Trimethyl\u20112,4,6\u2011tris(tert\u2011butyl)cyclohexyl\u20113\u2011(2,4,6\u2011tri\u00ad(tert\u2011butyl)phenyl)benzoate"
+          },
+          {
+            "subject": "https://hypmol.net/ChemicalSubstance/48dcd3ea-34eb-48a2-9ad5-c7262b76a3dc",
+            "predicate": "https://hypmol.net/molarMass",
+            "object": "506.74"
+          },
+          {
+            "subject": "https://hypmol.net/ChemicalSubstance/48dcd3ea-34eb-48a2-9ad5-c7262b76a3dc",
+            "predicate": "https://hypmol.net/chemicalName",
+            "object": "1,3,5\u2011Trimethyl\u20112,4,6\u2011tris(tert\u2011butyl)cyclohexyl\u20113\u2011(2,4,6\u2011tri\u00ad(tert\u2011butyl)phenyl)benzoate"
+          }
+        ],
+        "trace": [
+          {
+            "id": "f270feea-327b-4903-bb08-6da5f85916f8",
+            "sessionId": "dab4a206-c2c4-443a-b3e1-606c964c614c",
+            "title": "Chemical substances with molar mass 506.74",
+            "answer": "The chemical substance with molar mass **506.74** is **1,3,5\u2011Trimethyl\u20112,4,6\u2011tris(tert\u2011butyl)cyclohexyl\u20113\u2011(2,4,6\u2011tri\u00ad(tert\u2011butyl)phenyl)benzoate**. Its label is the same as its chemical name. [Label](http://localhost:3000/citation/eb146e06-1d5f-43ae-9541-97399b29bccf) [Chemical Name](http://localhost:3000/citation/f3886035-9cdb-43ee-b450-abb5b5265e0d)",
+            "stepCount": 6,
+            "steps": [
+              {
+                "description": "Searched for molar mass property",
+                "toolName": "search",
+                "toolParams": {
+                  "query": "molar mass",
+                  "limit": 20,
+                  "offset": 0
+                },
+                "executionKey": "58e6e0ec-2ec9-4bcd-8d00-f4a9d9e6fa37"
+              },
+              {
+                "description": "Searched for chemical substance class",
+                "toolName": "search",
+                "toolParams": {
+                  "query": "chemical substance",
+                  "limit": 20,
+                  "offset": 0
+                },
+                "executionKey": "754d4e89-dded-482a-aa03-94aa99ac79ef"
+              },
+              {
+                "description": "Inspected ChemicalSubstance class to find relevant properties",
+                "toolName": "inspect",
+                "toolParams": {
+                  "uri": "https://hypmol.net/ChemicalSubstance",
+                  "expandProperties": []
+                },
+                "executionKey": "15ba215c-611f-4236-acec-0bdef4a7b56c"
+              },
+              {
+                "description": "Verified molar mass of the found substance",
+                "toolName": "fact",
+                "toolParams": {
+                  "subject": "https://hypmol.net/ChemicalSubstance/48dcd3ea-34eb-48a2-9ad5-c7262b76a3dc",
+                  "predicate": "https://hypmol.net/molarMass",
+                  "object": "\"506.74\"",
+                  "limit": 1
+                },
+                "executionKey": "331c72d9-bcff-413f-b1ec-29e9bab8f6fc"
+              },
+              {
+                "description": "Verified label of the substance",
+                "toolName": "fact",
+                "toolParams": {
+                  "subject": "https://hypmol.net/ChemicalSubstance/48dcd3ea-34eb-48a2-9ad5-c7262b76a3dc",
+                  "predicate": "rdfs:label",
+                  "object": "_",
+                  "limit": 5
+                },
+                "executionKey": "3f259363-063c-4fe1-bfba-41c769d18099"
+              },
+              {
+                "description": "Verified chemical name of the substance",
+                "toolName": "fact",
+                "toolParams": {
+                  "subject": "https://hypmol.net/ChemicalSubstance/48dcd3ea-34eb-48a2-9ad5-c7262b76a3dc",
+                  "predicate": "https://hypmol.net/chemicalName",
+                  "object": "_",
+                  "limit": 5
+                },
+                "executionKey": "f9442bf2-d402-4860-84c1-504a8b99313c"
+              }
+            ],
+            "createdAt": "2026-01-26T18:43:21.970Z",
+            "url": "http://localhost:3000/explain/f270feea-327b-4903-bb08-6da5f85916f8"
+          }
+        ]
+      },
+      "answer": "The chemical substance with molar mass **506.74** is **1,3,5\u2011Trimethyl\u20112,4,6\u2011tris(tert\u2011butyl)cyclohexyl\u20113\u2011(2,4,6\u2011tri\u00ad(tert\u2011butyl)phenyl)benzoate**. Its label is the same as its chemical name.  \n\n[Label](http://localhost:3000/citation/eb146e06-1d5f-43ae-9541-97399b29bccf)\u2003[Chemical Name](http://localhost:3000/citation/f3886035-9cdb-43ee-b450-abb5b5265e0d)",
+      "error": null
+    },
+    {
+      "id": 15,
+      "question": "Can you find some information about 'Photoredox\u2011Mediated Decarboxylative Cross\u2011Coupling: A Green Platform for Drug Lead Diversification'? Can you provide details on its project code and its project title?",
+      "expected": {
+        "triples": [
+          {
+            "subject": "https://hypmol.net/Project/2896a012-f7c6-430a-8f94-73abec10068e",
+            "predicate": "https://hypmol.net/projectCode",
+            "object": "PHOTODIR\u201101 (PH\u2011DC\u201101)"
+          }
+        ],
+        "trace": [
+          {
+            "tool": "search",
+            "query": "Photoredox\u2011Mediated Decarboxylative Cross\u2011Coupling: A Green Platform for Drug Lead Diversification"
+          },
+          {
+            "tool": "inspect",
+            "uri": "https://hypmol.net/Project/2896a012-f7c6-430a-8f94-73abec10068e"
+          },
+          {
+            "tool": "fact",
+            "subject": "https://hypmol.net/Project/2896a012-f7c6-430a-8f94-73abec10068e",
+            "predicate": "https://hypmol.net/projectTitle",
+            "object": "Photoredox\u2011Mediated Decarboxylative Cross\u2011Coupling: A Green Platform for Drug Lead Diversification"
+          },
+          {
+            "tool": "fact",
+            "subject": "https://hypmol.net/Project/2896a012-f7c6-430a-8f94-73abec10068e",
+            "predicate": "https://hypmol.net/projectCode",
+            "object": "PHOTODIR\u201101 (PH\u2011DC\u201101)"
+          }
+        ]
+      },
+      "received": {
+        "triples": [
+          {
+            "subject": "https://hypmol.net/Project/2896a012-f7c6-430a-8f94-73abec10068e",
+            "predicate": "https://hypmol.net/projectCode",
+            "object": "PHOTODIR\u201101 (PH\u2011DC\u201101)"
+          },
+          {
+            "subject": "https://hypmol.net/Project/2896a012-f7c6-430a-8f94-73abec10068e",
+            "predicate": "https://hypmol.net/projectTitle",
+            "object": "Photoredox\u2011Mediated Decarboxylative Cross\u2011Coupling: A Green Platform for Drug Lead Diversification"
+          }
+        ],
+        "trace": [
+          {
+            "id": "6e9c2a36-bd2f-4a41-b5f6-5c4ebe137b65",
+            "sessionId": "5a2ca76b-cac5-46e6-94f3-0f291815bbae",
+            "title": "Project code and title for Photoredox\u2011Mediated Decarboxylative Cross\u2011Coupling",
+            "answer": "The project code is **PHOTODIR\u201101 (PH\u2011DC\u201101)** and the project title is **Photoredox\u2011Mediated Decarboxylative Cross\u2011Coupling: A Green Platform for Drug Lead Diversification**.[Source](http://localhost:3000/citation/7bab9bd4-801c-40f8-ac20-8baf09fdd3f6)[Source](http://localhost:3000/citation/d3d9945d-e11e-4f98-885c-d4ae9703fa29)",
+            "stepCount": 2,
+            "steps": [
+              {
+                "description": "Retrieved project code via fact query.",
+                "toolName": "fact",
+                "toolParams": {
+                  "subject": "https://hypmol.net/Project/2896a012-f7c6-430a-8f94-73abec10068e",
+                  "predicate": "https://hypmol.net/projectCode",
+                  "object": "_",
+                  "limit": 1
+                },
+                "executionKey": "05cb6a5a-d645-4624-903b-62177f7c5162"
+              },
+              {
+                "description": "Retrieved project title via fact query.",
+                "toolName": "fact",
+                "toolParams": {
+                  "subject": "https://hypmol.net/Project/2896a012-f7c6-430a-8f94-73abec10068e",
+                  "predicate": "https://hypmol.net/projectTitle",
+                  "object": "_",
+                  "limit": 1
+                },
+                "executionKey": "59e1d7b8-d9d0-48a0-82e6-65d302f6dea4"
+              }
+            ],
+            "createdAt": "2026-01-26T18:42:29.338Z",
+            "url": "http://localhost:3000/explain/6e9c2a36-bd2f-4a41-b5f6-5c4ebe137b65"
+          }
+        ]
+      },
+      "answer": "The project code is **PHOTODIR\u201101 (PH\u2011DC\u201101)** and the project title is **Photoredox\u2011Mediated Decarboxylative Cross\u2011Coupling: A Green Platform for Drug Lead Diversification**.[Source](http://localhost:3000/citation/7bab9bd4-801c-40f8-ac20-8baf09fdd3f6)[Source](http://localhost:3000/citation/d3d9945d-e11e-4f98-885c-d4ae9703fa29)",
+      "error": null
+    },
+    {
+      "id": 16,
+      "question": "What can you tell me about 'Hanaa Youssef'? What info exists on its position?",
+      "expected": {
+        "triples": [
+          {
+            "subject": "https://hypmol.net/Person/4a629b17-4098-44f4-bb25-5b8d357c5a98",
+            "predicate": "https://hypmol.net/position",
+            "object": "Associate Professor"
+          }
+        ],
+        "trace": [
+          {
+            "tool": "search",
+            "query": "Hanaa Youssef"
+          },
+          {
+            "tool": "inspect",
+            "uri": "https://hypmol.net/Person/4a629b17-4098-44f4-bb25-5b8d357c5a98"
+          },
+          {
+            "tool": "fact",
+            "subject": "https://hypmol.net/Person/4a629b17-4098-44f4-bb25-5b8d357c5a98",
+            "predicate": "https://hypmol.net/position",
+            "object": "Associate Professor"
+          }
+        ]
+      },
+      "received": {
+        "triples": [
+          {
+            "subject": "https://hypmol.net/Person/4a629b17-4098-44f4-bb25-5b8d357c5a98",
+            "predicate": "https://hypmol.net/position",
+            "object": "Associate Professor"
+          }
+        ],
+        "trace": [
+          {
+            "id": "c4de3f67-3fe1-41c2-b4c4-8cf1f177791b",
+            "sessionId": "b2342a2d-9f9d-4592-9156-dc8da0cce604",
+            "title": "Information about Hanaa Youssef and position",
+            "answer": "Hanaa Youssef is listed as a person with the position **Associate Professor**.[Source](http://localhost:3000/citation/b2951e3c-1214-4534-b615-34bb68e6a51a)",
+            "stepCount": 1,
+            "steps": [
+              {
+                "description": "Retrieved the position of Hanaa Youssef via fact query.",
+                "toolName": "fact",
+                "toolParams": {
+                  "subject": "https://hypmol.net/Person/4a629b17-4098-44f4-bb25-5b8d357c5a98",
+                  "predicate": "https://hypmol.net/position",
+                  "object": "_",
+                  "limit": 1
+                },
+                "executionKey": "a84c424d-3c88-4118-8bc7-6ff5e8183c4d"
+              }
+            ],
+            "createdAt": "2026-01-26T18:42:55.853Z",
+            "url": "http://localhost:3000/explain/c4de3f67-3fe1-41c2-b4c4-8cf1f177791b"
+          }
+        ]
+      },
+      "answer": "Hanaa\u202fYoussef is listed as a person with the position **Associate Professor**.[Source](http://localhost:3000/citation/b2951e3c-1214-4534-b615-34bb68e6a51a)",
+      "error": null
+    }
+  ]
+}
