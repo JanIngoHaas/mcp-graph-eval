@@ -193,6 +193,7 @@ class GraphGenerator:
             self.project_registry[clean_key(p.code)] = uri
             self.g.add((uri, RDF.type, HYPMOL.Project))
             self.g.add((uri, HYPMOL.projectTitle, Literal(p.title)))
+            self.g.add((uri, RDFS.label, Literal(p.title)))
             self.g.add((uri, HYPMOL.projectCode, Literal(p.code)))
         
         print(f"Registered {len(projects)} projects.")

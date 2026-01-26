@@ -40,6 +40,17 @@ def classify_property(label: str) -> str:
     # 5. direct / noun / simple verb
     return "direct"
 
+def pluralize(label: str) -> str:
+    """Pluralizes a noun label based on simple English rules."""
+    label = label.strip()
+    if not label:
+        return "items"
+    if label.endswith(('s', 'x', 'z', 'ch', 'sh')):
+        return f"{label}es"
+    if label.endswith('y') and not label.endswith(('ay', 'ey', 'iy', 'oy', 'uy')):
+        return f"{label[:-1]}ies"
+    return f"{label}s"
+
 def humanize_label(s: str) -> str:
     """Converts technical names (camelCase, snake_case) into spaced, lowercase words."""
     if not s:

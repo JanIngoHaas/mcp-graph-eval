@@ -51,7 +51,7 @@ def Rule_forward_hop():
 
 def Rule_sample_facts(max_facts: int = 2):
     """Samples properties and values for the current focal entity."""
-    return APPLY(ops.gen_random_facts(max_facts=max_facts), access=["s_entities", "trace", "s_facts"])
+    return APPLY(ops.gen_random_facts(max_facts=max_facts), access=["s_entities", "trace", "s_facts", "answer_triples"])
 
 def Rule_search():
     """Initial discovery step."""

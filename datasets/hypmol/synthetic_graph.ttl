@@ -1568,62 +1568,77 @@
     hypmol:position "Professor" .
 
 <https://hypmol.net/Project/096d6028-986d-4a67-93ff-46668b816b59> a hypmol:Project ;
+    rdfs:label "Flow‑Based Enzymatic One-Pot Synthesis of Complex Marine Alkaloids" ;
     hypmol:projectCode "FLOWBIO‑042 (FL‑BIO‑01)" ;
     hypmol:projectTitle "Flow‑Based Enzymatic One-Pot Synthesis of Complex Marine Alkaloids" .
 
 <https://hypmol.net/Project/0d48e6f8-9b38-42e5-8302-88e14f14383c> a hypmol:Project ;
+    rdfs:label "Iridium‑Catalyzed Asymmetric C(sp²)-H Activation for Rapid Access to Oligoquinazoline Anticancer Scaffolds" ;
     hypmol:projectCode "SYNTH‑IR2025 (IR‑ASY‑01)" ;
     hypmol:projectTitle "Iridium‑Catalyzed Asymmetric C(sp²)-H Activation for Rapid Access to Oligoquinazoline Anticancer Scaffolds" .
 
 <https://hypmol.net/Project/2896a012-f7c6-430a-8f94-73abec10068e> a hypmol:Project ;
+    rdfs:label "Photoredox‑Mediated Decarboxylative Cross‑Coupling: A Green Platform for Drug Lead Diversification" ;
     hypmol:projectCode "PHOTODIR‑01 (PH‑DC‑01)" ;
     hypmol:projectTitle "Photoredox‑Mediated Decarboxylative Cross‑Coupling: A Green Platform for Drug Lead Diversification" .
 
 <https://hypmol.net/Project/2a54f8b6-22b9-4776-9c4c-3e2a148f7fa2> a hypmol:Project ;
+    rdfs:label "Dual‑Catalysis Strategy Combining Lewis Acid & Photoredox for Stereoselective Ether Formation" ;
     hypmol:projectCode "DUAL‑LEA‑05 (DU‑LA‑01)" ;
     hypmol:projectTitle "Dual‑Catalysis Strategy Combining Lewis Acid & Photoredox for Stereoselective Ether Formation" .
 
 <https://hypmol.net/Project/39c555c7-596b-4c44-a5c2-86050522c4a7> a hypmol:Project ;
+    rdfs:label "Computationally Guided Design of SuFEx Click Reactions for Rapid Generation of Polymer Libraries" ;
     hypmol:projectCode "CSURFEX‑08 (CS‑FX‑01)" ;
     hypmol:projectTitle "Computationally Guided Design of SuFEx Click Reactions for Rapid Generation of Polymer Libraries" .
 
 <https://hypmol.net/Project/67386a5e-26d1-49ae-8c6a-4c0c26e8b92a> a hypmol:Project ;
+    rdfs:label "Multicomponent Cascade for the Assembly of Spirolactone Natural Products" ;
     hypmol:projectCode "MCCLAN‑39 (MC‑CL‑01)" ;
     hypmol:projectTitle "Multicomponent Cascade for the Assembly of Spirolactone Natural Products" .
 
 <https://hypmol.net/Project/80ae105e-828f-41ec-94d7-a73f30be21b0> a hypmol:Project ;
+    rdfs:label "Late‑Stage Fluorination of Heteroaromatic Precursors via Electrophilic Radical Mediator" ;
     hypmol:projectCode "LASFluor‑12 (LS‑FL‑01)" ;
     hypmol:projectTitle "Late‑Stage Fluorination of Heteroaromatic Precursors via Electrophilic Radical Mediator" .
 
 <https://hypmol.net/Project/84cae0ba-ad7c-45f7-be57-b4774e4c5c6e> a hypmol:Project ;
+    rdfs:label "Hybrid Electrochemical–Photochemical Pathways for Functional Group Tolerance in Late‑Stage Synthesis" ;
     hypmol:projectCode "HYB‑EP‑10 (HY‑EP‑01)" ;
     hypmol:projectTitle "Hybrid Electrochemical–Photochemical Pathways for Functional Group Tolerance in Late‑Stage Synthesis" .
 
 <https://hypmol.net/Project/92655aa1-82b5-4bee-b4f1-56324374c926> a hypmol:Project ;
+    rdfs:label "Biomimetic Radical Coupling for the Construction of Polycyclic Alkaloids" ;
     hypmol:projectCode "BIORAD‑14 (BI‑RC‑01)" ;
     hypmol:projectTitle "Biomimetic Radical Coupling for the Construction of Polycyclic Alkaloids" .
 
 <https://hypmol.net/Project/9eb0c9a5-63cd-435e-9476-05da40703d1f> a hypmol:Project ;
+    rdfs:label "Solid‑Phase Synthesis of Chiral Sulfinamide‑Directed Enyne Cycloisomerizations" ;
     hypmol:projectCode "SSMI‑18 (SS‑CI‑01)" ;
     hypmol:projectTitle "Solid‑Phase Synthesis of Chiral Sulfinamide‑Directed Enyne Cycloisomerizations" .
 
 <https://hypmol.net/Project/ce59240a-7f2f-46ad-aaa1-2dd8ad857a77> a hypmol:Project ;
+    rdfs:label "High‑Throughput Photoredox Library Generation for Photodynamic Therapy Agents" ;
     hypmol:projectCode "HTP‑PR‑07 (HT‑PR‑01)" ;
     hypmol:projectTitle "High‑Throughput Photoredox Library Generation for Photodynamic Therapy Agents" .
 
 <https://hypmol.net/Project/dc0631b1-a35c-4146-a9b4-e7534a1def6d> a hypmol:Project ;
+    rdfs:label "Enantioselective Organocatalytic Decarboxylative Mannich Reactions in Continuous Flow" ;
     hypmol:projectCode "ENAT‑COFLOW‑06 (EN‑CF‑01)" ;
     hypmol:projectTitle "Enantioselective Organocatalytic Decarboxylative Mannich Reactions in Continuous Flow" .
 
 <https://hypmol.net/Project/dc3784dc-180f-48b3-92b4-f04102c0672d> a hypmol:Project ;
+    rdfs:label "Catalytic Asymmetric Cyclopropanation Using Bifunctional N‑Heterocyclic Carbene Ligands" ;
     hypmol:projectCode "SYNAS‑22 (SA‑CY‑01)" ;
     hypmol:projectTitle "Catalytic Asymmetric Cyclopropanation Using Bifunctional N‑Heterocyclic Carbene Ligands" .
 
 <https://hypmol.net/Project/ec239c55-e0c2-4dba-8d04-981c55ce3dd1> a hypmol:Project ;
+    rdfs:label "Microwave‑Accelerated Cycloaddition Platform for Bioisostere‑Enhanced Peptidomimetics" ;
     hypmol:projectCode "MW‑PACT‑03 (MW‑PA‑01)" ;
     hypmol:projectTitle "Microwave‑Accelerated Cycloaddition Platform for Bioisostere‑Enhanced Peptidomimetics" .
 
 <https://hypmol.net/Project/eeac8e8b-a7d9-4e03-9e44-926d28b0e8eb> a hypmol:Project ;
+    rdfs:label "Mechanochemical Synthesis of Metal‑Organic Framework Precursors via Ball‑Milling Reactions" ;
     hypmol:projectCode "MECHMO‑27 (ME‑MO‑01)" ;
     hypmol:projectTitle "Mechanochemical Synthesis of Metal‑Organic Framework Precursors via Ball‑Milling Reactions" .
 

@@ -8,4 +8,9 @@ dependencies = [
     "requests",
     "python-dotenv",
     "rdflib",
+    "langchain>=1.2.7",
+    "langchain-openai>=1.1.7",
+    "langchain-mcp-adapters>=0.2.1",
+    "scikit-learn>=1.8.0",
+    "python-levenshtein>=0.27.3",
 ]

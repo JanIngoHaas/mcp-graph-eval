@@ -1,3 +1,4 @@
+from ..vm.core import RetrySignal
 import os
 import random
 import time
@@ -10,7 +11,7 @@ from rdflib.namespace import RDF, RDFS, OWL, XSD, split_uri
 from rdflib.plugins.stores.sparqlstore import SPARQLStore
 from dotenv import load_dotenv
 
-from .language_utils import humanize_label
+from .language_utils import humanize_label, pluralize
 from .sparql_utils import filter_out_boring_stuff, group_by_predicate
 
 # Load .env file for configuration
@@ -23,14 +24,7 @@ class TypeNode:
 
     @property
     def plural(self) -> str:
-        label = self.label.strip()
-        if not label:
-            return "items"
-        if label.endswith(('s', 'x', 'z', 'ch', 'sh')):
-            return f"{label}es"
-        if label.endswith('y') and not label.endswith(('ay', 'ey', 'iy', 'oy', 'uy')):
-            return f"{label[:-1]}ies"
-        return f"{label}s"
+        return pluralize(self.label)
 
 class PropertyRange(Enum):
     OBJECT = auto()
@@ -79,9 +73,9 @@ class OntologySampler:
         for prefix, uri in self.ns.items():
             self.graph.bind(prefix, uri)
 
-    def _query(self, sparql: str) -> List[tuple]:
+    def _query(self, sparql: str, use_cache: bool = True) -> List[tuple]:
         """Executes a SPARQL query via rdflib and returns list of rows."""
-        if sparql in _QUERY_CACHE:
+        if use_cache and sparql in _QUERY_CACHE:
             print(f"DEBUG: Cache hit for query: {sparql}")
             return _QUERY_CACHE[sparql]
 
@@ -96,7 +90,8 @@ class OntologySampler:
         elapsed = time.time() - start_time
         print(f"DEBUG: Query finished in {elapsed:.2f}s")
         
-        _QUERY_CACHE[sparql] = rows
+        if use_cache:
+            _QUERY_CACHE[sparql] = rows
         return rows
 
     def get_label(self, uri: URIRef) -> str:
@@ -109,9 +104,7 @@ class OntologySampler:
         results = self._query(sparql)
         
         resolved_label = str(results[0][0]) if results else None
-        
         if not resolved_label:
-            # 2. Syntactic Fallback
             resolved_label = self._get_local_name(uri)
         
         return humanize_label(resolved_label)
@@ -120,7 +113,8 @@ class OntologySampler:
         if "schema#label" in uri:
             return "label"
 
-        return uri
+        raise RetrySignal("Failed to find label for URI: " + str(uri))
+
         # """Extracts and humanizes the local part of a URI."""
         # try:
         #     _, local = split_uri(uri)
@@ -191,7 +185,7 @@ class OntologySampler:
             OPTIONAL {{ ?s rdfs:label ?label }}
         }} ORDER BY RAND() LIMIT 1
         """
-        results = self._query(sparql)
+        results = self._query(sparql, use_cache=False)
         if not results:
             raise ValueError(f"No entities of type {type_uri} found")
             
@@ -226,7 +220,7 @@ class OntologySampler:
 
     def sample_random_literal_value(self, prop_uri: URIRef) -> Literal:
         """Samples a literal value for a given property."""
-        sparql = f"SELECT ?o WHERE {{ ?s <{prop_uri}> ?o . FILTER(isLiteral(?o)) }} LIMIT 100"
+        sparql = f"SELECT ?o WHERE {{ ?s <{prop_uri}> ?o . FILTER(isLiteral(?o)) }}"
         results = self._query(sparql)
         if results:
             return random.choice(results)[0]

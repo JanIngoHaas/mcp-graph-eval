@@ -1,3 +1,4 @@
+from random import seed
 import json
 from src.vm.core import GeneratorVM
 import src.grammar.definitions as rules
@@ -7,7 +8,8 @@ def generate_sample():
         'nl': [],
         'trace': [],
         's_entities': [],
-        's_facts': []
+        's_facts': [],
+        'answer_triples': []
     })
     root_node = rules.root()
     
@@ -22,14 +24,18 @@ def generate_sample():
             nl_question = "".join(nl_stack)
             trace = vm.get_ctx('trace') or []
             
+            answer_triples = vm.get_ctx('answer_triples') or []
+            
             return {
                 "question": nl_question,
-                "trace": trace
+                "trace": trace,
+                "answer_triples": answer_triples
             }
         except Exception:
             continue
 
 def main():
+    seed(395234)
     num_samples = 1000
     print(f"Generating {num_samples} samples...")
     samples = []

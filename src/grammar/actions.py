@@ -6,7 +6,8 @@ from src.grammar.ontology import OntologySampler, TypeNode, EntityNode, Property
 from src.grammar.language_utils import (
     classify_property, get_hop_phrases,
     format_property_as_noun_phrase, humanize_label,
-    get_search_phrases, compose_question, compose_qb_question
+    get_search_phrases, compose_question, compose_qb_question,
+    pluralize
 )
 from src.vm.core import RetrySignal
 
@@ -64,7 +65,7 @@ def resolve_operator_and_value(term: Any) -> tuple[str, str]:
             return "contains", val_str
              
     # 3. Object Logic (URIRef)
-    return random.choice(["=", "!="]), val_str
+    return random.choice(["="]), val_str
 
 @dataclass
 class QueryBuilderState:
@@ -121,12 +122,20 @@ def gen_random_facts(min_facts: int = 1, max_facts: int = 3):
                 "tool": "fact",
                 "subject": str(ent.uri),
                 "predicate": str(prop.uri),
-                "object": str(val)
+                "object": "_"
             })
             
             # Accumulate for question generation
             data["s_facts"].append((prop, val))
             
+            # Record essential answer triple
+            if "answer_triples" in data:
+                 data["answer_triples"].append({
+                    "subject": str(ent.uri),
+                    "predicate": str(prop.uri),
+                    "object": str(val)
+                })
+
             # Mark as seen
             ent.seen_properties.add(prop.uri)
         return
@@ -343,6 +352,24 @@ def qb_finalize_question(data: dict):
         # Fallback if generation failed
         raise RetrySignal("Logic failed to generate valid QB state")
         
+    # 0. Discovery steps (Enriching trace for explanation)
+    s = get_sampler()
+    type_label = s.get_label(qb.root_type)
+    
+    # Agent searches for the class
+    data["trace"].append({"tool": "search", "query": type_label})
+    # Agent inspects the class to see properties
+    data["trace"].append({"tool": "inspect", "uri": str(qb.root_type)})
+    
+    # Discovery NL
+    discovery_phrases = [
+        f"I'm looking into the available information for {pluralize(type_label)}.",
+        f"Let me check the database for {type_label} records.",
+        f"I'll start by exploring what we have on {pluralize(type_label)}.",
+        f"I'm curious about the {type_label} entries."
+    ]
+    data["nl"].append(random.choice(discovery_phrases))
+
     # 1. Build JSON Tool Call
     # Map our internal state to the tool schema
     tool_filters = []
