@@ -1827,6 +1827,287 @@
       },
       "answer": "Hanaa\u202fYoussef is listed as a person with the position **Associate Professor**.[Source](http://localhost:3000/citation/b2951e3c-1214-4534-b615-34bb68e6a51a)",
       "error": null
+    },
+    {
+      "id": 17,
+      "question": "I'm looking into the available information for datasets. Find all datasets whose author's position contains 'Assistant Professor'. Then show me their label, description.",
+      "expected": {
+        "triples": [
+          {
+            "subject": "https://hypmol.net/Dataset/a496149e-a83f-4693-a925-ed0976ff5883",
+            "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
+            "object": "Hydrolysis of Oxazolidinone to Primary Carboxylic Acid"
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/7b9715ca-ef2a-4311-b502-cb1eff2f41ca",
+            "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
+            "object": "Condensation to Form a Phosphine"
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/82a6b97a-e3f9-441f-aa5b-ee71965c3931",
+            "predicate": "http://schema.org/description",
+            "object": "This experiment focuses on generating a phosphonium salt from a sulfonyl chloride and a tertiary amine. The product is a key intermediate in nucleophilic substitution reactions and demonstrates the utility of sulfonylation for constructing phosphonium frameworks."
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/ddddd1a8-3805-436e-a9a7-2244b5d8c8f4",
+            "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "object": "http://schema.org/Dataset"
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/37594005-3f61-4bcf-922d-cd71381f7a18",
+            "predicate": "http://schema.org/description",
+            "object": "Synthesis of bis(1,3\u2011diphenyl\u20112\u2011pyridyl)disulfane by reacting hexamethyl\u20114\u2011(tert\u2011butyl)benzene\u20112,3\u2011diyl di\u2011(bromophenyl)borate with (4\u2011(tert\u2011butyl)phenyl)methoxy\u2011n,n\u2032\u2011dimethyl\u2011pyridinium chloride under thermal conditions."
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/37594005-3f61-4bcf-922d-cd71381f7a18",
+            "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "object": "http://schema.org/Dataset"
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/7b9715ca-ef2a-4311-b502-cb1eff2f41ca",
+            "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "object": "http://schema.org/Dataset"
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/37594005-3f61-4bcf-922d-cd71381f7a18",
+            "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
+            "object": "Formation of Bis(1,3\u2011Diphenyl\u20112\u2011Pyridyl)Disulfane via Coupling"
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/13b1f364-6b6c-41f0-9d29-65cc8b5abbab",
+            "predicate": "http://schema.org/description",
+            "object": "A reductive coupling between a thioester and a carbamimidic acid is attempted under photochemical conditions. The reaction progress is monitored by TLC and the product is isolated by recrystallization."
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/a0842ee9-53f8-42bc-9ad6-347ec3bb2914",
+            "predicate": "http://schema.org/description",
+            "object": "A silane\u2011catalyzed addition across the oxacyclic double bond of a 3\u2011(1\u2011benzyl\u2011piperidin\u20114\u2011yl)cyclic ether to generate a novel tetrahydropyran derivative.  The protocol employs a platinum catalyst and triethylsilane as the hydride source."
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/ddddd1a8-3805-436e-a9a7-2244b5d8c8f4",
+            "predicate": "http://schema.org/description",
+            "object": "An investigation into the regioselectivity of nucleophilic aromatic substitution using bis(2\u2011(n\u2011tert\u2011butoxycarbonyl)phenyl\u2011methyl\u2011sulfide) with (4\u2011(tert\u2011butyl)phenyl)methoxy\u2011n,n\u2032\u2011dimethyl\u2011pyridinium chloride under basic conditions to prepare a sulfenylated biaryl bearing a sulfonyl chloride functionality."
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/ddddd1a8-3805-436e-a9a7-2244b5d8c8f4",
+            "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
+            "object": "Synthesis of a Biaryl Sulfurylate via Nucleophilic Aromatic Substitution"
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/47048c3f-4012-4ca3-b5bb-dff0c6c80715",
+            "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
+            "object": "Dataset 7 - Synthesis of a Sulfenylated Cyclohexanone via Bis(1,3\u2011diphenyl\u20112\u2011pyridyl)disulfane"
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/043e21d1-bf65-4295-b8f9-c26f52f3784b",
+            "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
+            "object": "Dataset 7: Oxidative Cyclization to Form a Triazole Core"
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/d1473dd6-46db-4ebb-b8ee-18fb07c43a1c",
+            "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
+            "object": "Dataset 7"
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/a0842ee9-53f8-42bc-9ad6-347ec3bb2914",
+            "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
+            "object": "Dataset 4 \u2013 Hydrosilylation of a Cyclic Ether Using 4\u2011(trimetyl\u2011silyl)pyrrolidin-2-yl)pentyl\u2011sulfonyl chloride"
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/a496149e-a83f-4693-a925-ed0976ff5883",
+            "predicate": "http://schema.org/description",
+            "object": "The goal is the base\u2011catalyzed hydrolysis of bis(3,5\u2011difluoro\u20114\u2011methylphenyl)oxazolidin\u20112\u2011one to the corresponding 3\u2011(difluoro\u2011methyl)phenylcarboxylic acid. The procedure assesses pH control and product isolation."
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/13b1f364-6b6c-41f0-9d29-65cc8b5abbab",
+            "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "object": "http://schema.org/Dataset"
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/a0842ee9-53f8-42bc-9ad6-347ec3bb2914",
+            "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "object": "http://schema.org/Dataset"
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/a496149e-a83f-4693-a925-ed0976ff5883",
+            "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "object": "http://schema.org/Dataset"
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/c01ceb75-6748-45a4-a9f9-71f4d465b16e",
+            "predicate": "http://schema.org/description",
+            "object": "Explores a two\u2011step alkylation leading to a bis\u2011chloropyrimidyl bromide, evaluating reagent selectivity and byproduct analysis by NMR and mass spectrometry."
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/47048c3f-4012-4ca3-b5bb-dff0c6c80715",
+            "predicate": "http://schema.org/description",
+            "object": "A sulfur transfer reaction where bis(1,3\u2011diphenyl\u20112\u2011pyridyl)disulfane reacts with 3\u2011(1\u2011benzyl\u2011piperidin\u20114\u2011yl)cyclohexanone to deliver a sulfenylated cyclohexanone derivative. The study inspects regioselectivity and possible thiyl radical intermediates."
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/82a6b97a-e3f9-441f-aa5b-ee71965c3931",
+            "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
+            "object": "Preparation of a Phosphonium Salt via Sulfonyl Chloride Coupling"
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/d1473dd6-46db-4ebb-b8ee-18fb07c43a1c",
+            "predicate": "http://schema.org/description",
+            "object": "Cross\u2011coupling of a benzodioxolo benzothiazole ester with a borate reagent to form a biaryl product."
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/c01ceb75-6748-45a4-a9f9-71f4d465b16e",
+            "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "object": "http://schema.org/Dataset"
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/043e21d1-bf65-4295-b8f9-c26f52f3784b",
+            "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "object": "http://schema.org/Dataset"
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/d1473dd6-46db-4ebb-b8ee-18fb07c43a1c",
+            "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "object": "http://schema.org/Dataset"
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/7b9715ca-ef2a-4311-b502-cb1eff2f41ca",
+            "predicate": "http://schema.org/description",
+            "object": "Synthesis of diethyl\u2011(phenylhydrazinyl)\u20112\u2011methoxy\u20111\u2011cyclohexylphosphine through condensation of an oxazepine N\u2011oxide and a boron\u2011containing heterocycle."
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/47048c3f-4012-4ca3-b5bb-dff0c6c80715",
+            "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "object": "http://schema.org/Dataset"
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/13b1f364-6b6c-41f0-9d29-65cc8b5abbab",
+            "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
+            "object": "Dataset\u00a07 \u2013 Reductive Coupling of Bis(3,5\u2011Dichloro\u20112\u2011(tert\u2011butyl)phenyl)bis(1,2,4\u2011triazole)-3\u2011thiocarbonyl sulfide with n,n\u2032\u2011bis(3\u2011chloro\u20114\u2011methyl\u20112\u2011pyridyl)carbamimidic acid"
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/043e21d1-bf65-4295-b8f9-c26f52f3784b",
+            "predicate": "http://schema.org/description",
+            "object": "Examining the oxidative cyclization of a 2\u2011(bis(1,2,4\u2011triazolyl)phosphine) ligand with a di-iodinated aromatic to generate a fused triazine triazole scaffold."
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/c01ceb75-6748-45a4-a9f9-71f4d465b16e",
+            "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
+            "object": "Formation of Bis(4\u2011(tert\u2011butyl)phenyl)\u20114\u2011chloropyrimidyl\u20111\u2011butyl\u20111\u2011bromide via Alkylation of 4\u2011(tert\u2011butyl)phenyl)methoxy\u2011n,n\u2032\u2011dimethyl\u2011pyridinium chloride"
+          },
+          {
+            "subject": "https://hypmol.net/Dataset/82a6b97a-e3f9-441f-aa5b-ee71965c3931",
+            "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "object": "http://schema.org/Dataset"
+          }
+        ],
+        "trace": [
+          {
+            "tool": "search",
+            "query": "dataset"
+          },
+          {
+            "tool": "inspect",
+            "uri": "http://schema.org/Dataset"
+          },
+          {
+            "tool": "query_builder",
+            "type": "http://schema.org/Dataset",
+            "filters": [
+              {
+                "path": "<http://schema.org/author>.<https://hypmol.net/position>",
+                "operator": "contains",
+                "value": "Assistant Professor"
+              }
+            ],
+            "project": [
+              "<http://www.w3.org/2000/01/rdf-schema#label>",
+              "<http://schema.org/description>"
+            ]
+          }
+        ]
+      },
+      "received": {
+        "triples": [],
+        "trace": []
+      },
+      "answer": "Sorry, need more steps to process this request.",
+      "error": null
+    },
+    {
+      "id": 18,
+      "question": "I'm curious about the experiment entries. Find all experiments where the procedure step's step order is at least '1'. Then show me their label, experiment name, reaction equation.",
+      "expected": {
+        "triples": [],
+        "trace": [
+          {
+            "tool": "search",
+            "query": "experiment"
+          },
+          {
+            "tool": "inspect",
+            "uri": "https://hypmol.net/Experiment"
+          },
+          {
+            "tool": "query_builder",
+            "type": "https://hypmol.net/Experiment",
+            "filters": [
+              {
+                "path": "<https://hypmol.net/hasProcedureStep>.<https://hypmol.net/stepOrder>",
+                "operator": ">=",
+                "value": "1"
+              }
+            ],
+            "project": [
+              "<http://www.w3.org/2000/01/rdf-schema#label>",
+              "<https://hypmol.net/experimentName>",
+              "<https://hypmol.net/reactionEquation>"
+            ]
+          }
+        ]
+      },
+      "received": {
+        "triples": [],
+        "trace": []
+      },
+      "answer": null,
+      "error": "'NoneType' object has no attribute 'citations_data'"
+    },
+    {
+      "id": 19,
+      "question": "I am currently checking the database for experiment records and have a task for you. Find all experiments whose experiment name contains 'Pd\u2011Catalyzed Allylic Alkylation'. Then show me their label, equipment and apparatus.",
+      "expected": {
+        "triples": [],
+        "trace": [
+          {
+            "tool": "search",
+            "query": "experiment"
+          },
+          {
+            "tool": "inspect",
+            "uri": "https://hypmol.net/Experiment"
+          },
+          {
+            "tool": "query_builder",
+            "type": "https://hypmol.net/Experiment",
+            "filters": [
+              {
+                "path": "<https://hypmol.net/experimentName>",
+                "operator": "contains",
+                "value": "Pd\u2011Catalyzed Allylic Alkylation"
+              }
+            ],
+            "project": [
+              "<http://www.w3.org/2000/01/rdf-schema#label>",
+              "<https://hypmol.net/equipment>"
+            ]
+          }
+        ]
+      },
+      "received": {
+        "triples": [],
+        "trace": []
+      },
+      "answer": null,
+      "error": "'NoneType' object has no attribute 'citations_data'"
     }
   ]
 }
