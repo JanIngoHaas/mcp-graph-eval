@@ -121,8 +121,13 @@ def format_property_as_noun_phrase(label: str) -> str:
         return p_label # e.g. "has name" -> "name"
         
     elif p_class == "is_prefix":
-        # "is part of" -> "what this is part of"
-        return f"what this {p_label}"
+        # "is part of" -> "what it is part of"
+        rest = p_label[3:].strip()
+        prepositions = {"in", "at", "on", "from", "to", "for", "with", "into", "as", "of"}
+        if any(w in prepositions for w in rest.split()):
+            return f"what it is {rest}"
+        # "is version" -> "what version it is"
+        return f"what {rest} it is"
         
     elif p_class == "passive_by":
         # "authored by" -> "who authored" (we drop 'it' to allow appending the name)
@@ -134,6 +139,11 @@ def format_property_as_noun_phrase(label: str) -> str:
         if p_label.endswith((" in", " at", " on")):
              return f"where it was {p_label.rsplit(' ', 1)[0]}"
         return f"what it was {p_label}"
+    elif p_class == "compound_passive":
+        # "published in stream" -> "publication stream"
+        if p_label.startswith("published in "):
+            return f"publication {p_label.replace('published in ', '', 1)}"
+        return p_label
     else:
         return p_label
 
@@ -147,7 +157,7 @@ def get_search_phrases(label: str) -> list[str]:
         f"What can you tell me about '{label}'? "
     ]
 
-def compose_question(property_labels: list[str], prefix: str, article: str, ent_label: str) -> str:
+def compose_question(property_labels: list[str], prefix: str, article: str) -> str:
     """Assembles the final natural language question from gathered facts."""
     is_plural = len(property_labels) > 1
     

@@ -86,9 +86,10 @@ class MANY(Node):
 
 class RETRY(Node):
     """Retries a node N times, catching RetrySignal or Exception, with state rollback."""
-    def __init__(self, node: Node, n: int = 3):
+    def __init__(self, node: Node, n: int = 3, name: str = None):
         self.node = node
         self.n = n
+        self.name = name or type(node).__name__
 
     def expand(self, vm: GeneratorVM) -> None:
         last_err = None
@@ -100,15 +101,13 @@ class RETRY(Node):
                 return
             except (RetrySignal, Exception) as e:
                 last_err = e
+                print(f"[Retry {self.name}] attempt {i+1}/{self.n} failed: {e}")
                 # Rollback state
                 vm.ctx = snapshot
-                
-                reason = getattr(e, 'reason', str(e))
-                print(f"  [RETRY {i+1}/{self.n}] Backtracking due to: {reason}")
                 continue
         
         # If we exhausted retries, bubble up the last error
-        raise last_err or Exception(f"RETRY exhausted after {self.n} attempts")
+        raise last_err or Exception(f"RETRY({self.name}) exhausted after {self.n} attempts")
 
 class APPLY(Node):
     """
@@ -136,8 +135,8 @@ def Rule(*steps: Node) -> Node:
 def Choice(*options: Tuple[Node, float]) -> Node:
     return OR(list(options))
 
-def Retry(node: Node, n: int = 5) -> Node:
-    return RETRY(node, n=n)
+def Retry(node: Node, n: int = 5, name: str = None) -> Node:
+    return RETRY(node, n=n, name=name)
 
 def Push(target: str, read: str) -> Node:
     """Helper: appends/adds context[read] into context[target]."""

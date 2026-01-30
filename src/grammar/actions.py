@@ -88,6 +88,12 @@ def sel_random_entity(data: dict):
     node = s.get_random_entity(type_node.uri)
     data["s_entities"].append(WorkingEntity(node))
 
+def sel_hoppable_entity(data: dict):
+    """Samples a random entity that has at least one outgoing object property."""
+    s = get_sampler()
+    node = s.get_random_hoppable_entity()
+    data["s_entities"].append(WorkingEntity(node))
+
 def gen_random_facts(min_facts: int = 1, max_facts: int = 3):
     """Factory that returns an action sampling [min_facts, max_facts] for the focal entity."""
     def _gen_facts_logic(data: dict) -> Any:
@@ -121,7 +127,8 @@ def gen_random_facts(min_facts: int = 1, max_facts: int = 3):
                 "tool": "fact",
                 "subject": str(ent.uri),
                 "predicate": str(prop.uri),
-                "object": str(val)
+                "object": str(val),
+
             })
             
             # Accumulate for question generation
@@ -153,7 +160,7 @@ def gen_impossible_fact(data: dict):
         "tool": "fact",
         "subject": str(ent.uri),
         "predicate": str(impossible_prop.uri),
-        "object": "_"
+        "object": "_",
     })
     
     # 4. Add to s_facts for question generation -> (prop, None) implies no value found
@@ -172,27 +179,29 @@ def sel_hop_target(data: dict) -> Any:
     # Get object properties actually used by THIS specific entity
     obj_props = s.get_entity_object_properties(ent.uri)
     random.shuffle(obj_props)
-    
-    if obj_props:
-        prop = obj_props[0]
-        target_uri = random.choice(prop.values)
-        
-        # Proper entity resolution instead of a partial node
-        target_node = s.resolve_entity(target_uri)
-        
-        # Record the connection fact first
-        data["trace"].append({
-            "tool": "fact",
-            "subject": str(ent.uri),
-            "predicate": str(prop.uri),
-            "object": str(target_node.uri)
-        })
-        
-        phrases = get_hop_phrases(prop.label, target_node.label)
-        data["nl"].append(random.choice(phrases))
-        # Push new focus
-        data["s_entities"].append(WorkingEntity(target_node))
-        return
+
+    for prop in obj_props:
+        target_candidates = list(prop.values)
+        random.shuffle(target_candidates)
+
+        # Pick the first target (single-hop only; no need to check target structure)
+        for target_uri in target_candidates:
+            target_node = s.resolve_entity(target_uri)
+
+            # Record the connection fact first
+            data["trace"].append({
+                "tool": "fact",
+                "subject": str(ent.uri),
+                "predicate": str(prop.uri),
+                "object": str(target_node.uri)
+            })
+
+            # Avoid leaking the answer by not injecting the target label into the question.
+            phrases = get_hop_phrases(prop.label)
+            data["nl"].append(random.choice(phrases))
+            # Push new focus
+            data["s_entities"].append(WorkingEntity(target_node))
+            return
 
     raise RetrySignal(f"Entity {ent.label} has no outgoing links (object properties) to hop to")
 
@@ -214,6 +223,10 @@ def gen_inspect(data: dict):
     if not ent: return
     data["trace"].append({"tool": "inspect", "uri": ent.uri})
 
+def add_type_to_question(qtype: str):
+    def inner(data: dict):
+        data["qtype"] = qtype
+    return inner
 
 def make_question(data: dict):
     s_facts = data["s_facts"]
@@ -248,7 +261,7 @@ def make_question(data: dict):
         # Consolidate phrases
         prop_labels = [p.label for p, val in facts]
         
-        question = compose_question(prop_labels, prefix, article, ent.label)
+        question = compose_question(prop_labels, prefix, article)
         nl.append(question)
     else:
         nl.append(f"Could you provide more context for '{ent.label}'?")

@@ -3,12 +3,13 @@ import os
 import random
 import time
 from dataclasses import dataclass
-from typing import List, Optional, Dict, Any
+from typing import List, Optional, Dict, Any, cast
 from enum import Enum, auto
 from rdflib import Graph, URIRef, Literal, BNode, Namespace
 from rdflib.term import Identifier
 from rdflib.namespace import RDF, RDFS, OWL, XSD, split_uri
 from rdflib.plugins.stores.sparqlstore import SPARQLStore
+from rdflib.query import ResultRow
 from dotenv import load_dotenv
 
 from .language_utils import humanize_label, pluralize
@@ -46,7 +47,7 @@ class EntityNode:
 
 
 # Global persistent cache for all SPARQL queries
-_QUERY_CACHE: Dict[str, List[tuple]] = {}
+_QUERY_CACHE: Dict[str, List[ResultRow]] = {}
 
 class OntologySampler:
     """
@@ -62,7 +63,7 @@ class OntologySampler:
         
         # Rate-limiting delay from environment or default to 0.5s
         self.query_delay = float(os.getenv("SPARQL_QUERY_DELAY", 0.5))
-        
+
         # Standard prefixes
         self.ns = {
             "rdf": RDF,
@@ -73,26 +74,43 @@ class OntologySampler:
         for prefix, uri in self.ns.items():
             self.graph.bind(prefix, uri)
 
-    def _query(self, sparql: str, use_cache: bool = True) -> List[tuple]:
+        self.hoppable_types = self._parse_type_list(os.getenv("SPARQL_HOPPABLE_TYPES", ""))
+
+    def _query(self, sparql: str, use_cache: bool = False) -> List[ResultRow]:
         """Executes a SPARQL query via rdflib and returns list of rows."""
         if use_cache and sparql in _QUERY_CACHE:
-            print(f"DEBUG: Cache hit for query: {sparql}")
             return _QUERY_CACHE[sparql]
 
         if self.query_delay > 0:
             time.sleep(self.query_delay)
-        print(f"DEBUG: Executing SPARQL query to {self.endpoint_url} via rdflib...")
-        start_time = time.time()
-        
+
         res = self.graph.query(sparql)
-        rows = list(res)
-        
-        elapsed = time.time() - start_time
-        print(f"DEBUG: Query finished in {elapsed:.2f}s")
-        
-        if use_cache:
+        rows = cast(List[ResultRow], list(res))
+        if use_cache and rows:
             _QUERY_CACHE[sparql] = rows
         return rows
+
+    def _parse_type_list(self, raw: str) -> List[URIRef]:
+        """Parses a comma-separated list of type URIs (or prefixed names if known)."""
+        if not raw:
+            return []
+        out: List[URIRef] = []
+        for item in raw.split(","):
+            token = item.strip()
+            if not token:
+                continue
+            if token.startswith("<") and token.endswith(">"):
+                token = token[1:-1].strip()
+            if "://" in token:
+                out.append(URIRef(token))
+                continue
+            if ":" in token:
+                prefix, local = token.split(":", 1)
+                ns = self.ns.get(prefix)
+                if ns:
+                    out.append(URIRef(str(ns) + local))
+            # Silently skip unknown prefixes.
+        return out
 
     def get_label(self, uri: URIRef) -> str:
         """Attempts to find a professional label for a URI using a prioritized SPARQL query."""
@@ -101,7 +119,7 @@ class OntologySampler:
             <{uri}> rdfs:label ?label .
         }} LIMIT 1
         """
-        results = self._query(sparql)
+        results = self._query(sparql, use_cache=True)
         
         resolved_label = str(results[0][0]) if results else None
         if not resolved_label:
@@ -113,7 +131,8 @@ class OntologySampler:
         if "schema#label" in uri:
             return "label"
 
-        raise RetrySignal("Failed to find label for URI: " + str(uri))
+        msg = "Failed to find label for URI: " + str(uri)
+        raise RetrySignal(msg)
 
         # """Extracts and humanizes the local part of a URI."""
         # try:
@@ -126,18 +145,21 @@ class OntologySampler:
         # return local
 
     def get_random_type(self) -> TypeNode:
-        """Fetches a random RDF class (type) that has actual instances in the graph."""
-        sparql = "SELECT DISTINCT ?type WHERE { ?s a ?type . }"
-        results = self._query(sparql)
-        if not results:
-            raise RuntimeError(f"No classes found at {self.endpoint_url}")
-        
-        uris = [row[0] for row in results]
-        filtered = filter_out_boring_stuff([str(u) for u in uris])
-        uri = URIRef(random.choice(filtered)) if filtered else URIRef(uris[0])
+        """
+        Fetches a random RDF class directly (avoids bias from labeled entities).
+        """
+        sparql = """
+        SELECT DISTINCT ?type ?label WHERE {
+            ?s a ?type .
+            ?type rdfs:label ?label .
+        } ORDER BY RAND() LIMIT 1
+        """
+        rows = self._query(sparql, use_cache=False)
+        if not rows:
+            raise RetrySignal("No types found")
 
-        label = self.get_label(uri)
-        return TypeNode(uri, label)
+        type_uri, label_lit = rows[0]
+        return TypeNode(cast(URIRef, type_uri), str(label_lit))
 
     def get_all_properties(self) -> List[PropertyNode]:
         """Returns ALL properties in the graph (both data and object properties) defined via types."""
@@ -151,7 +173,7 @@ class OntologySampler:
         
         props = []
         for row in results:
-            p_uri = row[0]
+            p_uri = cast(URIRef, row[0])
             label = self.get_label(p_uri)
             props.append(PropertyNode(p_uri, label, PropertyRange.OBJECT, values=[]))
         return props
@@ -166,7 +188,8 @@ class OntologySampler:
         candidates = [p for p in all_props if p.uri not in forbidden_uris]
         
         if not candidates:
-            raise RetrySignal("No disjoint properties found for impossible question")
+            msg = "No disjoint properties found for impossible question"
+            raise RetrySignal(msg)
             
         return random.choice(candidates)
 
@@ -179,8 +202,10 @@ class OntologySampler:
         return self._discover_properties(entity_uri, "out", "isLiteral(?o) || (isIRI(?o) && NOT EXISTS { ?o ?p2 ?o2 })", PropertyRange.DATATYPE)
 
     def get_entity_object_properties(self, entity_uri: URIRef) -> List[PropertyNode]:
-        """Properties pointing to entities with internal structure."""
-        return self._discover_properties(entity_uri, "out", "isIRI(?o) && EXISTS { ?o ?p2 ?o2 }", PropertyRange.OBJECT)
+        """Properties pointing to label-bearing IRI targets (single-hop)."""
+        # Require a labeled IRI target; no extra structure needed for one hop.
+        filter_expr = "isIRI(?o) && EXISTS { ?o rdfs:label ?ol }"
+        return self._discover_properties(entity_uri, "out", filter_expr, PropertyRange.OBJECT)
 
     def get_incoming_properties(self, entity_uri: URIRef) -> List[PropertyNode]:
         """Properties and their subjects pointing TO this specific entity."""
@@ -192,7 +217,7 @@ class OntologySampler:
         """Unified helper to fetch and group properties in either direction."""
         pattern = f"<{entity_uri}> ?p ?o" if direction == "out" else f"?s ?p <{entity_uri}>"
         
-        sparql = f"SELECT DISTINCT ?p ?{'o' if direction == 'out' else 's'} WHERE {{ {pattern} . FILTER({sparql_filter}) }}"
+        sparql = f"SELECT DISTINCT ?p ?{'o' if direction == 'out' else 's'} WHERE {{ ?p rdfs:label ?l . {pattern} . FILTER({sparql_filter}) }}"
         results = self._query(sparql)
         
         # Group by property
@@ -205,25 +230,52 @@ class OntologySampler:
                 props.append(PropertyNode(p_uri, label, range_kind, values=vals))
         return props
 
-    def get_random_entity(self, type_uri: URIRef) -> EntityNode:
-        """Samples a random entity of the given type."""
+    def get_random_entity(self, type_uri: Optional[URIRef] = None) -> EntityNode:
+        """
+        Samples a random labeled entity (optionally of a given type) with ORDER BY RAND().
+        """
+
+        if type_uri:
+            type_clause = f"?s a <{type_uri}> .\n            BIND(<{type_uri}> AS ?type)"
+        else:
+            type_clause = "?s a ?type ."
+
         sparql = f"""
-        SELECT ?s ?label WHERE {{
-            ?s a <{type_uri}> .
+        SELECT ?s ?type ?label WHERE {{
+            ?s <{str(RDFS.label)}> ?label .
             FILTER(isIRI(?s))
-            # Skip skolemized/internal IDs that look like 'bn123' or 'node123'
-            FILTER(!regex(str(?s), "(bn|node)[0-9]+|:_|#bn", "i"))
-            OPTIONAL {{ ?s rdfs:label ?label }}
+            {type_clause}
         }} ORDER BY RAND() LIMIT 1
         """
-        results = self._query(sparql, use_cache=False)
-        if not results:
-            raise ValueError(f"No entities of type {type_uri} found")
-            
-        uri, label_lit = results[0][0], results[0][1]
-        label = str(label_lit) if label_lit else self.get_label(uri)
-        return EntityNode(uri, label, type_uri)
+        rows = self._query(sparql, use_cache=False)
+        if not rows:
+            msg = f"No entities found (type={type_uri})"
+            raise RetrySignal(msg)
 
+        uri, result_type, label_lit = rows[0]
+        entity_type = result_type or type_uri
+        if not entity_type:
+            msg = "Couldn't retrieve a type for random entity"
+            raise RetrySignal(msg)
+        label = str(label_lit)
+        return EntityNode(cast(URIRef, uri), label, cast(URIRef, entity_type))
+
+    def get_random_hoppable_entity(self, type_uri: Optional[URIRef] = None, max_attempts: int = 5) -> EntityNode:
+        """
+        Samples an entity that has at least one outgoing object property.
+        If SPARQL_HOPPABLE_TYPES is set, only those types are considered.
+        """
+        type_candidates = [type_uri] if type_uri else list(self.hoppable_types)
+        if not type_candidates:
+            type_candidates = [None]
+
+        for _ in range(max_attempts):
+            chosen = random.choice(type_candidates)
+            node = self.get_random_entity(chosen)
+            if self.get_entity_object_properties(node.uri):
+                return node
+
+        raise RetrySignal("Failed to find a hoppable entity after retries")
 
     def resolve_entity(self, uri: URIRef) -> EntityNode:
         """Fetches the label and type for a specific URI to construct a proper EntityNode."""
@@ -246,13 +298,13 @@ class OntologySampler:
         
         row = results[0]
         label = str(row[0]) if row[0] else self.get_label(uri)
-        return EntityNode(uri, label, type_uri)
+        return EntityNode(uri, label, cast(URIRef, type_uri))
 
 
     def sample_random_literal_value(self, prop_uri: URIRef) -> Literal:
         """Samples a literal value for a given property."""
-        sparql = f"SELECT ?o WHERE {{ ?s <{prop_uri}> ?o . FILTER(isLiteral(?o)) }}"
-        results = self._query(sparql)
-        if results:
-            return random.choice(results)[0]
+        sparql = f"SELECT ?o WHERE {{ ?s <{prop_uri}> ?o . FILTER(isLiteral(?o)) }} ORDER BY RAND() LIMIT 1"
+        rows = self._query(sparql, use_cache=False)
+        if rows:
+            return cast(Literal, rows[0])
         return Literal("value")

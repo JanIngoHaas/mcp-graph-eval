@@ -5,14 +5,22 @@ import os
 import traceback
 import Levenshtein
 from typing import List, Dict, Any, Set, Tuple
+from datetime import datetime
 
 from src.eval.langchain_adapter import LangChainAdapter
 from src.eval.harness import AgentResult
 from src.eval.ground_truth import execute_trace_ground_truth
 from src.eval.ground_truth import extract_triples_from_subgraph
+from src.eval.prompts import get_agent_system_prompt
 
 EVAL_CONCURRENCY = int(os.getenv("EVAL_CONCURRENCY", "1"))
-EVAL_LLM_MODEL = os.getenv("EVAL_LLM_MODEL")
+
+# --- Configurable List of Models to Evaluate ---
+EVAL_MODELS = [
+    "lfm2.5-1.2b-thinking",
+    "mistralai/ministral-3-14b-reasoning",
+    # Add more models here as needed
+]
 
 # --- Metrics Calculation ---
 
@@ -149,37 +157,45 @@ def save_json(path: str, data: List):
     with open(path, "w") as f:
         json.dump(data, f, indent=2)
 
-def get_task_list(data: List, args) -> Tuple[List[int], List[Dict]]:
+def get_task_list(data: List, output_path: str, limit: int, model_name: str) -> Tuple[List[int], Dict]:
     """Determine which sample IDs need to be processed, prioritizing unfinished ones."""
-    existing_results = load_json(args.output)
+    existing_results = load_json(output_path)
+    
     if existing_results:
-        print(f"Loaded {len(existing_results)} existing results from {args.output}.")
+        print(f"Loaded existing results from {output_path}.")
+        # Validate model matches
+        if existing_results.get("metadata", {}).get("model") != model_name:
+            raise ValueError(f"Existing results are for model '{existing_results.get('metadata', {}).get('model')}', not '{model_name}'")
     else:
-        print(f"No existing results found at {args.output}. Creating new file.")
-        existing_results = {"metadata": {"eval_model": EVAL_LLM_MODEL}, "output": []}
+        print(f"No existing results found at {output_path}. Creating new file.")
+        existing_results = {
+            "metadata": {
+                "model": model_name,
 
-    processed_ids = {r["id"] for r in existing_results if "id" in r}
+                "prompt": get_agent_system_prompt(),
+                "created_at": datetime.now().isoformat(),
+            },
+            "output": []
+        }
+
+    processed_ids = {r["id"] for r in existing_results.get("output", []) if "id" in r}
     
     # Resume-friendly logic: Find the first X unfinished samples
     todo_ids = []
     for idx in range(len(data)):
         if idx not in processed_ids:
             todo_ids.append(idx)
-        if len(todo_ids) >= args.limit:
+        if len(todo_ids) >= limit:
             break
 
-    if not todo_ids:
-        choice = input(f"\nAll samples in the dataset are already processed.\nDo you want to FORCE re-run the first {args.limit} samples? [y/N]: ").lower()
+    if not todo_ids and processed_ids:
+        choice = input(f"\nAll samples for model '{model_name}' are already processed.\nDo you want to FORCE re-run the first {limit} samples? [y/N]: ").lower()
         if choice == 'y':
-            todo_ids = list(range(min(args.limit, len(data))))
+            todo_ids = list(range(min(limit, len(data))))
             # Filter results to remove the ones we are about to overwrite
-            existing_results = [r for r in existing_results if r.get("id") not in todo_ids]
+            existing_results["output"] = [r for r in existing_results.get("output", []) if r.get("id") not in todo_ids]
         else:
-            print("Everything is up to date.")
-
-    # Check existing results for model - must be the same as before
-    if existing_results and existing_results["metadata"].get("eval_model") != EVAL_LLM_MODEL:
-        raise ValueError("Existing results must be from the same model.")
+            print(f"Skipping model '{model_name}' - everything is up to date.")
 
     return todo_ids, existing_results
 
@@ -204,6 +220,7 @@ async def process_single_sample(
             entry = {
                 "id": idx,
                 "question": sample.get("question"),
+                "qtype": sample.get("qtype", "unknown"),
                 "expected": {
                     "triples": gold_triples,
                     "trace": gold_trace
@@ -227,6 +244,7 @@ async def process_single_sample(
             entry = {
                 "id": idx,
                 "question": sample.get("question"),
+                "qtype": sample.get("qtype", "unknown"),
                 "expected": {"triples": [], "trace": gold_trace},
                 "received": {"triples": [], "trace": []},
                 "answer": None,
@@ -240,13 +258,14 @@ async def process_single_sample(
             results["output"].sort(key=lambda x: x.get("id", 0))
             save_json(output_path, results)
 
-async def process_samples(todo_ids: List[int], all_data: List[Dict], results: List[Dict], output_path: str):
+async def process_samples(todo_ids: List[int], all_data: List[Dict], results: Dict, output_path: str, model_name: str):
     """Core evaluation loop with concurrency support."""
-    adapter = LangChainAdapter()
+    adapter = LangChainAdapter(model_name=model_name)
     semaphore = asyncio.Semaphore(EVAL_CONCURRENCY)
     lock = asyncio.Lock()
     
     print(f"\nEvaluation Plan (Concurrency={EVAL_CONCURRENCY}):")
+    print(f"  - Model               : {model_name}")
     print(f"  - Total samples target: {len(todo_ids)}")
     print(f"  - Output file         : {output_path}\n")
 
@@ -259,11 +278,18 @@ async def process_samples(todo_ids: List[int], all_data: List[Dict], results: Li
     
     await asyncio.gather(*tasks)
 
+def get_output_path_for_model(model_name: str, base_output: str) -> str:
+    """Generate output file path for a specific model."""
+    # Convert model name to safe filename: "mistral:7b" -> "mistral_7b"
+    safe_name = model_name.replace(":", "_").replace("/", "_").replace(".", "_")
+    base, ext = os.path.splitext(base_output)
+    return f"{base}_{safe_name}{ext}"
+
 async def main():
     parser = argparse.ArgumentParser(description="Run kg-mcp evaluation and save raw results.")
     parser.add_argument("--samples", type=str, default="produced_samples.json", help="Path to samples JSON")
-    parser.add_argument("--limit", type=int, default=None, help="Number of samples to run")
-    parser.add_argument("--output", type=str, default="eval_results_raw.json", help="Path to output raw results")
+    parser.add_argument("--limit", type=int, default=None, help="Number of samples to run per model")
+    parser.add_argument("--output", type=str, default="eval_results.json", help="Base path for output files (model name will be appended)")
     args = parser.parse_args()
 
     all_data = load_json(args.samples)
@@ -271,13 +297,41 @@ async def main():
         print(f"Error: No data found in {args.samples}")
         return
 
-    args.limit = len(all_data) if args.limit is None else args.limit
-    todo_ids, results = get_task_list(all_data, args)
+    limit = len(all_data) if args.limit is None else args.limit
     
-    if todo_ids:
-        await process_samples(todo_ids, all_data, results, args.output)
+    print(f"\n{'='*60}")
+    print(f"MCP Graph Evaluation Runner")
+    print(f"{'='*60}")
+    print(f"  Samples file: {args.samples}")
+    print(f"  Total samples: {len(all_data)}")
+    print(f"  Limit per model: {limit}")
+    print(f"  Models to evaluate: {len(EVAL_MODELS)}")
+    for m in EVAL_MODELS:
+        print(f"    - {m}")
+    print(f"{'='*60}\n")
+
+    for model_name in EVAL_MODELS:
+        print(f"\n{'='*60}")
+        print(f"Evaluating model: {model_name}")
+        print(f"{'='*60}")
+        
+        output_path = get_output_path_for_model(model_name, args.output)
+        
+        try:
+            todo_ids, results = get_task_list(all_data, output_path, limit, model_name)
+            
+            if todo_ids:
+                await process_samples(todo_ids, all_data, results, output_path, model_name)
+            
+            print(f"✓ Completed model: {model_name}")
+        except Exception as e:
+            print(f"✗ Error with model {model_name}: {e}")
+            traceback.print_exc()
+            continue
     
-    print("\nDone.")
+    print(f"\n{'='*60}")
+    print("All models evaluated. Done.")
+    print(f"{'='*60}")
 
 if __name__ == "__main__":
     asyncio.run(main())

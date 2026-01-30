@@ -32,4 +32,20 @@ You have a limited, but reasonable number of steps. If the information is missin
 - State clearly: **"I verified that the information is missing"** or **"the requested information does not exist"** or **"I can't find the information"**.
 - Do not make up information - failing to find the answer is better than making it up.
 - Call `explain` to show what you checked (the "journey to nowhere").
+
+## Example Workflow
+
+**Question**: "Who directed the movie that Tom Hanks starred in during 1994?"
+
+**Step 1 - Explore**: Use the search tool to find "Tom Hanks" → finds the actor entity
+
+**Step 2 - Inspect**: Use the inspect tool on Tom Hanks → shows his movies including "Forrest Gump (1994)"
+
+**Step 3 - Follow relation**: Use the inspect tool on Forrest Gump → shows the director is Robert Zemeckis
+
+**Step 4 - Cite**: Use the cite tool to formally cite the fact: Forrest Gump's director is Robert Zemeckis
+
+**Step 5 - Explain**: Use the explain tool, referencing your citation from step 4 in your answer
+
+**Step 6 - Answer**: "Robert Zemeckis directed it ([Source](link-from-cite-tool))."
 """

@@ -605,6 +605,7 @@ dependencies = [
     { name = "rdflib" },
     { name = "requests" },
     { name = "scikit-learn" },
+    { name = "scipy" },
 ]
 
 [package.metadata]
@@ -617,6 +618,7 @@ requires-dist = [
     { name = "rdflib" },
     { name = "requests" },
     { name = "scikit-learn", specifier = ">=1.8.0" },
+    { name = "scipy", specifier = ">=1.15.0" },
 ]
 
 [[package]]
