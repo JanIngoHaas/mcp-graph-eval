@@ -31,8 +31,8 @@ def generate_sample():
     }
 
 def main():
-    seed(395234)
-    num_samples = 100
+    seed(3952356)
+    num_samples = 250
     print(f"Generating {num_samples} samples...")
     samples = []
     qtype_counts = Counter()

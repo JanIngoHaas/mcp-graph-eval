@@ -43,7 +43,7 @@ You have a limited, but reasonable number of steps. If the information is missin
 
 **Step 3 - Follow relation**: Use the inspect tool on Forrest Gump → shows the director is Robert Zemeckis
 
-**Step 4 - Cite**: Use the cite tool to formally cite the fact: Forrest Gump's director is Robert Zemeckis
+**Step 4 - Cite**: Use the cite tool to formally cite the fact from step 3: Forrest Gump's director is Robert Zemeckis
 
 **Step 5 - Explain**: Use the explain tool, referencing your citation from step 4 in your answer
 

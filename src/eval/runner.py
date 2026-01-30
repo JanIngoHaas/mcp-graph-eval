@@ -3,6 +3,7 @@ import asyncio
 import argparse
 import os
 import traceback
+import time
 import Levenshtein
 from typing import List, Dict, Any, Set, Tuple
 from datetime import datetime
@@ -15,131 +16,19 @@ from src.eval.prompts import get_agent_system_prompt
 
 EVAL_CONCURRENCY = int(os.getenv("EVAL_CONCURRENCY", "1"))
 
-# --- Configurable List of Models to Evaluate ---
+# --- Models that fit into 24GB of VRAM ---
 EVAL_MODELS = [
-    "lfm2.5-1.2b-thinking",
-    "mistralai/ministral-3-14b-reasoning",
-    # Add more models here as needed
+    "qwen/qwen3-4b-thinking-2507", # 8bit quant - tiny (lower)
+    "qwen/qwen3-8b", # 8bit quant - tiny (upper)
+    "ministral-3-14b-instruct-2512", #8bit quant - small (lower)
+    "devstral-small-2-24b-instruct-2512", #4bit quant UD - small (upper) 
 ]
 
-# --- Metrics Calculation ---
+# --- Models where you need at least 120GB VRAM for ---
+# EVAL_MODELS = [
+#     ""
+# ]
 
-def calculate_triple_f1(gold_triples: List[Dict], predicted_triples: List[Dict]) -> Tuple[float, float, float]:
-    """
-    Calculates Precision, Recall, and F1 for triples.
-    Triples are normalized to (subject, predicate, object) strings for comparison.
-    """
-    def get_all_triples(t_list):
-        all_triples = set()
-        for t in t_list:
-            subj = t.get("subject")
-            pred = t.get("predicate")
-            obj = t.get("object")
-            if subj:
-                all_triples.add((str(subj), str(pred), str(obj)))
-            elif "ttl" in t:
-                for s, p, o in extract_triples_from_subgraph(t["ttl"]):
-                    all_triples.add((str(s), str(p), str(o)))
-        return all_triples
-
-    gold_set = get_all_triples(gold_triples)
-    pred_set = get_all_triples(predicted_triples)
-
-    tp = len(gold_set.intersection(pred_set))
-    fp = len(pred_set) - tp
-    fn = len(gold_set) - tp
-
-    precision = tp / (tp + fp) if (tp + fp) > 0 else 0.0
-    recall = tp / (tp + fn) if (tp + fn) > 0 else 0.0
-    
-    if precision + recall == 0:
-        f1 = 0.0
-    else:
-        f1 = 2 * (precision * recall) / (precision + recall)
-
-    return precision, recall, f1
-
-def calculate_trace_similarity(gold_trace: List[Dict], predicted_trace: List[Dict]) -> float:
-    """
-    Calculates a similarity score (0-1) between the gold usage trace and the predicted trace.
-    Aligns steps fundamentally by Tool Name (with inspect==fact rule) and then compares arguments.
-    """
-    if not gold_trace and not predicted_trace:
-        return 1.0
-    if not gold_trace or not predicted_trace:
-        return 0.0
-
-    # 1. Normalize Tool Names
-    def normalize_tool_name(tool: str) -> str:
-        if tool == "inspect": return "fact"
-        return tool
-
-    # Simple approach: Longest Common Subsequence logic or similar alignment.
-    # Given the sequential nature, we can iterate and look for best matches window-wise or just simple alignment.
-    # For robustness, let's just do a greedy best-match for each gold step in the predicted trace order? 
-    # Or strict sequence alignment?
-    # Let's use Levenshtein distance on a "stringified" representation of the trace for a quick robust metric,
-    # OR step-by-step comparison.
-    
-    # Step-by-step approach is more interpretable.
-    
-    score_sum = 0.0
-    matches = 0
-    
-    # We will try to find the "best matching step" in the predicted trace for each gold step.
-    # This ignores order slightly but allows for inserted/deleted steps by the agent.
-    # BUT, to capture "Flow", strict order matters? 
-    # Let's stick to the user's suggestion: "first check tool name... then syntactic similarity"
-    
-    # Let's map gold steps to predicted steps (greedy).
-    used_pred_indices = set()
-    
-    for g_step in gold_trace:
-        g_tool = normalize_tool_name(g_step.get("tool", ""))
-        best_step_score = 0.0
-        best_pred_idx = -1
-        
-        for i, p_step in enumerate(predicted_trace):
-            if i in used_pred_indices: continue
-            
-            p_tool = normalize_tool_name(p_step.get("tool", ""))
-            
-            if g_tool == p_tool:
-                # Calculate Detailed Argument Similarity
-                # We serialize the arguments (excluding 'tool') to string
-                def get_args_str(step):
-                    return " ".join([f"{k}:{v}" for k, v in sorted(step.items()) if k not in ("tool", "explanation_key", "limit")]) # exclude internal keys and limit
-                
-                g_args = get_args_str(g_step)
-                p_args = get_args_str(p_step)
-                
-                # Levenshtein Ratio: 0 to 1
-                sim = Levenshtein.ratio(g_args, p_args)
-                
-                # Base score for matching tool is high? Or just use the arg similarity as the step score?
-                # If args are totally different, maybe it shouldn't match.
-                # Let's say: if tool matches, score is 0.5 + 0.5 * arg_sim
-                current_score = 0.5 + (0.5 * sim)
-                
-                if current_score > best_step_score:
-                    best_step_score = current_score
-                    best_pred_idx = i
-        
-        if best_pred_idx != -1:
-            score_sum += best_step_score
-            used_pred_indices.add(best_pred_idx)
-            matches += 1
-            
-    # Normalize by max length to penalize missing steps or extra hallucinations?
-    # Or just by gold length (Recall-focused trace similarity)?
-    # Let's use max(len_gold, len_pred) to valid total similarity.
-    max_len = max(len(gold_trace), len(predicted_trace))
-    final_score = score_sum / max_len if max_len > 0 else 0.0
-    
-    return final_score
-
-
-# --- Main Runner ---
 
 # --- Runner Helpers ---
 
@@ -156,6 +45,41 @@ def load_json(path: str) -> List:
 def save_json(path: str, data: List):
     with open(path, "w") as f:
         json.dump(data, f, indent=2)
+
+def _normalize_usage(usage: Dict[str, Any]) -> Dict[str, int]:
+    if not isinstance(usage, dict):
+        return {}
+    input_tokens = usage.get("input_tokens", usage.get("prompt_tokens"))
+    output_tokens = usage.get("output_tokens", usage.get("completion_tokens"))
+    total_tokens = usage.get("total_tokens", usage.get("total"))
+    if total_tokens is None and input_tokens is not None and output_tokens is not None:
+        total_tokens = input_tokens + output_tokens
+    normalized: Dict[str, int] = {}
+    if input_tokens is not None:
+        normalized["input_tokens"] = int(input_tokens)
+    if output_tokens is not None:
+        normalized["output_tokens"] = int(output_tokens)
+    if total_tokens is not None:
+        normalized["total_tokens"] = int(total_tokens)
+    return normalized
+
+def _summarize_token_usage(entries: List[Dict[str, Any]]) -> Dict[str, int]:
+    totals: Dict[str, int] = {}
+    found = False
+    for entry in entries:
+        raw = entry.get("usage") or entry.get("token_usage") or {}
+        if isinstance(raw, list):
+            raw_list = raw
+        else:
+            raw_list = [raw]
+        for item in raw_list:
+            usage = _normalize_usage(item)
+            if not usage:
+                continue
+            found = True
+            for key, value in usage.items():
+                totals[key] = totals.get(key, 0) + value
+    return totals if found else {}
 
 def get_task_list(data: List, output_path: str, limit: int, model_name: str) -> Tuple[List[int], Dict]:
     """Determine which sample IDs need to be processed, prioritizing unfinished ones."""
@@ -174,9 +98,13 @@ def get_task_list(data: List, output_path: str, limit: int, model_name: str) -> 
 
                 "prompt": get_agent_system_prompt(),
                 "created_at": datetime.now().isoformat(),
+                "token_usage": {}
             },
             "output": []
         }
+
+    existing_results.setdefault("metadata", {})
+    existing_results["metadata"]["token_usage"] = _summarize_token_usage(existing_results.get("output", []))
 
     processed_ids = {r["id"] for r in existing_results.get("output", []) if "id" in r}
     
@@ -211,6 +139,7 @@ async def process_single_sample(
     """Processes a single sample through the evaluation pipeline."""
     async with semaphore:
         print(f"--- Starting Sample {idx} ---")
+        start_time = time.perf_counter()
         gold_trace = sample.get("trace", [])
         
         try:
@@ -227,7 +156,8 @@ async def process_single_sample(
                 },
                 "received": {"triples": [], "trace": []},
                 "answer": None,
-                "error": None
+                "error": None,
+                "usage": []
             }
 
             # 2. Answer question via agent
@@ -237,6 +167,7 @@ async def process_single_sample(
                 "trace": res.explanation_data
             }
             entry["answer"] = res.answer
+            entry["usage"] = res.token_usage
             print(f"--- Finished Sample {idx} (Received {len(res.citations_data)} triples) ---")
             
         except Exception as e:
@@ -248,14 +179,20 @@ async def process_single_sample(
                 "expected": {"triples": [], "trace": gold_trace},
                 "received": {"triples": [], "trace": []},
                 "answer": None,
-                "error": str(e)
+                "error": str(e),
+                "usage": []
             }
             print(f"--- Error on Sample {idx}: {e} ---")
+        finally:
+            elapsed = time.perf_counter() - start_time
+            entry["elapsed_s"] = elapsed
 
         # 3. Thread-safe incremental save
         async with lock:
             results["output"].append(entry)
             results["output"].sort(key=lambda x: x.get("id", 0))
+            results.setdefault("metadata", {})
+            results["metadata"]["token_usage"] = _summarize_token_usage(results["output"])
             save_json(output_path, results)
 
 async def process_samples(todo_ids: List[int], all_data: List[Dict], results: Dict, output_path: str, model_name: str):

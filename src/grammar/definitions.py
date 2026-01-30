@@ -7,8 +7,8 @@ def root():
     return Choice(
         (Rule_direct(), 0.25),
         (Rule_forward_hop(), 0.25),
-        (Rule_impossible(), 0.25),
-        (Rule_query_builder(), 0.25)
+        (Rule_impossible(), 0.15),
+        (Rule_query_builder(), 0.45)
     )
 
 def Rule_impossible():
