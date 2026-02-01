@@ -95,7 +95,7 @@ class LangChainAdapter(AgentAdapter):
                 inputs = {"messages": [HumanMessage(content=question)]}
                 result = await agent.ainvoke(
                     inputs,
-                    config={"recursion_limit": 50, "callbacks": [token_handler]},
+                    config={"recursion_limit": 30, "callbacks": [token_handler]},
                 )
 
                 # 4. Extract answer

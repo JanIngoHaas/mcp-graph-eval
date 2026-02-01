@@ -16,19 +16,17 @@ from src.eval.prompts import get_agent_system_prompt
 
 EVAL_CONCURRENCY = int(os.getenv("EVAL_CONCURRENCY", "1"))
 
-# --- Models that fit into 24GB of VRAM ---
+# --- Models ---
 EVAL_MODELS = [
-    "qwen/qwen3-4b-thinking-2507", # 8bit quant - tiny (lower)
-    "qwen/qwen3-8b", # 8bit quant - tiny (upper)
-    "ministral-3-14b-instruct-2512", #8bit quant - small (lower)
-    "devstral-small-2-24b-instruct-2512", #4bit quant UD - small (upper) 
+    "qwen3:4b-instruct-2507-q8_0", # 8bit quant - tiny (lower)
+    "qwen3:8b-q8_0", # 8bit quant - small (lower)
+    "ministral-3:14b-instruct-2512-q8_0", #8bit quant - small (upper)
+    "devstral-small-2:24b-instruct-2512-q8_0", #8bit quant - medium (lower) 
+    "nemotron-3-nano:30b-a3b-q8_0", #8bit quant - medium (upper)
+    "glm-4.7-flash:q8_0", #8bit quant - medium (upper)
+    # "gpt-oss:120b", # native - big
+    # "devstral-2:123b" # 4bit - big
 ]
-
-# --- Models where you need at least 120GB VRAM for ---
-# EVAL_MODELS = [
-#     ""
-# ]
-
 
 # --- Runner Helpers ---
 
