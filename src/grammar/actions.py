@@ -82,9 +82,10 @@ class QueryBuilderState:
     anchor_entity: Optional[WorkingEntity] = None
 
 
-def _peek(data: dict) -> Optional[WorkingEntity]:
+def _peek(data: dict) -> WorkingEntity:
     stack = data.get("s_entities")
-    return stack[-1] if stack else None
+    if not stack: raise ValueError("Focal stack is empty")
+    return stack[-1]
 
 # --- Oracle Functions ---
 
@@ -104,7 +105,7 @@ def sel_hoppable_entity(data: dict):
 def gen_random_facts(min_facts: int = 1, max_facts: int = 3):
     """Factory that returns an action sampling [min_facts, max_facts] for the focal entity."""
     def _gen_facts_logic(data: dict) -> Any:
-        ent: EntityNode = _peek(data)
+        ent: WorkingEntity = _peek(data)
         if not ent: raise RetrySignal("No focal entity to sample facts from")
 
         s = get_sampler()
@@ -344,6 +345,7 @@ def qb_filter_generator(prob_deep: Optional[float] = None):
         # Decide on filter depth (direct vs 1-hop)
         is_deep = random.random() < p_deep
         existing_paths = {f["path_uri"] for f in qb.filters}
+        print(f"Existing paths: {existing_paths}")
 
         if is_deep:
             # 1-Hop Filter: ent -> p1 -> ent2 -> p2 -> val
@@ -387,7 +389,7 @@ def qb_filter_generator(prob_deep: Optional[float] = None):
 
             qb.filters.append({
                 "path_uri": f"{p1.uri} -> {p2.uri}",
-                "path_display": f"{p1.label}.{p2.label}",
+                "path_display": f"{p1.label}->{p2.label}",
                 "operator": op,
                 "value": val_str,
                 "type": "deep",
@@ -405,6 +407,7 @@ def qb_filter_generator(prob_deep: Optional[float] = None):
             if not candidates:
                  raise RetrySignal(f"No unique properties left for filter on {ent.label}")
 
+            print(candidates)
             p1 = random.choice(candidates)
             if not p1.values: 
                 raise RetrySignal(f"Property {p1.label} on {ent.label} has no values")
@@ -413,7 +416,7 @@ def qb_filter_generator(prob_deep: Optional[float] = None):
             op, val_str = resolve_operator_and_value(val_term)
             
             qb.filters.append({
-                "path_uri": f"{p1.uri}",
+                "path_uri": p1.uri,
                 "path_display": p1.label,
                 "operator": op,
                 "value": val_str,
@@ -470,6 +473,7 @@ def qb_finalize_question(data: dict):
     )
 
     # Optional: inspecting a sample instance of the root type is allowed.
+    # That's probably not really necessary...
     if qb.anchor_entity is not None:
         _append_trace(
             data,

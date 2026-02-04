@@ -49,10 +49,7 @@ class LangChainAdapter(AgentAdapter):
         
         model_kwargs = {}
         llm_kwargs = {}
-
         if LLM_IS_DETERMINISTIC:
-            # If the backend supports it, keep a fixed seed.
-            model_kwargs["seed"] = 0
             if LLM_TOP_K is not None:
                 model_kwargs["top_k"] = LLM_TOP_K
             llm_kwargs = {
@@ -62,12 +59,14 @@ class LangChainAdapter(AgentAdapter):
                 "max_tokens": LLM_MAX_TOKENS,
                 "frequency_penalty": LLM_FREQUENCY_PENALTY,
                 "presence_penalty": LLM_PRESENCE_PENALTY,
-                "model_kwargs": model_kwargs,
             }
+        
+        llm_kwargs["model_kwargs"] = model_kwargs
 
         self.llm = ChatOpenAI(
             model=self.model_name,
-            api_key=LLM_API_KEY,
+            seed=0,
+	        api_key=LLM_API_KEY,
             base_url=LLM_BASE_URL,
             **llm_kwargs,
         )
@@ -102,13 +101,13 @@ class LangChainAdapter(AgentAdapter):
                     tool.handle_tool_error = True
 
                 # 2. Create Agent using LangGraph with system prompt
-                agent = create_agent(model=self.llm, tools=tools)
+                agent = create_agent(model=self.llm, tools=tools, system_prompt=self.system_prompt)
 
                 # 3. Invoke Agent with a step limit to prevent infinite loops
                 token_handler = TokenUsageCallback()
                 trace_handler = LiveTraceCallback()
                 result = await agent.ainvoke(
-                    {"messages": [SystemMessage(content=self.system_prompt), HumanMessage(content=question)]},
+                    {"messages": [HumanMessage(content=question)]},
                     config={"recursion_limit": 50, "callbacks": [token_handler, trace_handler]},
                 )
 

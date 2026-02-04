@@ -223,7 +223,7 @@ def compose_qb_question(
     nl_filters = []
     for f in filters:
         # Better path humanization for deep filters: "hasProcedureStep.stepOrder" -> "procedure step's step order"
-        parts = f["path_display"].split(".")
+        parts = f["path_display"].split("->")
         if len(parts) > 1:
             p_label = f"{_clean_label(parts[0])}'s {_clean_label(parts[1])}"
         else:

@@ -26,7 +26,9 @@ EVAL_MODELS = [
     # "glm-4.7-flash:q8_0", #4bit quant - medium (upper)
     # "gpt-oss:120b", # native - big
     # "devstral-2:123b" # 4bit - big
-    "kimi-k2.5:cloud"
+    # "kimi-k2.5:cloud",
+    "glm-4.7:cloud"
+
 ]
 
 # --- Runner Helpers ---

@@ -195,8 +195,12 @@ class OntologySampler:
 
     def get_entity_properties(self, entity_uri: URIRef) -> List[PropertyNode]:
         """Returns all properties (data and object) outgoing from this entity."""
-        return self.get_entity_data_properties(entity_uri) + self.get_entity_object_properties(entity_uri)
-
+        l1 = self.get_entity_data_properties(entity_uri)
+        l2 = self.get_entity_object_properties(entity_uri)
+        full = l1 + l2
+        # Now we dedupe
+        return list({p.uri: p for p in full}.values())
+    
     def get_entity_data_properties(self, entity_uri: URIRef) -> List[PropertyNode]:
         """Properties pointing to Literals or 'dead-end' IRIs."""
         return self._discover_properties(entity_uri, "out", "isLiteral(?o) || (isIRI(?o) && NOT EXISTS { ?o ?p2 ?o2 })", PropertyRange.DATATYPE)

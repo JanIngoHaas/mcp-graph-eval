@@ -61,7 +61,9 @@ async def execute_trace_ground_truth(trace: List[Dict], mcp_client: MultiServerM
                 
                 # 3. Handle citation logic for explainable tools
                 content = "".join([c.text for c in res.content if hasattr(c, "text")])
-                match = re.search(r"Citation Key: ([a-f0-9\-]{36})", content)
+                
+                # Match word-word-word-word format citation keys
+                match = re.search(r"Citation Key: ([a-z]+(?:-[a-z]+)+)", content)
                 
                 if match:
                     citation_key = match.group(1)
