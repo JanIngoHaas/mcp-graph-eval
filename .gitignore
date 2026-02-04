@@ -9,4 +9,5 @@ wheels/
 # Virtual environments
 .venv
 *hypmol.*
+*checkpoint*.ttl
 .env

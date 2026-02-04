@@ -18,7 +18,17 @@ from scipy import stats
 from .metrics import (
     compute_combined_score,
     CombinedScore,
+    TraceScore,
+    TripleScore,
 )
+
+
+def _extract_explain_success(received_trace: list) -> bool | None:
+    """Return success flag from explain object if present."""
+    for item in received_trace or []:
+        if isinstance(item, dict) and "success" in item:
+            return item.get("success")
+    return None
 
 
 def evaluate_single_item(item: dict, alpha: float) -> dict:
@@ -44,6 +54,40 @@ def evaluate_single_item(item: dict, alpha: float) -> dict:
         received_triples=received_triples,
         alpha=alpha
     )
+
+    # Special handling for impossible questions:
+    # - explain must set success=false
+    # - citations are optional and ignored for correctness
+    if qtype == "impossible":
+        success_flag = _extract_explain_success(received_trace)
+        if success_flag is not False:
+            score = CombinedScore(
+                trace_score=TraceScore(precision=0.0, recall=0.0, f1=0.0, step_details=[]),
+                triple_score=TripleScore(
+                    precision=0.0,
+                    recall=0.0,
+                    f1=0.0,
+                    matched=0,
+                    expected_count=0,
+                    received_count=len(received_triples),
+                ),
+                combined_f1=0.0,
+                alpha=alpha,
+            )
+        else:
+            score = CombinedScore(
+                trace_score=score.trace_score,
+                triple_score=TripleScore(
+                    precision=1.0,
+                    recall=1.0,
+                    f1=1.0,
+                    matched=0,
+                    expected_count=0,
+                    received_count=len(received_triples),
+                ),
+                combined_f1=alpha * score.trace_score.f1 + (1 - alpha) * 1.0,
+                alpha=alpha,
+            )
     
     return {
         'id': question_id,
@@ -270,7 +314,7 @@ def print_full_report(evaluation: dict, input_file: Path):
     print("-" * 80)
     print()
     
-    print("  Trace Evaluation (LCS-based, order-sensitive)")
+    print("  Trace Evaluation (order-agnostic, required/optional matching)")
     print_table(
         headers=["Metric", "Mean", "Std Dev"],
         rows=[

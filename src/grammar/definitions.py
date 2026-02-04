@@ -1,14 +1,71 @@
-from src.vm.core import Rule, Choice, MANY, APPLY, Push, Pop, Literal, Retry
+import math
+from typing import Dict, Iterable, Tuple
+
+from src.vm.core import Rule, MANY, APPLY, Retry, Repeat
 import src.grammar.actions as ops
 
 # -- GRAMMAR RULES --
 
-def root():
-    return Choice(
-        (Rule_direct(), 0.25),
-        (Rule_forward_hop(), 0.25),
-        (Rule_impossible(), 0.15),
-        (Rule_query_builder(), 0.45)
+_DEFAULT_QTYPE_WEIGHTS: Tuple[Tuple[str, float], ...] = (
+    ("query_builder", 0.3),
+    ("direct", 0.25),
+    ("hop", 0.25),
+    ("impossible", 0.2),
+)
+
+_QB_PROJECTION_MIN = 1
+_QB_PROJECTION_MAX = 3
+
+
+# Inlined reset keys (lists + scalar state)
+RESET_KEYS = [
+    "nl",
+    "trace",
+    "s_entities",
+    "s_facts",
+    "answer_triples",
+    "qtype",
+    "qb",
+]
+
+def compute_qtype_targets(total_amount: int, weights: Iterable[Tuple[str, float]]) -> Dict[str, int]:
+    if total_amount <= 0:
+        raise ValueError("total_amount must be positive")
+
+    items = list(weights)
+    if not items:
+        raise ValueError("weights must be non-empty")
+
+    targets: Dict[str, int] = {}
+    for qtype, weight in items:
+        targets[qtype] = int(math.ceil(total_amount * weight))
+
+    return targets
+
+def collect_sample(data: dict):
+    if data.get("samples") is None:
+        data["samples"] = []
+    question = "".join(data.get("nl") or [])
+    data["samples"].append({
+        "question": question,
+        "trace": data.get("trace") or [],
+        "qtype": data.get("qtype"),
+    })
+
+def sample(rule_node):
+    return Rule(
+        rule_node,
+        APPLY(collect_sample, access=["samples", "nl", "trace", "qtype"]),
+    )
+
+def root(total_amount: int = 150, qtype_weights: Dict[str, float] | None = None):
+    weights = qtype_weights or dict(_DEFAULT_QTYPE_WEIGHTS)
+    targets = compute_qtype_targets(total_amount, weights.items())
+    return Rule(
+        Repeat(sample(Rule_query_builder()), count=targets["query_builder"], reset_keys=RESET_KEYS),
+        Repeat(sample(Rule_direct()), count=targets["direct"], reset_keys=RESET_KEYS),
+        Repeat(sample(Rule_forward_hop()), count=targets["hop"], reset_keys=RESET_KEYS),
+        Repeat(sample(Rule_impossible()), count=targets["impossible"], reset_keys=RESET_KEYS),
     )
 
 def Rule_impossible():
@@ -36,7 +93,8 @@ def Rule_query_builder(preamble=None):
         ),
         MANY(
             APPLY(ops.qb_projection_generator(), access=["qb"]),
-            probability=0.25
+            min_count=_QB_PROJECTION_MIN,
+            max_count=_QB_PROJECTION_MAX
         ),
         APPLY(ops.qb_finalize_question, access=["qb", "trace", "nl"]),
         APPLY(ops.add_type_to_question("query_builder"), access=["qtype"]),

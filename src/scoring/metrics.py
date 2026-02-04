@@ -14,6 +14,9 @@ import json
 from Levenshtein import distance as lev_distance
 from sklearn.metrics import precision_score, recall_score, f1_score
 
+RDFS_LABEL_URI = "http://www.w3.org/2000/01/rdf-schema#label"
+TRACE_MATCH_THRESHOLD = 0.8
+
 
 @dataclass
 class StepScore:
@@ -67,6 +70,87 @@ def normalized_levenshtein(s1: str, s2: str) -> float:
     return 1.0 - (distance / max_len)
 
 
+def _normalize_text(value: str) -> str:
+    """Normalize free-form text for comparison."""
+    return " ".join(value.strip().split()).lower()
+
+
+def _normalize_uri(value: str) -> str:
+    """Normalize a URI-ish string for comparison."""
+    return value.strip()
+
+
+def _normalize_path(value: str) -> str:
+    """Normalize a property path."""
+    if not value:
+        return ""
+    parts = [p.strip() for p in value.split("->") if p.strip()]
+    return "->".join(_normalize_uri(p) for p in parts)
+
+
+def _canonicalize_query_builder(params: dict) -> dict:
+    out: dict = {}
+
+    if "type" in params:
+        out["type"] = _normalize_uri(str(params["type"]))
+
+    if "project" in params:
+        proj = []
+        for item in params.get("project") or []:
+            if isinstance(item, str) and item.lower() in {"label", "rdfs:label"}:
+                proj.append(RDFS_LABEL_URI)
+            else:
+                proj.append(_normalize_uri(str(item)))
+        out["project"] = sorted(proj)
+
+    if "filters" in params:
+        filters = []
+        for f in params.get("filters") or []:
+            if not isinstance(f, dict):
+                continue
+            path = _normalize_path(str(f.get("path", "")))
+            op = str(f.get("operator", "")).lower()
+            val = str(f.get("value", "")).strip()
+            filters.append({"path": path, "operator": op, "value": val})
+        filters.sort(key=lambda x: (x["path"], x["operator"], x["value"]))
+        out["filters"] = filters
+
+    return out
+
+
+def _canonicalize_tool_params(tool: str, params: dict) -> dict:
+    """Canonicalize tool params for comparison."""
+    if not isinstance(params, dict):
+        return {}
+
+    if tool == "search":
+        if "query" in params:
+            return {"query": _normalize_text(str(params["query"]))}
+        return {}
+
+    if tool == "inspect":
+        if "uri" in params:
+            return {"uri": _normalize_uri(str(params["uri"]))}
+        return {}
+
+    if tool == "fact":
+        out = {}
+        for key in ["subject", "predicate", "object"]:
+            if key in params:
+                out[key] = _normalize_uri(str(params[key]))
+        return out
+
+    if tool == "query_builder":
+        return _canonicalize_query_builder(params)
+
+    if tool == "query":
+        if "query" in params:
+            return {"query": " ".join(str(params["query"]).split())}
+        return {}
+
+    return params
+
+
 def stringify_value(value: Any) -> str:
     """Convert any value to a comparable string."""
     if isinstance(value, str):
@@ -98,7 +182,7 @@ def compute_arg_similarity(params1: dict, params2: dict) -> float:
     all_keys = set(params1.keys()) | set(params2.keys())
     
     # Exclude metadata keys that don't affect semantics
-    exclude_keys = {'limit', 'offset', 'executionKey', 'expandProperties'}
+    exclude_keys = {'limit', 'offset', 'executionKey', 'expandProperties', 'required', 'is_answer'}
     relevant_keys = all_keys - exclude_keys
     
     if not relevant_keys:
@@ -137,6 +221,9 @@ def compute_step_similarity(expected_step: dict, received_step: dict) -> StepSco
     # Expected format varies by tool type
     expected_params = _extract_expected_params(expected_step)
     received_params = received_step.get('toolParams', {})
+
+    expected_params = _canonicalize_tool_params(expected_tool, expected_params)
+    received_params = _canonicalize_tool_params(received_tool, received_params)
     
     arg_sim = compute_arg_similarity(expected_params, received_params)
     
@@ -175,110 +262,79 @@ def _extract_expected_params(step: dict) -> dict:
 
 def compute_trace_f1(expected_trace: list[dict], received_trace: list[dict]) -> TraceScore:
     """
-    Compute F1 score for trace comparison using LCS (Longest Common Subsequence).
-    
-    This is ORDER-SENSITIVE: steps must appear in the correct order to count.
-    Extra steps in between are allowed but don't contribute to the match.
-    
-    Precision = LCS_score / len(received)  -- what fraction of received steps were useful
-    Recall    = LCS_score / len(expected)  -- what fraction of expected steps were covered
+    Compute F1 score for trace comparison using order-agnostic matching.
+
+    - Expected steps can be tagged with `required`.
+    - If any step is tagged, only required steps are scored.
+    - Extra received steps are ignored unless they are plausible matches.
     """
-    # Handle edge cases
-    if not expected_trace and not received_trace:
-        return TraceScore(precision=1.0, recall=1.0, f1=1.0, step_details=[])
-    if not expected_trace:
-        return TraceScore(precision=0.0, recall=1.0, f1=0.0, step_details=[])
-    if not received_trace:
-        return TraceScore(precision=1.0, recall=0.0, f1=0.0, step_details=[])
-    
+    # Expected steps include required + optional; recall is computed on required only.
+    expected_steps = list(expected_trace)
+    required_indices = {idx for idx, step in enumerate(expected_steps) if step.get("required")}
+
     # Extract steps from received trace (may be nested in explain objects)
     received_steps = _extract_received_steps(received_trace)
-    
+
+    # Handle edge cases
+    if not expected_steps:
+        return TraceScore(precision=0.0, recall=0.0, f1=0.0, step_details=[])
     if not received_steps:
-        return TraceScore(precision=1.0, recall=0.0, f1=0.0, step_details=[])
-    
-    n = len(expected_trace)
+        return TraceScore(precision=0.0, recall=0.0, f1=0.0, step_details=[])
+
+    n = len(expected_steps)
+    n_required = len(required_indices)
     m = len(received_steps)
-    
+
     # Build similarity matrix
     sim_matrix = []
     for i, recv_step in enumerate(received_steps):
         row = []
-        for j, exp_step in enumerate(expected_trace):
+        for j, exp_step in enumerate(expected_steps):
             score = compute_step_similarity(exp_step, recv_step)
             row.append(score.combined)
         sim_matrix.append(row)
-    
-    # Compute LCS with similarity scores using DP
-    # dp[i][j] = best cumulative score using received[:i] and expected[:j]
-    dp = [[0.0] * (n + 1) for _ in range(m + 1)]
-    backtrack = [[None] * (n + 1) for _ in range(m + 1)]
-    
-    for i in range(1, m + 1):
-        for j in range(1, n + 1):
-            sim = sim_matrix[i-1][j-1]
-            
-            # Option 1: Match received[i-1] with expected[j-1]
-            match_score = dp[i-1][j-1] + sim
-            
-            # Option 2: Skip received[i-1]
-            skip_recv = dp[i-1][j]
-            
-            # Option 3: Skip expected[j-1]
-            skip_exp = dp[i][j-1]
-            
-            # Take the best option (only match if similarity > 0)
-            if sim > 0 and match_score >= skip_recv and match_score >= skip_exp:
-                dp[i][j] = match_score
-                backtrack[i][j] = 'match'
-            elif skip_recv >= skip_exp:
-                dp[i][j] = skip_recv
-                backtrack[i][j] = 'skip_recv'
-            else:
-                dp[i][j] = skip_exp
-                backtrack[i][j] = 'skip_exp'
-    
-    lcs_score = dp[m][n]
-    
-    # Backtrack to find matched pairs
-    step_details = []
-    i, j = m, n
+
+    # Greedy maximum matching on similarity scores (order-agnostic)
+    pairs = []
+    for i in range(m):
+        for j in range(n):
+            sim = sim_matrix[i][j]
+            if sim >= TRACE_MATCH_THRESHOLD:
+                pairs.append((sim, i, j))
+    pairs.sort(reverse=True, key=lambda x: x[0])
+
+    matched_score = 0.0
+    matched_required_score = 0.0
+    used_recv = set()
+    used_exp = set()
     matched_pairs = []
-    
-    while i > 0 and j > 0:
-        if backtrack[i][j] == 'match':
-            matched_pairs.append({
-                'received_idx': i - 1,
-                'expected_idx': j - 1,
-                'received_tool': received_steps[i-1].get('toolName', ''),
-                'expected_tool': expected_trace[j-1].get('tool', ''),
-                'score': sim_matrix[i-1][j-1]
-            })
-            i -= 1
-            j -= 1
-        elif backtrack[i][j] == 'skip_recv':
-            i -= 1
-        else:
-            j -= 1
-    
-    matched_pairs.reverse()
-    step_details = matched_pairs
-    
-    # Compute precision and recall
-    # Precision: total matched score / number of received steps
-    precision = lcs_score / m if m > 0 else 0.0
-    
-    # Recall: total matched score / number of expected steps
-    recall = lcs_score / n if n > 0 else 0.0
-    
-    # Use sklearn-style F1 calculation: 2 * (p * r) / (p + r)
+
+    for sim, i, j in pairs:
+        if i in used_recv or j in used_exp:
+            continue
+        used_recv.add(i)
+        used_exp.add(j)
+        matched_score += sim
+        if j in required_indices:
+            matched_required_score += sim
+        matched_pairs.append({
+            "received_idx": i,
+            "expected_idx": j,
+            "received_tool": received_steps[i].get("toolName", ""),
+            "expected_tool": expected_steps[j].get("tool", ""),
+            "score": sim,
+        })
+
+    # Precision penalizes extra steps not matching expected (required or optional).
+    precision = matched_score / m if m > 0 else 0.0
+    recall = matched_required_score / n_required if n_required > 0 else 0.0
     f1 = (2 * precision * recall / (precision + recall)) if (precision + recall) > 0 else 0.0
-    
+
     return TraceScore(
         precision=precision,
         recall=recall,
         f1=f1,
-        step_details=step_details
+        step_details=matched_pairs,
     )
 
 

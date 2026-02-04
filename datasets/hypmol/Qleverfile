@@ -1,10 +1,10 @@
 [data]
 NAME         = hypmol
-GET_DATA_CMD = cat hypmol/ontology.ttl hypmol/synthetic_graph.ttl
+GET_DATA_CMD = cat ./ontology.ttl ./synthetic_graph.ttl
 DESCRIPTION  = "HypMol Synthetic Chemistry Graph"
 
 [index]
-INPUT_FILES     = hypmol/ontology.ttl hypmol/synthetic_graph.ttl
+INPUT_FILES     = ./ontology.ttl ./synthetic_graph.ttl
 CAT_INPUT_FILES = cat ${INPUT_FILES}
 
 [server]

@@ -8,7 +8,7 @@ import Levenshtein
 from typing import List, Dict, Any, Set, Tuple
 from datetime import datetime
 
-from src.eval.langchain_adapter import LangChainAdapter
+from src.eval.langchain_adapter import LangChainAdapter, LLM_IS_DETERMINISTIC
 from src.eval.harness import AgentResult
 from src.eval.ground_truth import execute_trace_ground_truth
 from src.eval.ground_truth import extract_triples_from_subgraph
@@ -18,14 +18,15 @@ EVAL_CONCURRENCY = int(os.getenv("EVAL_CONCURRENCY", "1"))
 
 # --- Models ---
 EVAL_MODELS = [
-    "qwen3:4b-instruct-2507-q8_0", # 8bit quant - tiny (lower)
-    "qwen3:8b-q8_0", # 8bit quant - small (lower)
-    "ministral-3:14b-instruct-2512-q8_0", #8bit quant - small (upper)
-    "devstral-small-2:24b-instruct-2512-q8_0", #8bit quant - medium (lower) 
-    "nemotron-3-nano:30b-a3b-q8_0", #8bit quant - medium (upper)
-    "glm-4.7-flash:q8_0", #8bit quant - medium (upper)
+    # "qwen3:4b-instruct-2507-q8_0", # 8bit quant - tiny (lower)
+    # "qwen3:8b-q8_0", # 8bit quant - small (lower)
+    # "ministral-3:14b", #8bit quant - small (upper)
+    # "devstral-small-2:24b", #8bit quant - medium (lower) 
+    # "nemotron-3-nano:30b", #4bit quant - medium (upper)
+    # "glm-4.7-flash:q8_0", #4bit quant - medium (upper)
     # "gpt-oss:120b", # native - big
     # "devstral-2:123b" # 4bit - big
+    "kimi-k2.5:cloud"
 ]
 
 # --- Runner Helpers ---
@@ -95,6 +96,7 @@ def get_task_list(data: List, output_path: str, limit: int, model_name: str) -> 
                 "model": model_name,
 
                 "prompt": get_agent_system_prompt(),
+                "deterministic": LLM_IS_DETERMINISTIC,
                 "created_at": datetime.now().isoformat(),
                 "token_usage": {}
             },
@@ -166,6 +168,10 @@ async def process_single_sample(
             }
             entry["answer"] = res.answer
             entry["usage"] = res.token_usage
+            if res.answer is not None:
+                print("--- Model Answer ---")
+                print(res.answer)
+                print("--- End Model Answer ---")
             print(f"--- Finished Sample {idx} (Received {len(res.citations_data)} triples) ---")
             
         except Exception as e:
@@ -231,6 +237,7 @@ async def main():
     if not all_data:
         print(f"Error: No data found in {args.samples}")
         return
+
 
     limit = len(all_data) if args.limit is None else args.limit
     

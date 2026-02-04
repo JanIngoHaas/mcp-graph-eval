@@ -10,7 +10,7 @@ for organic chemistry synthesis. It includes:
 """
 
 from typing import List, Optional, Literal, get_args
-from datetime import date
+from datetime import date, datetime
 from pydantic import BaseModel, Field, create_model
 
 # ==========================================
@@ -32,7 +32,7 @@ class Person(BaseModel):
     project_code_ref: str = Field(..., description="The project code this person belongs to")
 
 # ==========================================
-# PHASE 2: THE PANTRY (Ingredients)
+# PHASE 2: THE Ingredients
 # ==========================================
 
 class ChemicalDefinition(BaseModel):
@@ -42,7 +42,7 @@ class ChemicalDefinition(BaseModel):
     molar_mass: float = Field(..., description="Molar mass in g/mol")
 
 # ==========================================
-# PHASE 3: THE COOKBOOK (Usage)
+# PHASE 3: THE Usage
 # ==========================================
 
 class SubstanceUsage(BaseModel):
@@ -70,6 +70,9 @@ class Experiment(BaseModel):
     """Complete experimental procedure with materials and measurements."""
     name: str = Field(..., description="Title of the experiment")
     equipment: str = Field(..., description="List of equipment used")
+    experiment_designation: Optional[str] = Field(None, description="Designation or number identifying the experiment")
+    substitution_check: Optional[str] = Field(None, description="Documentation of chemical substitution assessment")
+    experiment_notes: Optional[str] = Field(None, description="Additional notes or observations about the experiment")
     procedures: List[ProcedureStep]
     substance_usages: List[SubstanceUsage]
     measurements: List[Measurement] = Field(default_factory=list)
@@ -79,9 +82,25 @@ class Dataset(BaseModel):
     """Dataset containing experimental data."""
     name: str = Field(..., description="Name of the dataset")
     description: str = Field(..., description="Description of the dataset content")
+    identifier: Optional[str] = Field(None, description="Dataset identifier")
+    license: Optional[str] = Field(None, description="License URL for the dataset")
+    date_published: Optional[datetime] = Field(None, description="Publication date (ISO 8601)")
+    date_created: Optional[datetime] = Field(None, description="Creation date (ISO 8601)")
+    date_modified: Optional[datetime] = Field(None, description="Last modified date (ISO 8601)")
+    encoding_format: Optional[str] = Field(None, description="Media type (MIME type)")
+    genre: Optional[str] = Field(None, description="Genre of the dataset")
+    keywords: Optional[List[str]] = Field(None, description="Keywords for the dataset")
+    text: Optional[str] = Field(None, description="Textual content/abstract")
+    url: Optional[str] = Field(None, description="URL for the dataset")
     # Reference to an existing Person in the World
     author_email_ref: str = Field(..., description="Email of the author (must match a generated person)")
     experiment: Experiment  # Exactly one experiment per dataset
+
+class Publication(BaseModel):
+    """Scientific publication metadata."""
+    title: str = Field(..., description="Title of the publication")
+    author_email_refs: List[str] = Field(..., description="List of author emails")
+    primary_author_email_ref: Optional[str] = Field(None, description="Primary author email")
 
 # ==========================================
 # WRAPPERS FOR GENERATION
@@ -102,6 +121,10 @@ class ChemicalList(BaseModel):
 class DatasetList(BaseModel):
     """List of datasets for batch generation."""
     items: List[Dataset]
+
+class PublicationList(BaseModel):
+    """List of publications for batch generation."""
+    items: List[Publication]
 
 # ==========================================
 # CONSTRAINED MODEL FACTORY
@@ -164,6 +187,9 @@ def create_constrained_dataset_models(
         'ConstrainedExperiment',
         name=(str, Field(..., description="Title of the experiment")),
         equipment=(str, Field(..., description="List of equipment used")),
+        experiment_designation=(Optional[str], Field(None, description="Designation or number identifying the experiment")),
+        substitution_check=(Optional[str], Field(None, description="Documentation of chemical substitution assessment")),
+        experiment_notes=(Optional[str], Field(None, description="Additional notes or observations about the experiment")),
         procedures=(List[ProcedureStep], Field(...)),
         substance_usages=(List[ConstrainedSubstanceUsage], Field(...)),
         measurements=(List[Measurement], Field(default_factory=list)),
@@ -176,6 +202,16 @@ def create_constrained_dataset_models(
         'ConstrainedDataset',
         name=(str, Field(..., description="Name of the dataset")),
         description=(str, Field(..., description="Description of the dataset content")),
+        identifier=(Optional[str], Field(None, description="Dataset identifier")),
+        license=(Optional[str], Field(None, description="License URL for the dataset")),
+        date_published=(Optional[datetime], Field(None, description="Publication date (ISO 8601)")),
+        date_created=(Optional[datetime], Field(None, description="Creation date (ISO 8601)")),
+        date_modified=(Optional[datetime], Field(None, description="Last modified date (ISO 8601)")),
+        encoding_format=(Optional[str], Field(None, description="Media type (MIME type)")),
+        genre=(Optional[str], Field(None, description="Genre of the dataset")),
+        keywords=(Optional[List[str]], Field(None, description="Keywords for the dataset")),
+        text=(Optional[str], Field(None, description="Textual content/abstract")),
+        url=(Optional[str], Field(None, description="URL for the dataset")),
         author_email_ref=(AuthorEmailLiteral, Field(..., description="Email of the author (must match a generated person)")),
         experiment=(ConstrainedExperiment, Field(..., description="Exactly one experiment per dataset")),
         __base__=BaseModel
@@ -189,3 +225,34 @@ def create_constrained_dataset_models(
     )
     
     return ConstrainedDatasetList, ConstrainedDataset, ConstrainedExperiment, ConstrainedSubstanceUsage
+
+def create_constrained_publication_models(available_authors: List[str]):
+    """
+    Creates Pydantic models with Literal constraints for publication authors.
+
+    Args:
+        available_authors: List of valid author emails (normalized keys)
+
+    Returns:
+        Tuple of (ConstrainedPublicationList, ConstrainedPublication)
+    """
+    if not available_authors:
+        raise ValueError("available_authors cannot be empty")
+
+    AuthorEmailLiteral = Literal[tuple(available_authors)]
+
+    ConstrainedPublication = create_model(
+        'ConstrainedPublication',
+        title=(str, Field(..., description="Title of the publication")),
+        author_email_refs=(List[AuthorEmailLiteral], Field(..., description="List of author emails")),
+        primary_author_email_ref=(Optional[AuthorEmailLiteral], Field(None, description="Primary author email")),
+        __base__=BaseModel
+    )
+
+    ConstrainedPublicationList = create_model(
+        'ConstrainedPublicationList',
+        items=(List[ConstrainedPublication], Field(...)),
+        __base__=BaseModel
+    )
+
+    return ConstrainedPublicationList, ConstrainedPublication

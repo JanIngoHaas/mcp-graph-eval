@@ -4,11 +4,12 @@ import traceback
 from typing import List, Dict, Any, Tuple
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
-from langchain_core.messages import HumanMessage
+from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_core.callbacks import BaseCallbackHandler
+from langchain_core.agents import AgentAction, AgentFinish
 from langchain_mcp_adapters.tools import load_mcp_tools
 from langchain_mcp_adapters.client import MultiServerMCPClient
-from langgraph.prebuilt import create_react_agent
+from langchain.agents import create_agent
 from src.eval.harness import AgentAdapter, AgentResult
 from src.eval.prompts import get_agent_system_prompt
 from src.eval.ground_truth import extract_citations
@@ -20,16 +21,23 @@ LLM_API_KEY = os.getenv("EVAL_LLM_API_KEY", "ollama")
 LLM_BASE_URL = os.getenv("EVAL_LLM_BASE_URL", "http://localhost:11434/v1")
 MCP_SERVER_URL = os.getenv("MCP_SERVER_URL", "http://localhost:3000/mcp")
 
-# Deterministic decoding (hardcoded)
-LLM_TEMPERATURE = 0.0
+def _parse_bool(value: str | None, default: bool = True) -> bool:
+    if value is None:
+        return default
+    return value.strip().lower() in {"1", "true", "yes", "y", "on"}
+
+# Determinism toggle (only switch we expose)
+LLM_IS_DETERMINISTIC = _parse_bool(os.getenv("EVAL_DETERMINISTIC"), default=True)
+
+# Hardcoded decoding defaults
+LLM_TEMPERATURE_DET = 0.0
+LLM_TEMPERATURE_NDET = 0.7
 LLM_TOP_P = 1.0
 LLM_MAX_TOKENS = None
 LLM_N = 1
-LLM_SEED = None
 LLM_FREQUENCY_PENALTY = 0.0
 LLM_PRESENCE_PENALTY = 0.0
 LLM_TOP_K = None
-
 class LangChainAdapter(AgentAdapter):
     """Adapter using LangChain ReAct/Tool-calling agent via LangGraph."""
 
@@ -40,22 +48,28 @@ class LangChainAdapter(AgentAdapter):
         self.model_name = model_name
         
         model_kwargs = {}
-        if LLM_SEED is not None:
-            model_kwargs["seed"] = LLM_SEED
-        if LLM_TOP_K is not None:
-            model_kwargs["top_k"] = LLM_TOP_K
+        llm_kwargs = {}
+
+        if LLM_IS_DETERMINISTIC:
+            # If the backend supports it, keep a fixed seed.
+            model_kwargs["seed"] = 0
+            if LLM_TOP_K is not None:
+                model_kwargs["top_k"] = LLM_TOP_K
+            llm_kwargs = {
+                "temperature": LLM_TEMPERATURE_DET,
+                "top_p": LLM_TOP_P,
+                "n": LLM_N,
+                "max_tokens": LLM_MAX_TOKENS,
+                "frequency_penalty": LLM_FREQUENCY_PENALTY,
+                "presence_penalty": LLM_PRESENCE_PENALTY,
+                "model_kwargs": model_kwargs,
+            }
 
         self.llm = ChatOpenAI(
             model=self.model_name,
             api_key=LLM_API_KEY,
             base_url=LLM_BASE_URL,
-            temperature=LLM_TEMPERATURE,
-            top_p=LLM_TOP_P,
-            n=LLM_N,
-            max_tokens=LLM_MAX_TOKENS,
-            frequency_penalty=LLM_FREQUENCY_PENALTY,
-            presence_penalty=LLM_PRESENCE_PENALTY,
-            model_kwargs=model_kwargs
+            **llm_kwargs,
         )
 
         self.client = MultiServerMCPClient({
@@ -88,14 +102,14 @@ class LangChainAdapter(AgentAdapter):
                     tool.handle_tool_error = True
 
                 # 2. Create Agent using LangGraph with system prompt
-                agent = create_react_agent(self.llm, tools=tools, prompt=self.system_prompt)
+                agent = create_agent(model=self.llm, tools=tools)
 
                 # 3. Invoke Agent with a step limit to prevent infinite loops
                 token_handler = TokenUsageCallback()
-                inputs = {"messages": [HumanMessage(content=question)]}
+                trace_handler = LiveTraceCallback()
                 result = await agent.ainvoke(
-                    inputs,
-                    config={"recursion_limit": 30, "callbacks": [token_handler]},
+                    {"messages": [SystemMessage(content=self.system_prompt), HumanMessage(content=question)]},
+                    config={"recursion_limit": 50, "callbacks": [token_handler, trace_handler]},
                 )
 
                 # 4. Extract answer
@@ -165,3 +179,60 @@ class TokenUsageCallback(BaseCallbackHandler):
 
     def get_usage(self) -> List[Dict[str, Any]]:
         return self._entries
+
+
+class LiveTraceCallback(BaseCallbackHandler):
+    def __init__(self) -> None:
+        self._step = 0
+
+    def _bump(self, label: str) -> None:
+        self._step += 1
+        print(f"[LiveTrace] {self._step:02d} {label}")
+
+    def _format_tool_input_full(self, payload: Any) -> str:
+        if isinstance(payload, str):
+            return payload[:400] + "..." if len(payload) > 400 else payload
+        try:
+            if isinstance(payload, dict) or isinstance(payload, list):
+                text = json.dumps(payload, ensure_ascii=True)
+                return text[:400] + "..." if len(text) > 400 else text
+            text = json.dumps(payload, ensure_ascii=True)
+            return text[:400] + "..." if len(text) > 400 else text
+        except Exception:
+            text = str(payload)
+            return text[:400] + "..." if len(text) > 400 else text
+
+    def _summarize_output(self, output: Any) -> str:
+        text = str(output)
+        return text[:200] + "..." if len(text) > 200 else text
+
+    def on_llm_start(self, serialized, prompts, **kwargs) -> None:
+        self._bump("LLM start")
+
+    def on_llm_end(self, response, **kwargs) -> None:
+        try:
+            generations = getattr(response, "generations", []) or []
+            for gen_list in generations:
+                for gen in gen_list:
+                    msg = getattr(gen, "message", None)
+                    content = getattr(msg, "content", None)
+                    if isinstance(content, str) and content.strip():
+                        text = content.strip()
+                        if len(text) > 300:
+                            text = text[:300] + "..."
+                        self._bump(f"Reasoning: {text}")
+        except Exception:
+            self._bump("Reasoning step completed")
+
+    def on_tool_start(self, serialized, input_str, **kwargs) -> None:
+        name = serialized.get("name") if isinstance(serialized, dict) else None
+        self._bump(f"Tool call: {name or 'unknown'} | {self._format_tool_input_full(input_str)}")
+
+    def on_tool_end(self, output, **kwargs) -> None:
+        self._bump(f"Tool result: {self._summarize_output(output)}")
+
+    def on_agent_action(self, action: AgentAction, **kwargs) -> None:
+        self._bump(f"Tool call: {action.tool} | {self._format_tool_input_full(action.tool_input)}")
+
+    def on_agent_finish(self, finish: AgentFinish, **kwargs) -> None:
+        self._bump("Agent finish")

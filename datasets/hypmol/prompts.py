@@ -7,6 +7,11 @@ making them easier to maintain, version, and improve.
 
 from typing import List
 
+GENERAL_INSTRUCTIONS = (
+    "IMPORTANT: Invent plausible, fictional entries; they do not need to correspond to real-world entities or facts. "
+    "Keep each field concise (short titles/names, brief descriptions)."
+)
+
 
 class PromptTemplates:
     """Collection of prompt templates for synthetic data generation."""
@@ -23,7 +28,9 @@ class PromptTemplates:
         Returns:
             Formatted prompt string
         """
-        return f"""Generate {n_projects} realistic and diverse research projects in the domain of {topic}.
+        return f"""{GENERAL_INSTRUCTIONS}
+
+Generate {n_projects} realistic-sounding and diverse research projects in the domain of {topic}.
 
 Each project should:
 - Have a unique, descriptive title that reflects cutting-edge research
@@ -46,7 +53,9 @@ Focus on creating variety in research approaches and methodologies."""
             Formatted prompt string
         """
         codes_str = ", ".join(project_codes)
-        return f"""Generate {n_people} realistic researchers with diverse backgrounds.
+        return f"""{GENERAL_INSTRUCTIONS}
+
+Generate {n_people} realistic-sounding researchers with diverse backgrounds.
 
 Each researcher should:
 - Have a realistic given name and family name from various cultural backgrounds
@@ -71,7 +80,9 @@ Ensure diversity in:
         Returns:
             Formatted prompt string
         """
-        return f"""Generate {n_chemicals} FICTIONAL but scientifically plausible chemical substances for {topic}.
+        return f"""{GENERAL_INSTRUCTIONS}
+
+Generate {n_chemicals} synthetic but scientifically plausible chemical substances for {topic}.
 
 IMPORTANT: These chemicals might not be real chemicals. Invent new chemicals that SOUND plausible but might not exist in reality.
 
@@ -128,7 +139,9 @@ REMEMBER: The goal is to create chemicals that sound real and follow chemical na
         if len(available_authors) > max_display:
             auth_str += f" ... and {len(available_authors) - max_display} more"
         
-        return f"""Generate {n_experiments} realistic experimental datasets for {topic}.
+        return f"""{GENERAL_INSTRUCTIONS}
+
+Generate {n_experiments} synthetic but plausible experimental datasets for {topic}.
 
 NOTE: The chemicals you'll reference are FICTIONAL but plausible substances. Treat them as real chemicals in your experimental descriptions.
 
@@ -138,11 +151,26 @@ Each dataset should contain EXACTLY ONE experiment with:
    - A descriptive name for the dataset
    - A detailed description of what the experiment investigates
    - Author email (MUST be from this list): {auth_str}
+   - Optional metadata (if you include these, use realistic values):
+     * identifier (short ID)
+     * license (URL)
+     * date_published (ISO 8601 date-time)
+     * date_created (ISO 8601 date-time)
+     * date_modified (ISO 8601 date-time)
+     * encoding_format (MIME type)
+     * genre (short category label)
+     * keywords (list of 3-8 short keywords)
+     * text (1-3 sentence abstract)
+     * url (URL)
 
 2. EXPERIMENT DETAILS:
    - A specific experiment name
    - Equipment used (be specific: e.g., "Round-bottom flask, reflux condenser, magnetic stirrer")
    - Optional: A balanced chemical reaction equation if applicable (using the fictional chemicals)
+   - Optional extras (if relevant):
+     * experiment_designation (short code like "EXP-017")
+     * substitution_check (short assessment note)
+     * experiment_notes (1-2 sentences)
 
 3. PROCEDURE STEPS (3-7 steps):
    - Clear, sequential steps describing the experimental procedure
@@ -160,12 +188,45 @@ Each dataset should contain EXACTLY ONE experiment with:
      * concentration: Concentration (e.g., "0.5 M", "10% w/v")
      * amount_of_substance: Moles (e.g., "0.1 mol")
 
+5. MEASUREMENTS (0-4, optional but recommended for realism):
+   - measurement_method (e.g., NMR, IR, MS, UV-Vis)
+   - measurement_result (short result summary)
+
 IMPORTANT CONSTRAINTS (enforced by schema):
 - Author email MUST be exactly one from the provided list
 - Chemical names MUST be exactly from the provided list (case-sensitive)
 - Each dataset has exactly ONE experiment (not a list)
 
 Make the experiments realistic, detailed, and scientifically plausible, treating the fictional chemicals as if they were real."""
+
+    @staticmethod
+    def generate_publications(n_publications: int, available_authors: List[str]) -> str:
+        """
+        Generate prompt for creating publication metadata.
+
+        Args:
+            n_publications: Number of publications to generate
+            available_authors: List of author emails that can be referenced
+
+        Returns:
+            Formatted prompt string
+        """
+        max_display = 50
+        auth_display = available_authors[:max_display]
+        auth_str = ", ".join(auth_display)
+        if len(available_authors) > max_display:
+            auth_str += f" ... and {len(available_authors) - max_display} more"
+
+        return f"""{GENERAL_INSTRUCTIONS}
+
+Generate {n_publications} realistic-sounding scientific publication entries.
+
+Each publication should include:
+- A concise, specific title (10-18 words)
+- 2 to 6 authors (email addresses) chosen ONLY from this list: {auth_str}
+- One primary author email (must be one of the listed authors)
+
+Ensure the titles are diverse, topical, and sound like journal articles."""
 
 
 # Convenience functions for backward compatibility
@@ -194,3 +255,11 @@ def get_experiments_prompt(
     return PromptTemplates.generate_experiments(
         n_experiments, topic, available_chemicals, available_authors
     )
+
+
+def get_publications_prompt(
+    n_publications: int,
+    available_authors: List[str]
+) -> str:
+    """Get the publications generation prompt."""
+    return PromptTemplates.generate_publications(n_publications, available_authors)

@@ -20,8 +20,15 @@ def get_sampler() -> OntologySampler:
         _sampler = OntologySampler()
     return _sampler
 
+def _append_trace(data: dict, step: dict, required: bool = False, is_answer: bool = False) -> None:
+    """Append a trace step with evaluation metadata."""
+    entry = dict(step)
+    entry["required"] = required
+    entry["is_answer"] = bool(is_answer)
+    data["trace"].append(entry)
+
 # --- Configuration ---
-PROB_QB_DEEP_FILTER = 0.3
+PROB_QB_DEEP_FILTER = 0.30
 
 # --- State Objects ---
 
@@ -122,14 +129,29 @@ def gen_random_facts(min_facts: int = 1, max_facts: int = 3):
             # Sample value
             val = random.choice(prop.values) if prop.values else s.sample_random_literal_value(prop.uri)
             
-            # Record trace
-            data["trace"].append({
-                "tool": "fact",
-                "subject": str(ent.uri),
-                "predicate": str(prop.uri),
-                "object": str(val),
+            # Optional: inspecting the property is allowed but not required.
+            _append_trace(
+                data,
+                {
+                    "tool": "inspect",
+                    "uri": str(prop.uri),
+                },
+                required=False,
+                is_answer=False,
+            )
 
-            })
+            # Record trace
+            _append_trace(
+                data,
+                {
+                    "tool": "fact",
+                    "subject": str(ent.uri),
+                    "predicate": str(prop.uri),
+                    "object": str(val),
+                },
+                required=True,
+                is_answer=True,
+            )
             
             # Accumulate for question generation
             data["s_facts"].append((prop, val))
@@ -156,12 +178,17 @@ def gen_impossible_fact(data: dict):
     impossible_prop = s.get_random_property_excluding(actual_uris)
     
     # 3. Record trace - the agent effectively "checks" this property
-    data["trace"].append({
-        "tool": "fact",
-        "subject": str(ent.uri),
-        "predicate": str(impossible_prop.uri),
-        "object": "_",
-    })
+    _append_trace(
+        data,
+        {
+            "tool": "fact",
+            "subject": str(ent.uri),
+            "predicate": str(impossible_prop.uri),
+            "object": "_",
+        },
+        required=True,
+        is_answer=False,
+    )
     
     # 4. Add to s_facts for question generation -> (prop, None) implies no value found
     data["s_facts"].append((impossible_prop, None))
@@ -189,12 +216,25 @@ def sel_hop_target(data: dict) -> Any:
             target_node = s.resolve_entity(target_uri)
 
             # Record the connection fact first
-            data["trace"].append({
-                "tool": "fact",
-                "subject": str(ent.uri),
-                "predicate": str(prop.uri),
-                "object": str(target_node.uri)
-            })
+            _append_trace(
+                data,
+                {
+                    "tool": "fact",
+                    "subject": str(ent.uri),
+                    "predicate": str(prop.uri),
+                    "object": str(target_node.uri),
+                },
+                required=True,
+                is_answer=False,
+            )
+
+            # Optional: inspecting the linking property is allowed.
+            _append_trace(
+                data,
+                {"tool": "inspect", "uri": str(prop.uri)},
+                required=False,
+                is_answer=False,
+            )
 
             # Avoid leaking the answer by not injecting the target label into the question.
             phrases = get_hop_phrases(prop.label)
@@ -212,7 +252,12 @@ def gen_search(data: dict):
     ent = _peek(data)
     if not ent: return
     
-    data["trace"].append({"tool": "search", "query": ent.label})
+    _append_trace(
+        data,
+        {"tool": "search", "query": ent.label},
+        required=True,
+        is_answer=False,
+    )
     
     phrases = get_search_phrases(ent.label)
     data["nl"].append(random.choice(phrases))
@@ -221,7 +266,12 @@ def gen_inspect(data: dict):
     """Records an inspect tool call in the trace. No NL added (internal agent step)."""
     ent = _peek(data)
     if not ent: return
-    data["trace"].append({"tool": "inspect", "uri": ent.uri})
+    _append_trace(
+        data,
+        {"tool": "inspect", "uri": ent.uri},
+        required=True,
+        is_answer=False,
+    )
 
 def add_type_to_question(qtype: str):
     def inner(data: dict):
@@ -306,15 +356,17 @@ def qb_filter_generator(prob_deep: Optional[float] = None):
             p1 = None
             p2 = None
             val_term = None
+            target_uri_selected = None
             
             for candidate_p1 in obj_props:
                 if not candidate_p1.values: continue
                 target_uri = random.choice(candidate_p1.values)
+                target_uri_selected = target_uri
                 target_props = s.get_entity_data_properties(target_uri)
                 
                 # Check for unique second hop
                 for candidate_p2 in target_props:
-                    path_uri = f"<{candidate_p1.uri}>.<{candidate_p2.uri}>"
+                    path_uri = f"{candidate_p1.uri} -> {candidate_p2.uri}"
                     if path_uri not in existing_paths:
                         p1, p2 = candidate_p1, candidate_p2
                         val_term = random.choice(p2.values)
@@ -325,12 +377,22 @@ def qb_filter_generator(prob_deep: Optional[float] = None):
                 raise RetrySignal("No unique deep paths found from anchor")
             
             op, val_str = resolve_operator_and_value(val_term)
+            target_type_uri = None
+            if target_uri_selected is not None:
+                try:
+                    target_entity = s.resolve_entity(target_uri_selected)
+                    target_type_uri = str(target_entity.type_uri)
+                except Exception:
+                    target_type_uri = None
+
             qb.filters.append({
-                "path_uri": f"<{p1.uri}>.<{p2.uri}>",
+                "path_uri": f"{p1.uri} -> {p2.uri}",
                 "path_display": f"{p1.label}.{p2.label}",
                 "operator": op,
                 "value": val_str,
-                "type": "deep"
+                "type": "deep",
+                "path_segments": [str(p1.uri), str(p2.uri)],
+                "target_type_uri": target_type_uri,
             })
             
         else:
@@ -339,7 +401,7 @@ def qb_filter_generator(prob_deep: Optional[float] = None):
             if not all_props: 
                 raise RetrySignal(f"Anchor {ent.label} has no properties for filter")
             
-            candidates = [p for p in all_props if f"<{p.uri}>" not in existing_paths]
+            candidates = [p for p in all_props if p.uri not in existing_paths]
             if not candidates:
                  raise RetrySignal(f"No unique properties left for filter on {ent.label}")
 
@@ -351,11 +413,12 @@ def qb_filter_generator(prob_deep: Optional[float] = None):
             op, val_str = resolve_operator_and_value(val_term)
             
             qb.filters.append({
-                "path_uri": f"<{p1.uri}>",
+                "path_uri": f"{p1.uri}",
                 "path_display": p1.label,
                 "operator": op,
                 "value": val_str,
-                "type": "direct"
+                "type": "direct",
+                "path_segments": [str(p1.uri)],
             })
     return _qb_add_filter_logic
 
@@ -392,9 +455,63 @@ def qb_finalize_question(data: dict):
     type_label = s.get_label(qb.root_type)
     
     # Agent searches for the class
-    data["trace"].append({"tool": "search", "query": type_label})
+    _append_trace(
+        data,
+        {"tool": "search", "query": type_label},
+        required=True,
+        is_answer=False,
+    )
     # Agent inspects the class to see properties
-    data["trace"].append({"tool": "inspect", "uri": str(qb.root_type)})
+    _append_trace(
+        data,
+        {"tool": "inspect", "uri": str(qb.root_type)},
+        required=True,
+        is_answer=False,
+    )
+
+    # Optional: inspecting a sample instance of the root type is allowed.
+    if qb.anchor_entity is not None:
+        _append_trace(
+            data,
+            {"tool": "inspect", "uri": str(qb.anchor_entity.uri)},
+            required=False,
+            is_answer=False,
+        )
+
+    # If filters require a hop, enforce inspection of the linking property,
+    # the target type, and the second-hop property.
+    for f in qb.filters:
+        segments = f.get("path_segments") or []
+        if len(segments) > 1:
+            _append_trace(
+                data,
+                {"tool": "inspect", "uri": segments[0]},
+                required=True,
+                is_answer=False,
+            )
+            target_type_uri = f.get("target_type_uri")
+            if target_type_uri:
+                _append_trace(
+                    data,
+                    {"tool": "inspect", "uri": target_type_uri},
+                    required=True,
+                    is_answer=False,
+                )
+            # Optional: inspecting the second-hop property is allowed but not required.
+            _append_trace(
+                data,
+                {"tool": "inspect", "uri": segments[1]},
+                required=False,
+                is_answer=False,
+            )
+        elif len(segments) == 1:
+            # Optional: inspecting direct filter property is allowed.
+            _append_trace(
+                data,
+                {"tool": "inspect", "uri": segments[0]},
+                required=False,
+                is_answer=False,
+            )
     
     # Discovery NL
     discovery_phrases = [
@@ -403,6 +520,17 @@ def qb_finalize_question(data: dict):
         f"I'm curious about the {type_label} entries. "
     ]
     data["nl"].append(random.choice(discovery_phrases))
+
+    # Optional: search for filter values (can help models discover entities/terms).
+    for f in qb.filters:
+        val = f.get("value")
+        if val:
+            _append_trace(
+                data,
+                {"tool": "search", "query": str(val)},
+                required=False,
+                is_answer=False,
+            )
 
     # 1. Build JSON Tool Call
     # Map our internal state to the tool schema
@@ -414,19 +542,28 @@ def qb_finalize_question(data: dict):
             "value": f["value"]
         })
     
-    # Add label projection if not present (users usually want labels)
-    from rdflib.namespace import RDFS
-    if RDFS.label not in qb.projects:
-        qb.projects.insert(0, RDFS.label)
-        
     tool_call = {
         "tool": "query_builder",
         "type": str(qb.root_type),
         "filters": tool_filters,
-        "project": [f"<{p}>" for p in qb.projects]
+        "project": [str(p) for p in qb.projects]
     }
     
-    data["trace"].append(tool_call)
+    _append_trace(
+        data,
+        tool_call,
+        required=True,
+        is_answer=True,
+    )
+
+    # Optional: inspecting projection properties is allowed but not required.
+    for proj in qb.projects:
+        _append_trace(
+            data,
+            {"tool": "inspect", "uri": str(proj)},
+            required=False,
+            is_answer=False,
+        )
     
     # 2. Build Natural Language Question
     root_type_node = TypeNode(qb.root_type, get_sampler().get_label(qb.root_type))

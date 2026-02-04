@@ -84,6 +84,36 @@ class MANY(Node):
             except RetrySignal:
                 pass
 
+class REPEAT(Node):
+    def __init__(
+        self,
+        node: Node,
+        count: int,
+        reset_keys: Optional[List[str]] = None,
+    ):
+        self.node = node
+        self.count = count
+        self.reset_keys = list(reset_keys) if reset_keys else []
+
+        if self.count is None:
+            raise Exception("REPEAT node requires 'count'")
+
+    def expand(self, vm: GeneratorVM) -> None:
+        num = self.count
+
+        snapshot = None
+        if self.reset_keys:
+            snapshot = {k: copy.deepcopy(vm.get_ctx(k)) for k in self.reset_keys}
+
+        for _ in range(num):
+            if snapshot is not None:
+                for key, value in snapshot.items():
+                    vm.set_ctx(key, copy.deepcopy(value))
+            self.node.expand(vm)
+            if snapshot is not None:
+                for key, value in snapshot.items():
+                    vm.set_ctx(key, copy.deepcopy(value))
+
 class RETRY(Node):
     """Retries a node N times, catching RetrySignal or Exception, with state rollback."""
     def __init__(self, node: Node, n: int = 3, name: str = None):
@@ -137,6 +167,17 @@ def Choice(*options: Tuple[Node, float]) -> Node:
 
 def Retry(node: Node, n: int = 5, name: str = None) -> Node:
     return RETRY(node, n=n, name=name)
+
+def Repeat(
+    node: Node,
+    count: int,
+    reset_keys: Optional[List[str]] = None,
+) -> Node:
+    return REPEAT(
+        node,
+        count=count,
+        reset_keys=reset_keys,
+    )
 
 def Push(target: str, read: str) -> Node:
     """Helper: appends/adds context[read] into context[target]."""

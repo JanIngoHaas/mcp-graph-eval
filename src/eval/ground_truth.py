@@ -43,15 +43,17 @@ async def execute_trace_ground_truth(trace: List[Dict], mcp_client: MultiServerM
     
     async with mcp_client.session("kg-mcp") as session:
         for tool_call in trace:
-            # FIXME: This assumes that query_builder and fact tool calls are only generated for the actual answer triples
-            # Otherwise, we would generate citations that SHOULD NOT be cited, but are rather internal to the explain tool.
-            # This is currently the case, but hacky.
+            if "is_answer" not in tool_call:
+                raise ValueError(f"Trace step missing is_answer: {tool_call}")
+
             tool_name = tool_call.get("tool")
             if tool_name not in ["query_builder", "fact"]:
                 continue
+            if not tool_call["is_answer"]:
+                continue
                 
             # 1. Prepare arguments (remove "tool" key)
-            args = {k: v for k, v in tool_call.items() if k != "tool"}
+            args = {k: v for k, v in tool_call.items() if k not in {"tool", "required", "is_answer"}}
             
             # 2. Call the tool
             try:
