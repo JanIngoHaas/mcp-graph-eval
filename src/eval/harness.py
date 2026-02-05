@@ -7,6 +7,7 @@ class AgentResult:
     citations_data: List[Dict[str, Any]] = field(default_factory=list)
     explanation_data: List[Dict[str, Any]] = field(default_factory=list)
     token_usage: List[Dict[str, Any]] = field(default_factory=list)
+    runtime_trace: List[Dict[str, Any]] = field(default_factory=list)
 
 class AgentAdapter:
     async def answer_question(self, question: str) -> AgentResult:

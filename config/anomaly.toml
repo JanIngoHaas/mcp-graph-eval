@@ -1,0 +1,19 @@
+# Anomaly detection config for manual review queue
+
+[anomalies.thresholds]
+trace_zero = 0.05
+triple_zero = 0.05
+trace_high = 0.6
+both_zero = 0.02
+trace_perfect = 0.99
+triple_perfect = 0.99
+
+[anomalies]
+ignore_qtypes = ["impossible"]
+
+[anomalies.rules]
+triple_pos_trace_zero = true
+trace_pos_triple_zero = true
+both_zero = true
+triple_perfect_trace_not = true
+literal_subject_mismatch = true

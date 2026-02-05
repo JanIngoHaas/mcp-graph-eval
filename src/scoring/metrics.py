@@ -10,13 +10,16 @@ This module provides:
 from dataclasses import dataclass
 from typing import Any
 import json
+import re
 
-from Levenshtein import distance as lev_distance
-from sklearn.metrics import precision_score, recall_score, f1_score
+from Levenshtein import distance as lev_distance, ratio as lev_ratio
 
 RDFS_LABEL_URI = "http://www.w3.org/2000/01/rdf-schema#label"
-TRACE_MATCH_THRESHOLD = 0.8
-
+TRACE_MATCH_THRESHOLD = 0.95
+_CITATION_TO_EXECUTION_RE = re.compile(
+    r"Citation Key:\s*([\w-]+).*?(?:Execution Key|Explanation Key):\s*([\w-]+)",
+    re.DOTALL,
+)
 
 @dataclass
 class StepScore:
@@ -65,9 +68,7 @@ def normalized_levenshtein(s1: str, s2: str) -> float:
     if not s1 or not s2:
         return 0.0
     
-    max_len = max(len(s1), len(s2))
-    distance = lev_distance(s1, s2)
-    return 1.0 - (distance / max_len)
+    return lev_ratio(s1, s2)
 
 
 def _normalize_text(value: str) -> str:
@@ -77,7 +78,12 @@ def _normalize_text(value: str) -> str:
 
 def _normalize_uri(value: str) -> str:
     """Normalize a URI-ish string for comparison."""
-    return value.strip()
+    cleaned = value.strip()
+    lowered = cleaned.lower()
+    # TODO: handle prefixes better...
+    if lowered in {"rdfs:label", "label"}:
+        return RDFS_LABEL_URI
+    return cleaned
 
 
 def _normalize_path(value: str) -> str:
@@ -95,12 +101,7 @@ def _canonicalize_query_builder(params: dict) -> dict:
         out["type"] = _normalize_uri(str(params["type"]))
 
     if "project" in params:
-        proj = []
-        for item in params.get("project") or []:
-            if isinstance(item, str) and item.lower() in {"label", "rdfs:label"}:
-                proj.append(RDFS_LABEL_URI)
-            else:
-                proj.append(_normalize_uri(str(item)))
+        proj = [_normalize_uri(str(item)) for item in (params.get("project") or [])]
         out["project"] = sorted(proj)
 
     if "filters" in params:
@@ -164,7 +165,7 @@ def stringify_value(value: Any) -> str:
         return str(value)
 
 
-def compute_arg_similarity(params1: dict, params2: dict) -> float:
+def compute_arg_similarity(tool: str, exp_params: dict, recv_params: dict) -> float:
     """
     Compute argument similarity using hierarchical key-value matching.
     
@@ -174,25 +175,89 @@ def compute_arg_similarity(params1: dict, params2: dict) -> float:
     
     Returns average similarity across all keys.
     """
-    if not params1 and not params2:
+    if not exp_params and not recv_params:
         return 1.0
-    if not params1 or not params2:
+    if not exp_params or not recv_params:
         return 0.0
     
-    all_keys = set(params1.keys()) | set(params2.keys())
+    all_keys = set(exp_params.keys()) | set(recv_params.keys())
     
-    # Exclude metadata keys that don't affect semantics
+    # Exclude metadata keys that don't affect semantics (partly -- limit and offset does, but ignored here)
     exclude_keys = {'limit', 'offset', 'executionKey', 'expandProperties', 'required', 'is_answer'}
     relevant_keys = all_keys - exclude_keys
     
     if not relevant_keys:
         return 1.0
+
+    # Specialize on the tool type
+    if tool == "search":
+        # We classify as successful if prefix match (either direction) - otherwise, lev
+        q1 = str(exp_params.get("query", "")).strip()
+        q2 = str(recv_params.get("query", "")).strip()
+        if not q1 or not q2:
+            return 0.0
+        if q1.startswith(q2) or q2.startswith(q1):
+            return 1.0
+        return normalized_levenshtein(q1, q2) 
     
+    if tool == "inspect": 
+        # We classify as successful if literally same URI
+        uri1 = str(exp_params.get("uri", "")).strip()
+        uri2 = str(recv_params.get("uri", "")).strip()
+        if not uri1 or not uri2:
+            return 0.0
+        if uri1 == uri2:
+            return 1.0
+        return normalized_levenshtein(uri1, uri2)
+    
+    if tool == "fact":
+        # We classify as successful if literals match
+        subject1 = str(exp_params.get("subject", "")).strip()
+        predicate1 = str(exp_params.get("predicate", "")).strip()
+        object1 = str(exp_params.get("object", "")).strip()
+        subject2 = str(recv_params.get("subject", "")).strip()
+        predicate2 = str(recv_params.get("predicate", "")).strip()
+        object2 = str(recv_params.get("object", "")).strip()
+        if not subject1 or not subject2 or not predicate1 or not predicate2 or not object1 or not object2:
+            return 0.0
+        if subject1 == subject2 and predicate1 == predicate2:
+            if object1 == "_" or (object1 == object2):
+                return 1.0            
+        return normalized_levenshtein(subject1, subject2)
+
+    if tool == "query_builder":
+
+        total_score = 0.0
+
+        # We classify query builder as successful if 
+        # 1. Same type (Uris must match exactly)
+        # 2. Same filters (args must match exactly)
+        # 3. Same project (URIs must match exactly)
+
+        # 1
+        if "type" in exp_params and "type" in recv_params:
+            if exp_params["type"].strip() == recv_params["type"].strip():
+                total_score += 1
+
+        # 2
+        if "filters" in exp_params and "filters" in recv_params:
+            val1 = stringify_value(exp_params["filters"])
+            val2 = stringify_value(recv_params["filters"])
+            total_score += normalized_levenshtein(val1, val2)
+
+        # 3
+        if "project" in exp_params and "project" in recv_params:
+            val1 = stringify_value(exp_params["project"])
+            val2 = stringify_value(recv_params["project"])
+            total_score += normalized_levenshtein(val1, val2)
+
+        return total_score / 3
+
     total_score = 0.0
     for key in relevant_keys:
-        if key in params1 and key in params2:
-            val1 = stringify_value(params1[key])
-            val2 = stringify_value(params2[key])
+        if key in exp_params and key in recv_params:
+            val1 = stringify_value(exp_params[key])
+            val2 = stringify_value(recv_params[key])
             total_score += normalized_levenshtein(val1, val2)
         # If key only in one, contributes 0
     
@@ -224,14 +289,47 @@ def compute_step_similarity(expected_step: dict, received_step: dict) -> StepSco
 
     expected_params = _canonicalize_tool_params(expected_tool, expected_params)
     received_params = _canonicalize_tool_params(received_tool, received_params)
-    
-    arg_sim = compute_arg_similarity(expected_params, received_params)
+
+    arg_sim = compute_arg_similarity(expected_tool, expected_params, received_params)
     
     return StepScore(
         tool_match=True,
         arg_similarity=arg_sim,
         combined=arg_sim  # Since tool matched, combined = arg_sim
     )
+
+
+def extract_cited_execution_keys(runtime_trace: list[dict]) -> set[str]:
+    """
+    Extract execution/explanation keys that immediately follow a citation key.
+    """
+    if not runtime_trace:
+        return set()
+
+    text = json.dumps(runtime_trace, default=str)
+    return {execution_key for _, execution_key in _CITATION_TO_EXECUTION_RE.findall(text)}
+
+
+def match_trace(expected_trace: list[dict], received_trace: list[dict]) -> dict[int, list[int]]:
+    """
+    Match received trace steps to expected steps.
+
+    Returns a mapping: received_idx -> [expected_idx, ...] for all matches.
+    A match is a tool+arg similarity >= TRACE_MATCH_THRESHOLD.
+    """
+    expected_steps = list(expected_trace)
+    received_steps = _extract_received_steps(received_trace)
+    matches: dict[int, list[int]] = {}
+
+    for r_idx, recv_step in enumerate(received_steps):
+        matched = []
+        for e_idx, exp_step in enumerate(expected_steps):
+            score = compute_step_similarity(exp_step, recv_step)
+            if score.combined >= TRACE_MATCH_THRESHOLD:
+                matched.append(e_idx)
+        if matched:
+            matches[r_idx] = matched
+    return matches
 
 
 def _extract_expected_params(step: dict) -> dict:
@@ -260,7 +358,11 @@ def _extract_expected_params(step: dict) -> dict:
     return params
 
 
-def compute_trace_f1(expected_trace: list[dict], received_trace: list[dict]) -> TraceScore:
+def compute_trace_f1(
+    expected_trace: list[dict],
+    received_trace: list[dict],
+    ignored_execution_keys: set[str] | None = None,
+) -> TraceScore:
     """
     Compute F1 score for trace comparison using order-agnostic matching.
 
@@ -268,67 +370,61 @@ def compute_trace_f1(expected_trace: list[dict], received_trace: list[dict]) -> 
     - If any step is tagged, only required steps are scored.
     - Extra received steps are ignored unless they are plausible matches.
     """
-    # Expected steps include required + optional; recall is computed on required only.
     expected_steps = list(expected_trace)
-    required_indices = {idx for idx, step in enumerate(expected_steps) if step.get("required")}
-
-    # Extract steps from received trace (may be nested in explain objects)
     received_steps = _extract_received_steps(received_trace)
+    ignored_execution_keys = ignored_execution_keys or set()
 
-    # Handle edge cases
-    if not expected_steps:
-        return TraceScore(precision=0.0, recall=0.0, f1=0.0, step_details=[])
-    if not received_steps:
+    if not expected_steps or not received_steps:
         return TraceScore(precision=0.0, recall=0.0, f1=0.0, step_details=[])
 
-    n = len(expected_steps)
-    n_required = len(required_indices)
-    m = len(received_steps)
+    required_indices = {
+        idx
+        for idx, step in enumerate(expected_steps)
+        if step.get("required") and not step.get("is_answer")
+    }
+    optional_indices = set(range(len(expected_steps))) - required_indices
 
-    # Build similarity matrix
-    sim_matrix = []
-    for i, recv_step in enumerate(received_steps):
-        row = []
-        for j, exp_step in enumerate(expected_steps):
-            score = compute_step_similarity(exp_step, recv_step)
-            row.append(score.combined)
-        sim_matrix.append(row)
+    matches = match_trace(expected_trace, received_trace)
+    matched_expected = {e_idx for e_list in matches.values() for e_idx in e_list}
 
-    # Greedy maximum matching on similarity scores (order-agnostic)
-    pairs = []
-    for i in range(m):
-        for j in range(n):
-            sim = sim_matrix[i][j]
-            if sim >= TRACE_MATCH_THRESHOLD:
-                pairs.append((sim, i, j))
-    pairs.sort(reverse=True, key=lambda x: x[0])
-
-    matched_score = 0.0
-    matched_required_score = 0.0
-    used_recv = set()
-    used_exp = set()
-    matched_pairs = []
-
-    for sim, i, j in pairs:
-        if i in used_recv or j in used_exp:
-            continue
-        used_recv.add(i)
-        used_exp.add(j)
-        matched_score += sim
-        if j in required_indices:
-            matched_required_score += sim
-        matched_pairs.append({
-            "received_idx": i,
-            "expected_idx": j,
-            "received_tool": received_steps[i].get("toolName", ""),
-            "expected_tool": expected_steps[j].get("tool", ""),
-            "score": sim,
-        })
-
-    # Precision penalizes extra steps not matching expected (required or optional).
-    precision = matched_score / m if m > 0 else 0.0
-    recall = matched_required_score / n_required if n_required > 0 else 0.0
+    optional_only_received = {
+        r_idx
+        for r_idx, exp_list in matches.items()
+        if exp_list and all(e_idx in optional_indices for e_idx in exp_list)
+    }
+    ignored_received = {
+        idx
+        for idx, step in enumerate(received_steps)
+        if step.get("executionKey") in ignored_execution_keys
+    } | optional_only_received
+    effective_received = len(received_steps) - len(ignored_received)
+    precision = len(
+        [
+            r_idx
+            for r_idx, exp_list in matches.items()
+            if r_idx not in ignored_received and any(e_idx in required_indices for e_idx in exp_list)
+        ]
+    ) / effective_received if effective_received else 0.0
+    matched_required = {
+        e_idx
+        for r_idx, exp_list in matches.items()
+        if r_idx not in ignored_received
+        for e_idx in exp_list
+        if e_idx in required_indices
+    }
+    recall = len(matched_required) / len(required_indices) if required_indices else 0.0
     f1 = (2 * precision * recall / (precision + recall)) if (precision + recall) > 0 else 0.0
+
+    matched_pairs = []
+    for r_idx, exp_list in matches.items():
+        for e_idx in exp_list:
+            matched_pairs.append({
+                "received_idx": r_idx,
+                "expected_idx": e_idx,
+                "received_tool": received_steps[r_idx].get("toolName", ""),
+                "expected_tool": expected_steps[e_idx].get("tool", ""),
+                "score": 1.0,
+            })
 
     return TraceScore(
         precision=precision,
@@ -364,48 +460,55 @@ def triple_to_tuple(triple: dict) -> tuple:
     )
 
 
+def match_triple(expected_triples: list[dict], received_triples: list[dict]) -> dict[int, list[int]]:
+    """
+    Match received triples to expected triples by exact tuple match.
+
+    Returns a mapping: received_idx -> [expected_idx, ...] for all matches.
+    """
+    expected_tuples = [triple_to_tuple(t) for t in expected_triples]
+    received_tuples = [triple_to_tuple(t) for t in received_triples]
+    matches: dict[int, list[int]] = {}
+
+    index_by_tuple: dict[tuple, list[int]] = {}
+    for idx, tup in enumerate(expected_tuples):
+        index_by_tuple.setdefault(tup, []).append(idx)
+
+    for r_idx, tup in enumerate(received_tuples):
+        exp_indices = index_by_tuple.get(tup)
+        if exp_indices:
+            matches[r_idx] = list(exp_indices)
+    return matches
+
+
 def compute_triple_f1(expected_triples: list[dict], received_triples: list[dict]) -> TripleScore:
     """
-    Compute F1 score for triple/citation comparison using sklearn.
-    
+    Compute F1 score for triple/citation comparison using exact matches.
+
     Uses exact matching on (subject, predicate, object) tuples.
-    Converts to binary classification: each unique triple is a class,
-    y_true = 1 if in expected, y_pred = 1 if in received.
     """
-    # Handle edge cases
     if not expected_triples and not received_triples:
         return TripleScore(precision=1.0, recall=1.0, f1=1.0, matched=0, expected_count=0, received_count=0)
     if not expected_triples:
         return TripleScore(precision=0.0, recall=1.0, f1=0.0, matched=0, expected_count=0, received_count=len(received_triples))
     if not received_triples:
         return TripleScore(precision=1.0, recall=0.0, f1=0.0, matched=0, expected_count=len(expected_triples), received_count=0)
-    
-    # Convert to sets of tuples
-    expected_set = {triple_to_tuple(t) for t in expected_triples}
-    received_set = {triple_to_tuple(t) for t in received_triples}
-    
-    # Find all unique triples (universe)
-    all_triples = list(expected_set | received_set)
-    
-    # Create binary vectors
-    y_true = [1 if t in expected_set else 0 for t in all_triples]
-    y_pred = [1 if t in received_set else 0 for t in all_triples]
-    
-    # Use sklearn for precision/recall/f1
-    # zero_division=1.0 handles case where there are no positive predictions
-    precision = precision_score(y_true, y_pred, zero_division=1.0)
-    recall = recall_score(y_true, y_pred, zero_division=1.0)
-    f1 = f1_score(y_true, y_pred, zero_division=1.0)
-    
-    matched_count = len(expected_set & received_set)
-    
+
+    matches = match_triple(expected_triples, received_triples)
+    matched_received = set(matches.keys())
+    matched_expected = {e_idx for e_list in matches.values() for e_idx in e_list}
+
+    precision = len(matched_received) / len(received_triples) if received_triples else 0.0
+    recall = len(matched_expected) / len(expected_triples) if expected_triples else 0.0
+    f1 = (2 * precision * recall / (precision + recall)) if (precision + recall) > 0 else 0.0
+
     return TripleScore(
         precision=precision,
         recall=recall,
         f1=f1,
-        matched=matched_count,
-        expected_count=len(expected_set),
-        received_count=len(received_set)
+        matched=len(matched_received),
+        expected_count=len(expected_triples),
+        received_count=len(received_triples),
     )
 
 
@@ -414,7 +517,8 @@ def compute_combined_score(
     received_trace: list[dict],
     expected_triples: list[dict],
     received_triples: list[dict],
-    alpha: float = 0.5
+    alpha: float = 0.5,
+    ignored_execution_keys: set[str] | None = None,
 ) -> CombinedScore:
     """
     Compute combined F1 score from trace and triple scores.
@@ -424,7 +528,7 @@ def compute_combined_score(
                0.5 = equal weight
                Lower = prioritize correct answers over methodology
     """
-    trace_score = compute_trace_f1(expected_trace, received_trace)
+    trace_score = compute_trace_f1(expected_trace, received_trace, ignored_execution_keys)
     triple_score = compute_triple_f1(expected_triples, received_triples)
     
     combined_f1 = alpha * trace_score.f1 + (1 - alpha) * triple_score.f1

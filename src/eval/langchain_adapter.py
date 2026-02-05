@@ -114,6 +114,7 @@ class LangChainAdapter(AgentAdapter):
                 # 4. Extract answer
                 answer = result["messages"][-1].content
                 token_usage = token_handler.get_usage()
+                runtime_trace = trace_handler.get_events()
 
                 # 5. Get raw citation and explanation data from resources
                 citations_data = []
@@ -136,7 +137,8 @@ class LangChainAdapter(AgentAdapter):
                     answer=answer,
                     citations_data=citations_data,
                     explanation_data=explanation_data,
-                    token_usage=token_usage
+                    token_usage=token_usage,
+                    runtime_trace=runtime_trace,
                 )
                 
         except Exception as e:
@@ -155,7 +157,8 @@ class LangChainAdapter(AgentAdapter):
                 answer=error_msg,
                 citations_data=[],
                 explanation_data=[],
-                token_usage=[]
+                token_usage=[],
+                runtime_trace=[],
             )
 
 class TokenUsageCallback(BaseCallbackHandler):
@@ -183,10 +186,27 @@ class TokenUsageCallback(BaseCallbackHandler):
 class LiveTraceCallback(BaseCallbackHandler):
     def __init__(self) -> None:
         self._step = 0
+        self._events: List[Dict[str, Any]] = []
 
     def _bump(self, label: str) -> None:
         self._step += 1
         print(f"[LiveTrace] {self._step:02d} {label}")
+
+    def _safe_value(self, value: Any) -> Any:
+        try:
+            json.dumps(value)
+            return value
+        except Exception:
+            return str(value)
+
+    def _record(self, event_type: str, **payload: Any) -> None:
+        event = {"step": self._step, "type": event_type}
+        for k, v in payload.items():
+            event[k] = self._safe_value(v)
+        self._events.append(event)
+
+    def get_events(self) -> List[Dict[str, Any]]:
+        return self._events
 
     def _format_tool_input_full(self, payload: Any) -> str:
         if isinstance(payload, str):
@@ -207,6 +227,7 @@ class LiveTraceCallback(BaseCallbackHandler):
 
     def on_llm_start(self, serialized, prompts, **kwargs) -> None:
         self._bump("LLM start")
+        self._record("llm_start", prompts=prompts, serialized=serialized)
 
     def on_llm_end(self, response, **kwargs) -> None:
         try:
@@ -215,6 +236,12 @@ class LiveTraceCallback(BaseCallbackHandler):
                 for gen in gen_list:
                     msg = getattr(gen, "message", None)
                     content = getattr(msg, "content", None)
+                    tool_calls = None
+                    if msg is not None:
+                        tool_calls = getattr(msg, "tool_calls", None)
+                        if tool_calls is None:
+                            tool_calls = getattr(msg, "additional_kwargs", {}).get("tool_calls")
+                    self._record("llm_end", content=content, tool_calls=tool_calls)
                     if isinstance(content, str) and content.strip():
                         text = content.strip()
                         if len(text) > 300:
@@ -225,13 +252,17 @@ class LiveTraceCallback(BaseCallbackHandler):
 
     def on_tool_start(self, serialized, input_str, **kwargs) -> None:
         name = serialized.get("name") if isinstance(serialized, dict) else None
+        self._record("tool_start", tool=name or "unknown", input=input_str, serialized=serialized)
         self._bump(f"Tool call: {name or 'unknown'} | {self._format_tool_input_full(input_str)}")
 
     def on_tool_end(self, output, **kwargs) -> None:
+        self._record("tool_end", output=output)
         self._bump(f"Tool result: {self._summarize_output(output)}")
 
     def on_agent_action(self, action: AgentAction, **kwargs) -> None:
+        self._record("agent_action", tool=action.tool, input=action.tool_input, log=action.log)
         self._bump(f"Tool call: {action.tool} | {self._format_tool_input_full(action.tool_input)}")
 
     def on_agent_finish(self, finish: AgentFinish, **kwargs) -> None:
+        self._record("agent_finish", return_values=finish.return_values, log=finish.log)
         self._bump("Agent finish")

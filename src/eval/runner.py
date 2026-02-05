@@ -7,12 +7,14 @@ import time
 import Levenshtein
 from typing import List, Dict, Any, Set, Tuple
 from datetime import datetime
+from pathlib import Path
 
 from src.eval.langchain_adapter import LangChainAdapter, LLM_IS_DETERMINISTIC
 from src.eval.harness import AgentResult
 from src.eval.ground_truth import execute_trace_ground_truth
 from src.eval.ground_truth import extract_triples_from_subgraph
 from src.eval.prompts import get_agent_system_prompt
+from src.scoring.io_utils import load_data, dump_data, infer_format
 
 EVAL_CONCURRENCY = int(os.getenv("EVAL_CONCURRENCY", "1"))
 
@@ -43,9 +45,6 @@ def load_json(path: str) -> List:
         print(f"Warning: Could not load {path}: {e}")
         return []
 
-def save_json(path: str, data: List):
-    with open(path, "w") as f:
-        json.dump(data, f, indent=2)
 
 def _normalize_usage(usage: Dict[str, Any]) -> Dict[str, int]:
     if not isinstance(usage, dict):
@@ -68,11 +67,19 @@ def _summarize_token_usage(entries: List[Dict[str, Any]]) -> Dict[str, int]:
     totals: Dict[str, int] = {}
     found = False
     for entry in entries:
+        raw_list: List[Dict[str, Any]] = []
         raw = entry.get("usage") or entry.get("token_usage") or {}
         if isinstance(raw, list):
-            raw_list = raw
-        else:
-            raw_list = [raw]
+            raw_list.extend(raw)
+        elif raw:
+            raw_list.append(raw)
+        if not raw_list:
+            for event in entry.get("runtime_trace") or []:
+                if isinstance(event, dict) and event.get("type") == "token_usage":
+                    usage = event.get("usage")
+                    if isinstance(usage, dict):
+                        raw_list.append(usage)
+
         for item in raw_list:
             usage = _normalize_usage(item)
             if not usage:
@@ -82,9 +89,42 @@ def _summarize_token_usage(entries: List[Dict[str, Any]]) -> Dict[str, int]:
                 totals[key] = totals.get(key, 0) + value
     return totals if found else {}
 
+
+def _merge_token_usage_into_trace(runtime_trace: List[Dict[str, Any]], token_usage: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    if not token_usage:
+        return list(runtime_trace or [])
+    trace = list(runtime_trace or [])
+    merged: List[Dict[str, Any]] = []
+    usage_index = 0
+    for event in trace:
+        merged.append(event)
+        if event.get("type") == "llm_end" and usage_index < len(token_usage):
+            merged.append({
+                "type": "token_usage",
+                "usage": token_usage[usage_index],
+                "step": event.get("step"),
+                "attached_to": "llm_end",
+            })
+            usage_index += 1
+    for leftover in token_usage[usage_index:]:
+        merged.append({
+            "type": "token_usage",
+            "usage": leftover,
+            "step": None,
+            "orphan": True,
+        })
+    return merged
+
 def get_task_list(data: List, output_path: str, limit: int, model_name: str) -> Tuple[List[int], Dict]:
     """Determine which sample IDs need to be processed, prioritizing unfinished ones."""
-    existing_results = load_json(output_path)
+    if os.path.exists(output_path):
+        try:
+            existing_results = load_data(Path(output_path))
+        except Exception as e:
+            print(f"Warning: Could not load {output_path}: {e}")
+            existing_results = {}
+    else:
+        existing_results = {}
     
     if existing_results:
         print(f"Loaded existing results from {output_path}.")
@@ -157,6 +197,7 @@ async def process_single_sample(
                     "trace": gold_trace
                 },
                 "received": {"triples": [], "trace": []},
+                "runtime_trace": [],
                 "answer": None,
                 "error": None,
                 "usage": []
@@ -168,6 +209,7 @@ async def process_single_sample(
                 "triples": res.citations_data,
                 "trace": res.explanation_data
             }
+            entry["runtime_trace"] = _merge_token_usage_into_trace(res.runtime_trace, res.token_usage)
             entry["answer"] = res.answer
             entry["usage"] = res.token_usage
             if res.answer is not None:
@@ -184,6 +226,7 @@ async def process_single_sample(
                 "qtype": sample.get("qtype", "unknown"),
                 "expected": {"triples": [], "trace": gold_trace},
                 "received": {"triples": [], "trace": []},
+                "runtime_trace": [],
                 "answer": None,
                 "error": str(e),
                 "usage": []
@@ -199,7 +242,8 @@ async def process_single_sample(
             results["output"].sort(key=lambda x: x.get("id", 0))
             results.setdefault("metadata", {})
             results["metadata"]["token_usage"] = _summarize_token_usage(results["output"])
-            save_json(output_path, results)
+            fmt = infer_format(Path(output_path), None)
+            dump_data(results, Path(output_path), fmt)
 
 async def process_samples(todo_ids: List[int], all_data: List[Dict], results: Dict, output_path: str, model_name: str):
     """Core evaluation loop with concurrency support."""
@@ -232,7 +276,7 @@ async def main():
     parser = argparse.ArgumentParser(description="Run kg-mcp evaluation and save raw results.")
     parser.add_argument("--samples", type=str, default="produced_samples.json", help="Path to samples JSON")
     parser.add_argument("--limit", type=int, default=None, help="Number of samples to run per model")
-    parser.add_argument("--output", type=str, default="eval_results.json", help="Base path for output files (model name will be appended)")
+    parser.add_argument("--output", type=str, default="eval_results.toml", help="Base path for output files (model name will be appended)")
     args = parser.parse_args()
 
     all_data = load_json(args.samples)

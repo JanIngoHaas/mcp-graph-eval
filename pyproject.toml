@@ -16,4 +16,5 @@ dependencies = [
     "scipy>=1.15.0",
     "pynput>=1.8.1",
     "qlever>=0.5.45",
+    "textual>=0.64.0",
 ]

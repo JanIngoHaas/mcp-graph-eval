@@ -3,6 +3,8 @@ Runner script for evaluating KG agent results.
 
 Usage:
     python -m src.scoring.runner <eval_results_file.json> [--alpha 0.5] [--output results.json]
+    python -m src.scoring.runner <eval_results_file.json> --output results.toml --format toml
+    python -m src.scoring.runner <eval_results_file.toml> --auto-only
 """
 
 import argparse
@@ -10,17 +12,17 @@ import json
 import sys
 from pathlib import Path
 from datetime import datetime
-from collections import defaultdict
-
-import numpy as np
-from scipy import stats
 
 from .metrics import (
     compute_combined_score,
     CombinedScore,
     TraceScore,
     TripleScore,
+    extract_cited_execution_keys,
 )
+from .anomalies import load_anomaly_config, detect_anomalies, AnomalyConfig
+from .io_utils import load_data, dump_data, infer_format
+from .summary import summarize_results
 
 
 def _extract_explain_success(received_trace: list) -> bool | None:
@@ -31,7 +33,11 @@ def _extract_explain_success(received_trace: list) -> bool | None:
     return None
 
 
-def evaluate_single_item(item: dict, alpha: float) -> dict:
+def evaluate_single_item(
+    item: dict,
+    alpha: float,
+    anomaly_config: AnomalyConfig,
+) -> dict:
     """Evaluate a single question/answer pair."""
     question_id = item.get('id', 'unknown')
     question = item.get('question', '')
@@ -47,12 +53,14 @@ def evaluate_single_item(item: dict, alpha: float) -> dict:
     # Use qtype from item; fall back to 'unknown' if missing
     qtype = item.get('qtype') or 'unknown'
     
+    ignored_execution_keys = extract_cited_execution_keys(item.get("runtime_trace", []))
     score = compute_combined_score(
         expected_trace=expected_trace,
         received_trace=received_trace,
         expected_triples=expected_triples,
         received_triples=received_triples,
-        alpha=alpha
+        alpha=alpha,
+        ignored_execution_keys=ignored_execution_keys,
     )
 
     # Special handling for impossible questions:
@@ -89,6 +97,17 @@ def evaluate_single_item(item: dict, alpha: float) -> dict:
                 alpha=alpha,
             )
     
+    anomaly_flags = detect_anomalies(
+        trace_f1=score.trace_score.f1,
+        triple_f1=score.triple_score.f1,
+        qtype=qtype,
+        config=anomaly_config,
+        expected_triples=expected_triples,
+        received_triples=received_triples,
+    )
+    anomaly_detected = bool(anomaly_flags)
+    exclude_reason = ",".join(anomaly_flags) if anomaly_flags else None
+
     return {
         'id': question_id,
         'question': question,
@@ -103,98 +122,39 @@ def evaluate_single_item(item: dict, alpha: float) -> dict:
         'triples_expected': score.triple_score.expected_count,
         'triples_received': score.triple_score.received_count,
         'combined_f1': score.combined_f1,
+        'auto_trace_f1': score.trace_score.f1,
+        'auto_triple_f1': score.triple_score.f1,
+        'auto_combined_f1': score.combined_f1,
+        'anomaly_flags': anomaly_flags,
+        'anomaly_detected': anomaly_detected,
+        'manual_review': {
+            'required': anomaly_detected,
+            'status': 'pending' if anomaly_detected else 'none',
+        },
+        'factored_in': not anomaly_detected,
+        'exclude_reason': exclude_reason if anomaly_detected else None,
+        'scoring_source': 'excluded' if anomaly_detected else 'auto',
         'error': item.get('error'),
     }
 
 
-def compute_group_stats(results: list[dict], metric_key: str) -> dict:
-    """Compute mean, std, and values for a metric."""
-    values = [r[metric_key] for r in results]
-    if not values:
-        return {'mean': 0.0, 'std': 0.0, 'n': 0, 'values': []}
-    return {
-        'mean': float(np.mean(values)),
-        'std': float(np.std(values, ddof=1)) if len(values) > 1 else 0.0,
-        'n': len(values),
-        'values': values
-    }
-
-
-def compute_ttest_pvalue(group1_values: list, group2_values: list) -> float:
-    """Compute two-sample t-test p-value."""
-    if len(group1_values) < 2 or len(group2_values) < 2:
-        return float('nan')
-    try:
-        _, pvalue = stats.ttest_ind(group1_values, group2_values, equal_var=False)
-        return float(pvalue)
-    except Exception:
-        return float('nan')
-
-
-def evaluate_results(data: dict, alpha: float) -> dict:
+def evaluate_results(data: dict, alpha: float, anomaly_config: AnomalyConfig, include_anomalies: bool) -> dict:
     """Evaluate all results in an eval file."""
     metadata = data.get('metadata', {})
     output = data.get('output', [])
     
     results = []
     for item in output:
-        result = evaluate_single_item(item, alpha)
+        result = evaluate_single_item(item, alpha, anomaly_config)
         results.append(result)
-    
-    # Group by question type
-    by_type = defaultdict(list)
-    for r in results:
-        by_type[r['qtype']].append(r)
-    
-    # Compute per-type stats
-    type_stats = {}
-    for qtype, type_results in by_type.items():
-        type_stats[qtype] = {
-            'count': len(type_results),
-            'trace_f1': compute_group_stats(type_results, 'trace_f1'),
-            'triple_f1': compute_group_stats(type_results, 'triple_f1'),
-            'combined_f1': compute_group_stats(type_results, 'combined_f1'),
-        }
-    
-    # Compute overall stats
-    overall_stats = {
-        'trace_f1': compute_group_stats(results, 'trace_f1'),
-        'trace_precision': compute_group_stats(results, 'trace_precision'),
-        'trace_recall': compute_group_stats(results, 'trace_recall'),
-        'triple_f1': compute_group_stats(results, 'triple_f1'),
-        'triple_precision': compute_group_stats(results, 'triple_precision'),
-        'triple_recall': compute_group_stats(results, 'triple_recall'),
-        'combined_f1': compute_group_stats(results, 'combined_f1'),
-    }
-    
-    # Compute p-values between question types (if we have two types)
-    pvalues = {}
-    qtypes = list(by_type.keys())
-    if len(qtypes) == 2:
-        t1, t2 = qtypes
-        for metric in ['trace_f1', 'triple_f1', 'combined_f1']:
-            vals1 = type_stats[t1][metric]['values']
-            vals2 = type_stats[t2][metric]['values']
-            pvalues[f'{metric}_{t1}_vs_{t2}'] = compute_ttest_pvalue(vals1, vals2)
-    
-    # Remove raw values from output (keep stats only)
-    for qtype in type_stats:
-        for metric in ['trace_f1', 'triple_f1', 'combined_f1']:
-            del type_stats[qtype][metric]['values']
-    for metric in overall_stats:
-        del overall_stats[metric]['values']
-    
+    summary = summarize_results(
+        results,
+        {**metadata, 'scoring_alpha': alpha},
+        include_anomalies,
+        compute_pvalues=True,
+    )
     return {
-        'metadata': {
-            **metadata,
-            'scoring_alpha': alpha,
-            'total_questions': len(results),
-        },
-        'summary': {
-            'overall': overall_stats,
-            'by_type': type_stats,
-            'pvalues': pvalues,
-        },
+        **summary,
         'per_question': results,
     }
 
@@ -242,6 +202,9 @@ def print_full_report(evaluation: dict, input_file: Path):
     print(f"  Model:          {metadata.get('model', 'unknown')}")
     print(f"  Created:        {metadata.get('created_at', 'unknown')}")
     print(f"  Questions:      {metadata.get('total_questions', 0)}")
+    print(f"  Factored:       {metadata.get('factored_questions', 0)}")
+    print(f"  Excluded:       {metadata.get('excluded_questions', 0)}")
+    print(f"  Manual Pending: {metadata.get('manual_review_pending', 0)}")
     print(f"  Alpha (weight): {metadata.get('scoring_alpha', 0.5)}")
     print()
     
@@ -250,8 +213,8 @@ def print_full_report(evaluation: dict, input_file: Path):
     print("-" * 80)
     print()
     
-    headers = ["ID", "Type", "Trace", "Triple", "Combined", "Question"]
-    col_widths = [4, 14, 8, 8, 10, 32]
+    headers = ["ID", "Type", "Trace", "Triple", "Combined", "Status", "Question"]
+    col_widths = [4, 14, 8, 8, 10, 38, 32]
     
     sep = "+" + "+".join("-" * w for w in col_widths) + "+"
     
@@ -265,16 +228,22 @@ def print_full_report(evaluation: dict, input_file: Path):
         if len(question) > 30:
             question = question[:27] + "..."
         
+        if not q.get('factored_in', True):
+            reason = q.get('exclude_reason') or 'unknown'
+            status = f"excluded (reasons: {reason})"
+        else:
+            status = q.get('scoring_source', 'auto')
         row = [
             str(q['id']),
             q['qtype'],
             f"{q['trace_f1']:.3f}",
             f"{q['triple_f1']:.3f}",
             f"{q['combined_f1']:.3f}",
+            status,
             question
         ]
         row_str = "|" + "|".join(
-            str(row[i]).center(col_widths[i]) if i < 5 else " " + str(row[i]).ljust(col_widths[i]-1) 
+            str(row[i]).center(col_widths[i]) if i < 6 else " " + str(row[i]).ljust(col_widths[i]-1)
             for i in range(len(row))
         ) + "|"
         print(row_str)
@@ -364,10 +333,37 @@ def main():
         help='Weight for trace score (0-1). Default: 0.5 (equal weight)'
     )
     parser.add_argument(
+        '--anomaly-config',
+        type=Path,
+        default=None,
+        help='Path to anomaly config (TOML or JSON)'
+    )
+    parser.add_argument(
+        '--include-anomalies',
+        action='store_true',
+        help='Include anomaly-flagged questions in summary stats'
+    )
+    parser.add_argument(
         '--output', '-o',
         type=Path,
         default=None,
-        help='Output file for JSON results (if not specified, prints to CLI)'
+        help='Output file for results (default: <input>.scored.<ext>)'
+    )
+    parser.add_argument(
+        '--format',
+        type=str,
+        default=None,
+        help='Output format: json or toml (defaults to inferred from output path)'
+    )
+    parser.add_argument(
+        '--auto-only',
+        action='store_true',
+        help='Skip manual review UI; auto scoring only'
+    )
+    parser.add_argument(
+        '--anomalies-only',
+        action='store_true',
+        help='Manual review UI shows anomalies only'
     )
     
     args = parser.parse_args()
@@ -377,19 +373,37 @@ def main():
         print(f"Error: File not found: {args.input_file}", file=sys.stderr)
         sys.exit(1)
     
-    with open(args.input_file, 'r', encoding='utf-8') as f:
-        data = json.load(f)
+    data = load_data(args.input_file)
     
+    anomaly_path = args.anomaly_config
+    if anomaly_path is None:
+        default_path = Path("config/anomaly.toml")
+        if default_path.exists():
+            anomaly_path = default_path
+    anomaly_config = load_anomaly_config(anomaly_path)
+
     # Evaluate
-    evaluation = evaluate_results(data, args.alpha)
+    evaluation = evaluate_results(data, args.alpha, anomaly_config, args.include_anomalies)
     
     # Output
-    if args.output:
-        with open(args.output, 'w', encoding='utf-8') as f:
-            json.dump(evaluation, f, indent=2)
-        print(f"Results saved to: {args.output}")
-    else:
-        print_full_report(evaluation, args.input_file)
+    output_path = args.output
+    if output_path is None:
+        suffix = args.input_file.suffix or ".toml"
+        output_path = args.input_file.with_name(f"{args.input_file.stem}.scored{suffix}")
+
+    out_format = infer_format(output_path, args.format)
+    dump_data(evaluation, output_path, out_format)
+    print(f"Results saved to: {output_path}")
+
+    if not args.auto_only:
+        from .manual_review import run_manual_review
+        run_manual_review(
+            scores_path=output_path,
+            eval_path=args.input_file,
+            output_path=output_path,
+            format_hint=args.format,
+            anomalies_only=args.anomalies_only,
+        )
 
 
 if __name__ == '__main__':
