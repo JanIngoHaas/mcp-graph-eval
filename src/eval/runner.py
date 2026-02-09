@@ -29,8 +29,10 @@ EVAL_MODELS = [
     # "gpt-oss:120b", # native - big
     # "devstral-2:123b" # 4bit - big
     # "kimi-k2.5:cloud",
-    "glm-4.7:cloud"
-
+    # "glm-4.7:cloud"
+    # "gemini-3-flash-preview:cloud"
+    # "devstral-2:123b-cloud"
+    "gpt-oss:120b-cloud"
 ]
 
 # --- Runner Helpers ---

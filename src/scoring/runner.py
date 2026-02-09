@@ -25,11 +25,27 @@ from .io_utils import load_data, dump_data, infer_format
 from .summary import summarize_results
 
 
-def _extract_explain_success(received_trace: list) -> bool | None:
-    """Return success flag from explain object if present."""
+def _coerce_bool(value: object) -> bool | None:
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, str):
+        lowered = value.strip().lower()
+        if lowered == "true":
+            return True
+        if lowered == "false":
+            return False
+    return None
+
+
+def _extract_explain_found(received_trace: list) -> bool | None:
+    """Return found flag from explain object if present (fallback: legacy success)."""
     for item in received_trace or []:
-        if isinstance(item, dict) and "success" in item:
-            return item.get("success")
+        if not isinstance(item, dict):
+            continue
+        if "found" in item:
+            return _coerce_bool(item.get("found"))
+        if "success" in item:
+            return _coerce_bool(item.get("success"))
     return None
 
 
@@ -64,11 +80,11 @@ def evaluate_single_item(
     )
 
     # Special handling for impossible questions:
-    # - explain must set success=false
+    # - explain must set found=false
     # - citations are optional and ignored for correctness
     if qtype == "impossible":
-        success_flag = _extract_explain_success(received_trace)
-        if success_flag is not False:
+        found_flag = _extract_explain_found(received_trace)
+        if found_flag is not False:
             score = CombinedScore(
                 trace_score=TraceScore(precision=0.0, recall=0.0, f1=0.0, step_details=[]),
                 triple_score=TripleScore(
@@ -100,10 +116,13 @@ def evaluate_single_item(
     anomaly_flags = detect_anomalies(
         trace_f1=score.trace_score.f1,
         triple_f1=score.triple_score.f1,
+        triple_precision=score.triple_score.precision,
+        triple_recall=score.triple_score.recall,
         qtype=qtype,
         config=anomaly_config,
         expected_triples=expected_triples,
         received_triples=received_triples,
+        explain_found=_extract_explain_found(received_trace),
     )
     anomaly_detected = bool(anomaly_flags)
     exclude_reason = ",".join(anomaly_flags) if anomaly_flags else None
@@ -122,7 +141,11 @@ def evaluate_single_item(
         'triples_expected': score.triple_score.expected_count,
         'triples_received': score.triple_score.received_count,
         'combined_f1': score.combined_f1,
+        'auto_trace_precision': score.trace_score.precision,
+        'auto_trace_recall': score.trace_score.recall,
         'auto_trace_f1': score.trace_score.f1,
+        'auto_triple_precision': score.triple_score.precision,
+        'auto_triple_recall': score.triple_score.recall,
         'auto_triple_f1': score.triple_score.f1,
         'auto_combined_f1': score.combined_f1,
         'anomaly_flags': anomaly_flags,
@@ -365,6 +388,18 @@ def main():
         action='store_true',
         help='Manual review UI shows anomalies only'
     )
+    parser.add_argument(
+        '--web-host',
+        type=str,
+        default='127.0.0.1',
+        help='Host for manual review web UI'
+    )
+    parser.add_argument(
+        '--web-port',
+        type=int,
+        default=5000,
+        help='Port for manual review web UI'
+    )
     
     args = parser.parse_args()
     
@@ -396,13 +431,26 @@ def main():
     print(f"Results saved to: {output_path}")
 
     if not args.auto_only:
-        from .manual_review import run_manual_review
-        run_manual_review(
+        try:
+            from .manual_review_web import run_manual_review_web
+        except ModuleNotFoundError as exc:
+            if exc.name not in {"flask", "markdown"}:
+                raise
+            print(
+                "Manual review web dependencies are missing (flask/markdown). "
+                "Install dependencies and retry.",
+                file=sys.stderr,
+            )
+            sys.exit(2)
+
+        run_manual_review_web(
             scores_path=output_path,
             eval_path=args.input_file,
             output_path=output_path,
             format_hint=args.format,
             anomalies_only=args.anomalies_only,
+            host=args.web_host,
+            port=args.web_port,
         )
 
 

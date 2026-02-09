@@ -5,11 +5,57 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 import json
+import re
 
 try:
     import tomllib
 except Exception:  # pragma: no cover
     tomllib = None
+
+try:
+    import tomlkit
+except Exception:  # pragma: no cover
+    tomlkit = None
+
+_SURROGATE_PAIR_RE = re.compile(
+    r"\\u([dD][89aAbB][0-9a-fA-F]{2})\\u([dD][c-fC-F][0-9a-fA-F]{2})"
+)
+_DROP = object()
+
+
+def _replace_surrogate_pair(match: re.Match[str]) -> str:
+    high = int(match.group(1), 16)
+    low = int(match.group(2), 16)
+    codepoint = 0x10000 + ((high - 0xD800) << 10) + (low - 0xDC00)
+    return f"\\U{codepoint:08X}"
+
+
+def _repair_toml_surrogate_escapes(text: str) -> str:
+    """Convert JSON-style UTF-16 surrogate pairs into TOML-valid \\U escapes."""
+    return _SURROGATE_PAIR_RE.sub(_replace_surrogate_pair, text)
+
+
+def _sanitize_for_toml(value: Any) -> Any:
+    """Recursively drop None values so TOML serialization can succeed."""
+    if value is None:
+        return _DROP
+    if isinstance(value, dict):
+        cleaned: dict[str, Any] = {}
+        for key, child in value.items():
+            child_clean = _sanitize_for_toml(child)
+            if child_clean is _DROP:
+                continue
+            cleaned[key] = child_clean
+        return cleaned
+    if isinstance(value, list):
+        cleaned_list: list[Any] = []
+        for child in value:
+            child_clean = _sanitize_for_toml(child)
+            if child_clean is _DROP:
+                continue
+            cleaned_list.append(child_clean)
+        return cleaned_list
+    return value
 
 
 def infer_format(path: Path, format_hint: str | None) -> str:
@@ -32,7 +78,16 @@ def load_data(path: Path) -> dict[str, Any]:
     if suffix in {".toml", ".tml"}:
         if tomllib is None:
             raise RuntimeError("tomllib not available to read TOML input")
-        return tomllib.loads(text)
+        try:
+            return tomllib.loads(text)
+        except tomllib.TOMLDecodeError as exc:
+            repaired = _repair_toml_surrogate_escapes(text)
+            if repaired == text:
+                raise
+            try:
+                return tomllib.loads(repaired)
+            except tomllib.TOMLDecodeError:
+                raise exc
     return json.loads(text)
 
 
@@ -42,82 +97,11 @@ def dump_data(data: dict[str, Any], path: Path, fmt: str) -> None:
         path.write_text(json.dumps(data, indent=2), encoding="utf-8")
         return
     if fmt == "toml":
-        path.write_text(toml_dumps(data), encoding="utf-8")
+        if tomlkit is None:
+            raise RuntimeError("tomlkit not available to write TOML output")
+        cleaned = _sanitize_for_toml(data)
+        if cleaned is _DROP:
+            cleaned = {}
+        path.write_text(tomlkit.dumps(cleaned), encoding="utf-8")
         return
     raise ValueError(f"Unsupported format: {fmt}")
-
-
-def toml_dumps(data: dict[str, Any]) -> str:
-    lines: list[str] = []
-    _dump_table(lines, [], data, emit_header=False)
-    return "\n".join(lines).rstrip() + "\n"
-
-
-def _is_scalar(value: Any) -> bool:
-    return isinstance(value, (str, int, float, bool))
-
-
-def _format_scalar(value: Any) -> str:
-    if isinstance(value, bool):
-        return "true" if value else "false"
-    if isinstance(value, (int, float)):
-        return repr(float(value)) if isinstance(value, float) else str(value)
-    if isinstance(value, str):
-        return json.dumps(value)
-    return json.dumps(str(value))
-
-
-def _format_key(key: str) -> str:
-    if key.replace("_", "").replace("-", "").isalnum():
-        return key
-    return json.dumps(key)
-
-
-def _format_array(values: list[Any]) -> str:
-    items = ", ".join(_format_scalar(v) for v in values)
-    return f"[{items}]"
-
-
-def _dump_table(lines: list[str], path: list[str], data: dict[str, Any], emit_header: bool = True) -> None:
-    if emit_header and path:
-        header = ".".join(_format_key(p) for p in path)
-        lines.append(f"[{header}]")
-    scalars: dict[str, Any] = {}
-    subtables: dict[str, dict[str, Any]] = {}
-    array_tables: dict[str, list[dict[str, Any]]] = {}
-
-    for key, value in data.items():
-        if value is None:
-            continue
-        if isinstance(value, dict):
-            subtables[key] = value
-        elif isinstance(value, list) and value and all(isinstance(v, dict) for v in value):
-            array_tables[key] = value  # type: ignore[assignment]
-        else:
-            scalars[key] = value
-
-    for key, value in scalars.items():
-        key_out = _format_key(key)
-        if isinstance(value, list):
-            if not value:
-                lines.append(f"{key_out} = []")
-            elif all(_is_scalar(v) for v in value):
-                lines.append(f"{key_out} = {_format_array(value)}")
-            else:
-                lines.append(f"{key_out} = {json.dumps(value)}")
-        else:
-            lines.append(f"{key_out} = {_format_scalar(value)}")
-
-    if scalars and (subtables or array_tables):
-        lines.append("")
-
-    for key, table in subtables.items():
-        _dump_table(lines, path + [key], table, emit_header=True)
-        lines.append("")
-
-    for key, tables in array_tables.items():
-        for table in tables:
-            header = ".".join(_format_key(p) for p in (path + [key]))
-            lines.append(f"[[{header}]]")
-            _dump_table(lines, path + [key], table, emit_header=False)
-            lines.append("")
