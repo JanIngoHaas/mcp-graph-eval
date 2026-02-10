@@ -1,0 +1,4237 @@
+[
+  {
+    "question": "I am currently checking the database for procedure step records and have a task for you. Find all procedure steps whose step description contains 'cyclobutyl\u2011palladium complex (catalyst)' and where the procedure date is '2025-08-25'. Then show me their step description, experimental observation.",
+    "trace": [
+      {
+        "tool": "query_builder",
+        "type": "https://hypmol.net/ProcedureStep",
+        "filters": [
+          {
+            "path": "https://hypmol.net/stepDescription",
+            "operator": "contains",
+            "value": "cyclobutyl\u2011palladium complex (catalyst)"
+          },
+          {
+            "path": "https://hypmol.net/procedureDate",
+            "operator": "=",
+            "value": "2025-08-25"
+          }
+        ],
+        "project": [
+          "https://hypmol.net/stepDescription",
+          "https://hypmol.net/observation"
+        ],
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "query_builder",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I am currently checking the database for procedure step records and have a task for you. Find all procedure steps whose experimental observation contains 'Signal intensity'. Then show me their experimental observation.",
+    "trace": [
+      {
+        "tool": "query_builder",
+        "type": "https://hypmol.net/ProcedureStep",
+        "filters": [
+          {
+            "path": "https://hypmol.net/observation",
+            "operator": "contains",
+            "value": "Signal intensity"
+          }
+        ],
+        "project": [
+          "https://hypmol.net/observation"
+        ],
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "query_builder",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'm looking into the available information for procedure steps. Find all procedure steps where the step order is at most '1'. Then show me their step description.",
+    "trace": [
+      {
+        "tool": "query_builder",
+        "type": "https://hypmol.net/ProcedureStep",
+        "filters": [
+          {
+            "path": "https://hypmol.net/stepOrder",
+            "operator": "<=",
+            "value": "1"
+          }
+        ],
+        "project": [
+          "https://hypmol.net/stepDescription"
+        ],
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "query_builder",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I am currently checking the database for procedure step records and have a task for you. Find all procedure steps whose step description contains '0.025 g of'. Then show me their experimental observation, step order, step description.",
+    "trace": [
+      {
+        "tool": "query_builder",
+        "type": "https://hypmol.net/ProcedureStep",
+        "filters": [
+          {
+            "path": "https://hypmol.net/stepDescription",
+            "operator": "contains",
+            "value": "0.025 g of"
+          }
+        ],
+        "project": [
+          "https://hypmol.net/observation",
+          "https://hypmol.net/stepOrder",
+          "https://hypmol.net/stepDescription"
+        ],
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "query_builder",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'm curious about the procedure step entries. Find all procedure steps where the step order is at most '5'. Then show me their experimental observation, step description.",
+    "trace": [
+      {
+        "tool": "query_builder",
+        "type": "https://hypmol.net/ProcedureStep",
+        "filters": [
+          {
+            "path": "https://hypmol.net/stepOrder",
+            "operator": "<=",
+            "value": "5"
+          }
+        ],
+        "project": [
+          "https://hypmol.net/observation",
+          "https://hypmol.net/stepDescription"
+        ],
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "query_builder",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'm looking into the available information for experiments. Find all experiments whose procedure step's experimental observation contains 'Mixture turned'. Then show me their reaction equation, experiment designation.",
+    "trace": [
+      {
+        "tool": "query_builder",
+        "type": "https://hypmol.net/Experiment",
+        "filters": [
+          {
+            "path": "https://hypmol.net/hasProcedureStep -> https://hypmol.net/observation",
+            "operator": "contains",
+            "value": "Mixture turned"
+          }
+        ],
+        "project": [
+          "https://hypmol.net/reactionEquation",
+          "https://hypmol.net/experimentDesignation"
+        ],
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "query_builder",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'm looking into the available information for persons. Find all persons whose involved in project's project code contains 'SPIN-CAT-0924' and whose email contains 'david.klein@ethz.ch'. Then show me their position.",
+    "trace": [
+      {
+        "tool": "query_builder",
+        "type": "http://schema.org/Person",
+        "filters": [
+          {
+            "path": "https://hypmol.net/involvedInProject -> https://hypmol.net/projectCode",
+            "operator": "contains",
+            "value": "SPIN-CAT-0924"
+          },
+          {
+            "path": "http://schema.org/email",
+            "operator": "contains",
+            "value": "david.klein@ethz.ch"
+          }
+        ],
+        "project": [
+          "https://hypmol.net/position"
+        ],
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "query_builder",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'm looking into the available information for procedure steps. Find all procedure steps whose step description contains 'tetrakis(3,5-dimethylphenoxy)di-silver(i) iodide'. Then show me their procedure date.",
+    "trace": [
+      {
+        "tool": "query_builder",
+        "type": "https://hypmol.net/ProcedureStep",
+        "filters": [
+          {
+            "path": "https://hypmol.net/stepDescription",
+            "operator": "contains",
+            "value": "tetrakis(3,5-dimethylphenoxy)di-silver(i) iodide"
+          }
+        ],
+        "project": [
+          "https://hypmol.net/procedureDate"
+        ],
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "query_builder",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I am currently checking the database for publication records and have a task for you. Find all publications whose publication title contains 'Variable Oxygen'. Then show me their publication title.",
+    "trace": [
+      {
+        "tool": "query_builder",
+        "type": "https://hypmol.net/Publication",
+        "filters": [
+          {
+            "path": "https://hypmol.net/publicationTitle",
+            "operator": "contains",
+            "value": "Variable Oxygen"
+          }
+        ],
+        "project": [
+          "https://hypmol.net/publicationTitle"
+        ],
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "query_builder",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I am currently checking the database for procedure step records and have a task for you. Find all procedure steps where the step order is at least '4' and whose experimental observation contains 'k_S decreased from 1.2\u00d710\u2076'. Then show me their step description, step order.",
+    "trace": [
+      {
+        "tool": "query_builder",
+        "type": "https://hypmol.net/ProcedureStep",
+        "filters": [
+          {
+            "path": "https://hypmol.net/stepOrder",
+            "operator": ">=",
+            "value": "4"
+          },
+          {
+            "path": "https://hypmol.net/observation",
+            "operator": "contains",
+            "value": "k_S decreased from 1.2\u00d710\u2076"
+          }
+        ],
+        "project": [
+          "https://hypmol.net/stepDescription",
+          "https://hypmol.net/stepOrder"
+        ],
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "query_builder",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'm looking into the available information for procedure steps. Find all procedure steps whose step description contains 'solution containing 0.02' and whose experimental observation contains 'remained clear;'. Then show me their procedure date, experimental observation.",
+    "trace": [
+      {
+        "tool": "query_builder",
+        "type": "https://hypmol.net/ProcedureStep",
+        "filters": [
+          {
+            "path": "https://hypmol.net/stepDescription",
+            "operator": "contains",
+            "value": "solution containing 0.02"
+          },
+          {
+            "path": "https://hypmol.net/observation",
+            "operator": "contains",
+            "value": "remained clear;"
+          }
+        ],
+        "project": [
+          "https://hypmol.net/procedureDate",
+          "https://hypmol.net/observation"
+        ],
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "query_builder",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'm looking into the available information for procedure steps. Find all procedure steps where the procedure date is '2025-11-05' and whose step description contains 'fractions, remove solvents,'. Then show me their procedure date.",
+    "trace": [
+      {
+        "tool": "query_builder",
+        "type": "https://hypmol.net/ProcedureStep",
+        "filters": [
+          {
+            "path": "https://hypmol.net/procedureDate",
+            "operator": "=",
+            "value": "2025-11-05"
+          },
+          {
+            "path": "https://hypmol.net/stepDescription",
+            "operator": "contains",
+            "value": "fractions, remove solvents,"
+          }
+        ],
+        "project": [
+          "https://hypmol.net/procedureDate"
+        ],
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "query_builder",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I am currently checking the database for procedure step records and have a task for you. Find all procedure steps where the step order is at most '3' and where the procedure date is '2025-10-31'. Then show me their experimental observation, step description, step order.",
+    "trace": [
+      {
+        "tool": "query_builder",
+        "type": "https://hypmol.net/ProcedureStep",
+        "filters": [
+          {
+            "path": "https://hypmol.net/stepOrder",
+            "operator": "<=",
+            "value": "3"
+          },
+          {
+            "path": "https://hypmol.net/procedureDate",
+            "operator": "=",
+            "value": "2025-10-31"
+          }
+        ],
+        "project": [
+          "https://hypmol.net/observation",
+          "https://hypmol.net/stepDescription",
+          "https://hypmol.net/stepOrder"
+        ],
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "query_builder",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'm looking into the available information for persons. Find all persons whose given name contains 'Dr. Alejandro Vargas'. Then show me their email, family name.",
+    "trace": [
+      {
+        "tool": "query_builder",
+        "type": "http://schema.org/Person",
+        "filters": [
+          {
+            "path": "http://schema.org/givenName",
+            "operator": "contains",
+            "value": "Dr. Alejandro Vargas"
+          }
+        ],
+        "project": [
+          "http://schema.org/email",
+          "http://schema.org/familyName"
+        ],
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "query_builder",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I am currently checking the database for experiment records and have a task for you. Find all experiments whose procedure step's experimental observation contains 'of a'. Then show me their experiment designation.",
+    "trace": [
+      {
+        "tool": "query_builder",
+        "type": "https://hypmol.net/Experiment",
+        "filters": [
+          {
+            "path": "https://hypmol.net/hasProcedureStep -> https://hypmol.net/observation",
+            "operator": "contains",
+            "value": "of a"
+          }
+        ],
+        "project": [
+          "https://hypmol.net/experimentDesignation"
+        ],
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "query_builder",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I am currently checking the database for chemical substance records and have a task for you. Find all chemical substances whose chemical name contains '1-(4-Methylphenyl)ethan-1-one' and whose molecular formula contains 'C9H10O'. Then show me their chemical name.",
+    "trace": [
+      {
+        "tool": "query_builder",
+        "type": "https://hypmol.net/ChemicalSubstance",
+        "filters": [
+          {
+            "path": "https://hypmol.net/chemicalName",
+            "operator": "contains",
+            "value": "1-(4-Methylphenyl)ethan-1-one"
+          },
+          {
+            "path": "https://hypmol.net/molecularFormula",
+            "operator": "contains",
+            "value": "C9H10O"
+          }
+        ],
+        "project": [
+          "https://hypmol.net/chemicalName"
+        ],
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "query_builder",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'm looking into the available information for procedure steps. Find all procedure steps whose experimental observation contains 'at 120'. Then show me their experimental observation, step description, procedure date.",
+    "trace": [
+      {
+        "tool": "query_builder",
+        "type": "https://hypmol.net/ProcedureStep",
+        "filters": [
+          {
+            "path": "https://hypmol.net/observation",
+            "operator": "contains",
+            "value": "at 120"
+          }
+        ],
+        "project": [
+          "https://hypmol.net/observation",
+          "https://hypmol.net/stepDescription",
+          "https://hypmol.net/procedureDate"
+        ],
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "query_builder",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'm curious about the procedure step entries. Find all procedure steps where the step order is '4'. Then show me their step order.",
+    "trace": [
+      {
+        "tool": "query_builder",
+        "type": "https://hypmol.net/ProcedureStep",
+        "filters": [
+          {
+            "path": "https://hypmol.net/stepOrder",
+            "operator": "=",
+            "value": "4"
+          }
+        ],
+        "project": [
+          "https://hypmol.net/stepOrder"
+        ],
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "query_builder",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'm looking into the available information for procedure steps. Find all procedure steps whose experimental observation contains 'Solution turned pale yellow;' and where the step order is '1'. Then show me their procedure date, experimental observation.",
+    "trace": [
+      {
+        "tool": "query_builder",
+        "type": "https://hypmol.net/ProcedureStep",
+        "filters": [
+          {
+            "path": "https://hypmol.net/observation",
+            "operator": "contains",
+            "value": "Solution turned pale yellow;"
+          },
+          {
+            "path": "https://hypmol.net/stepOrder",
+            "operator": "=",
+            "value": "1"
+          }
+        ],
+        "project": [
+          "https://hypmol.net/procedureDate",
+          "https://hypmol.net/observation"
+        ],
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "query_builder",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I am currently checking the database for procedure step records and have a task for you. Find all procedure steps whose step description contains 'to generate the'. Then show me their step order.",
+    "trace": [
+      {
+        "tool": "query_builder",
+        "type": "https://hypmol.net/ProcedureStep",
+        "filters": [
+          {
+            "path": "https://hypmol.net/stepDescription",
+            "operator": "contains",
+            "value": "to generate the"
+          }
+        ],
+        "project": [
+          "https://hypmol.net/stepOrder"
+        ],
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "query_builder",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I am currently checking the database for dataset records and have a task for you. Find all datasets whose author's email contains 'ksato@research-institute.org' and where the date modified is '2026-01-28 14:45:00+00:00'. Then show me their description, date published.",
+    "trace": [
+      {
+        "tool": "query_builder",
+        "type": "http://schema.org/Dataset",
+        "filters": [
+          {
+            "path": "http://schema.org/author -> http://schema.org/email",
+            "operator": "contains",
+            "value": "ksato@research-institute.org"
+          },
+          {
+            "path": "http://schema.org/dateModified",
+            "operator": "=",
+            "value": "2026-01-28 14:45:00+00:00"
+          }
+        ],
+        "project": [
+          "http://schema.org/description",
+          "http://schema.org/datePublished"
+        ],
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "query_builder",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'm looking into the available information for procedure steps. Find all procedure steps where the step order is at least '6'. Then show me their step order, procedure date.",
+    "trace": [
+      {
+        "tool": "query_builder",
+        "type": "https://hypmol.net/ProcedureStep",
+        "filters": [
+          {
+            "path": "https://hypmol.net/stepOrder",
+            "operator": ">=",
+            "value": "6"
+          }
+        ],
+        "project": [
+          "https://hypmol.net/stepOrder",
+          "https://hypmol.net/procedureDate"
+        ],
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "query_builder",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I am currently checking the database for procedure step records and have a task for you. Find all procedure steps where the step order is at most '1'. Then show me their procedure date.",
+    "trace": [
+      {
+        "tool": "query_builder",
+        "type": "https://hypmol.net/ProcedureStep",
+        "filters": [
+          {
+            "path": "https://hypmol.net/stepOrder",
+            "operator": "<=",
+            "value": "1"
+          }
+        ],
+        "project": [
+          "https://hypmol.net/procedureDate"
+        ],
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "query_builder",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I am currently checking the database for publication records and have a task for you. Find all publications whose publication title contains 'Computing Algorithms in Molecular' and where the primary author is 'https://hypmol.net/Person/d230ce62-d9cd-4f05-9b1b-edd2be907b00'. Then show me their publication title.",
+    "trace": [
+      {
+        "tool": "query_builder",
+        "type": "https://hypmol.net/Publication",
+        "filters": [
+          {
+            "path": "https://hypmol.net/publicationTitle",
+            "operator": "contains",
+            "value": "Computing Algorithms in Molecular"
+          },
+          {
+            "path": "https://hypmol.net/hasPrimaryAuthor",
+            "operator": "=",
+            "value": "https://hypmol.net/Person/d230ce62-d9cd-4f05-9b1b-edd2be907b00"
+          }
+        ],
+        "project": [
+          "https://hypmol.net/publicationTitle"
+        ],
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "query_builder",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I am currently checking the database for procedure step records and have a task for you. Find all procedure steps whose experimental observation contains 'No gas bubbles observed.' and where the step order is at least '2'. Then show me their procedure date.",
+    "trace": [
+      {
+        "tool": "query_builder",
+        "type": "https://hypmol.net/ProcedureStep",
+        "filters": [
+          {
+            "path": "https://hypmol.net/observation",
+            "operator": "contains",
+            "value": "No gas bubbles observed."
+          },
+          {
+            "path": "https://hypmol.net/stepOrder",
+            "operator": ">=",
+            "value": "2"
+          }
+        ],
+        "project": [
+          "https://hypmol.net/procedureDate"
+        ],
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "query_builder",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'm looking into the available information for procedure steps. Find all procedure steps whose step description contains 'pulse, 0.8 \u00b5J) and'. Then show me their experimental observation.",
+    "trace": [
+      {
+        "tool": "query_builder",
+        "type": "https://hypmol.net/ProcedureStep",
+        "filters": [
+          {
+            "path": "https://hypmol.net/stepDescription",
+            "operator": "contains",
+            "value": "pulse, 0.8 \u00b5J) and"
+          }
+        ],
+        "project": [
+          "https://hypmol.net/observation"
+        ],
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "query_builder",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'm looking into the available information for persons. Find all persons whose involved in project's project code contains 'SPIN-SYNTH-01' and whose involved in project's project title contains 'Magnetochemical Control of C\u2013H'. Then show me their family name.",
+    "trace": [
+      {
+        "tool": "query_builder",
+        "type": "http://schema.org/Person",
+        "filters": [
+          {
+            "path": "https://hypmol.net/involvedInProject -> https://hypmol.net/projectCode",
+            "operator": "contains",
+            "value": "SPIN-SYNTH-01"
+          },
+          {
+            "path": "https://hypmol.net/involvedInProject -> https://hypmol.net/projectTitle",
+            "operator": "contains",
+            "value": "Magnetochemical Control of C\u2013H"
+          }
+        ],
+        "project": [
+          "http://schema.org/familyName"
+        ],
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "query_builder",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I am currently checking the database for procedure step records and have a task for you. Find all procedure steps where the procedure date is '2025-10-23'. Then show me their step description.",
+    "trace": [
+      {
+        "tool": "query_builder",
+        "type": "https://hypmol.net/ProcedureStep",
+        "filters": [
+          {
+            "path": "https://hypmol.net/procedureDate",
+            "operator": "=",
+            "value": "2025-10-23"
+          }
+        ],
+        "project": [
+          "https://hypmol.net/stepDescription"
+        ],
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "query_builder",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'm looking into the available information for persons. Find all persons whose involved in project's project code contains 'SPIN-ELEC-01'. Then show me their given name.",
+    "trace": [
+      {
+        "tool": "query_builder",
+        "type": "http://schema.org/Person",
+        "filters": [
+          {
+            "path": "https://hypmol.net/involvedInProject -> https://hypmol.net/projectCode",
+            "operator": "contains",
+            "value": "SPIN-ELEC-01"
+          }
+        ],
+        "project": [
+          "http://schema.org/givenName"
+        ],
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "query_builder",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I am currently checking the database for procedure step records and have a task for you. Find all procedure steps whose step description contains 'over Na\u2082SO\u2084, filter'. Then show me their experimental observation, step description.",
+    "trace": [
+      {
+        "tool": "query_builder",
+        "type": "https://hypmol.net/ProcedureStep",
+        "filters": [
+          {
+            "path": "https://hypmol.net/stepDescription",
+            "operator": "contains",
+            "value": "over Na\u2082SO\u2084, filter"
+          }
+        ],
+        "project": [
+          "https://hypmol.net/observation",
+          "https://hypmol.net/stepDescription"
+        ],
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "query_builder",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I am currently checking the database for procedure step records and have a task for you. Find all procedure steps where the procedure date is '2025-09-20'. Then show me their experimental observation.",
+    "trace": [
+      {
+        "tool": "query_builder",
+        "type": "https://hypmol.net/ProcedureStep",
+        "filters": [
+          {
+            "path": "https://hypmol.net/procedureDate",
+            "operator": "=",
+            "value": "2025-09-20"
+          }
+        ],
+        "project": [
+          "https://hypmol.net/observation"
+        ],
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "query_builder",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'm curious about the measurement entries. Find all measurements whose measurement result contains 'conversion after'. Then show me their measurement result, measurement method.",
+    "trace": [
+      {
+        "tool": "query_builder",
+        "type": "https://hypmol.net/Measurement",
+        "filters": [
+          {
+            "path": "https://hypmol.net/measurementResult",
+            "operator": "contains",
+            "value": "conversion after"
+          }
+        ],
+        "project": [
+          "https://hypmol.net/measurementResult",
+          "https://hypmol.net/measurementMethod"
+        ],
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "query_builder",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'm looking into the available information for persons. Find all persons whose involved in project's project code contains 'SPIN-Q2024' and whose given name contains 'Dr. Julian'. Then show me their email.",
+    "trace": [
+      {
+        "tool": "query_builder",
+        "type": "http://schema.org/Person",
+        "filters": [
+          {
+            "path": "https://hypmol.net/involvedInProject -> https://hypmol.net/projectCode",
+            "operator": "contains",
+            "value": "SPIN-Q2024"
+          },
+          {
+            "path": "http://schema.org/givenName",
+            "operator": "contains",
+            "value": "Dr. Julian"
+          }
+        ],
+        "project": [
+          "http://schema.org/email"
+        ],
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "query_builder",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'm looking into the available information for publications. Find all publications where the author is 'https://hypmol.net/Person/b6be8605-0975-4349-824d-c1f4e7606185' and where the primary author is 'https://hypmol.net/Person/b6be8605-0975-4349-824d-c1f4e7606185'. Then show me their publication title.",
+    "trace": [
+      {
+        "tool": "query_builder",
+        "type": "https://hypmol.net/Publication",
+        "filters": [
+          {
+            "path": "https://hypmol.net/hasAuthor",
+            "operator": "=",
+            "value": "https://hypmol.net/Person/b6be8605-0975-4349-824d-c1f4e7606185"
+          },
+          {
+            "path": "https://hypmol.net/hasPrimaryAuthor",
+            "operator": "=",
+            "value": "https://hypmol.net/Person/b6be8605-0975-4349-824d-c1f4e7606185"
+          }
+        ],
+        "project": [
+          "https://hypmol.net/publicationTitle"
+        ],
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "query_builder",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'm looking into the available information for procedure steps. Find all procedure steps where the procedure date is '2025-10-15'. Then show me their step order.",
+    "trace": [
+      {
+        "tool": "query_builder",
+        "type": "https://hypmol.net/ProcedureStep",
+        "filters": [
+          {
+            "path": "https://hypmol.net/procedureDate",
+            "operator": "=",
+            "value": "2025-10-15"
+          }
+        ],
+        "project": [
+          "https://hypmol.net/stepOrder"
+        ],
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "query_builder",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I am currently checking the database for chemical substance records and have a task for you. Find all chemical substances whose molecular formula contains 'C12H19NO' and whose chemical name contains 'N,N-Diethyl-4-methoxybenzylamine'. Then show me their molecular formula.",
+    "trace": [
+      {
+        "tool": "query_builder",
+        "type": "https://hypmol.net/ChemicalSubstance",
+        "filters": [
+          {
+            "path": "https://hypmol.net/molecularFormula",
+            "operator": "contains",
+            "value": "C12H19NO"
+          },
+          {
+            "path": "https://hypmol.net/chemicalName",
+            "operator": "contains",
+            "value": "N,N-Diethyl-4-methoxybenzylamine"
+          }
+        ],
+        "project": [
+          "https://hypmol.net/molecularFormula"
+        ],
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "query_builder",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'm looking into the available information for datasets. Find all datasets where the author is 'https://hypmol.net/Person/17645d01-4b01-4b46-a3fc-ecd051ca0b1f'. Then show me their genre, date created, text.",
+    "trace": [
+      {
+        "tool": "query_builder",
+        "type": "http://schema.org/Dataset",
+        "filters": [
+          {
+            "path": "http://schema.org/author",
+            "operator": "=",
+            "value": "https://hypmol.net/Person/17645d01-4b01-4b46-a3fc-ecd051ca0b1f"
+          }
+        ],
+        "project": [
+          "http://schema.org/genre",
+          "http://schema.org/dateCreated",
+          "http://schema.org/text"
+        ],
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "query_builder",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'm looking into the available information for procedure steps. Find all procedure steps whose step description contains 'to the degassed solvent' and where the procedure date is '2025-10-20'. Then show me their experimental observation, step description, procedure date.",
+    "trace": [
+      {
+        "tool": "query_builder",
+        "type": "https://hypmol.net/ProcedureStep",
+        "filters": [
+          {
+            "path": "https://hypmol.net/stepDescription",
+            "operator": "contains",
+            "value": "to the degassed solvent"
+          },
+          {
+            "path": "https://hypmol.net/procedureDate",
+            "operator": "=",
+            "value": "2025-10-20"
+          }
+        ],
+        "project": [
+          "https://hypmol.net/observation",
+          "https://hypmol.net/stepDescription",
+          "https://hypmol.net/procedureDate"
+        ],
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "query_builder",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'm curious about the procedure step entries. Find all procedure steps where the step order is at most '5'. Then show me their procedure date, experimental observation.",
+    "trace": [
+      {
+        "tool": "query_builder",
+        "type": "https://hypmol.net/ProcedureStep",
+        "filters": [
+          {
+            "path": "https://hypmol.net/stepOrder",
+            "operator": "<=",
+            "value": "5"
+          }
+        ],
+        "project": [
+          "https://hypmol.net/procedureDate",
+          "https://hypmol.net/observation"
+        ],
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "query_builder",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'm curious about the procedure step entries. Find all procedure steps where the procedure date is '2025-10-12'. Then show me their procedure date.",
+    "trace": [
+      {
+        "tool": "query_builder",
+        "type": "https://hypmol.net/ProcedureStep",
+        "filters": [
+          {
+            "path": "https://hypmol.net/procedureDate",
+            "operator": "=",
+            "value": "2025-10-12"
+          }
+        ],
+        "project": [
+          "https://hypmol.net/procedureDate"
+        ],
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "query_builder",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I am currently checking the database for experiment records and have a task for you. Find all experiments whose procedure step's experimental observation contains 'alkyne by TLC'. Then show me their reaction equation, experiment name.",
+    "trace": [
+      {
+        "tool": "query_builder",
+        "type": "https://hypmol.net/Experiment",
+        "filters": [
+          {
+            "path": "https://hypmol.net/hasProcedureStep -> https://hypmol.net/observation",
+            "operator": "contains",
+            "value": "alkyne by TLC"
+          }
+        ],
+        "project": [
+          "https://hypmol.net/reactionEquation",
+          "https://hypmol.net/experimentName"
+        ],
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "query_builder",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'm looking into the available information for datasets. Find all datasets whose experiment's equipment and apparatus contains 'round\u2011bottom flask, reflux condenser,'. Then show me their url, identifier.",
+    "trace": [
+      {
+        "tool": "query_builder",
+        "type": "http://schema.org/Dataset",
+        "filters": [
+          {
+            "path": "https://hypmol.net/hasExperiment -> https://hypmol.net/equipment",
+            "operator": "contains",
+            "value": "round\u2011bottom flask, reflux condenser,"
+          }
+        ],
+        "project": [
+          "http://schema.org/url",
+          "http://schema.org/identifier"
+        ],
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "query_builder",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'm looking into the available information for procedure steps. Find all procedure steps whose experimental observation contains 'Solution remained' and whose step description contains 'and transfer to a'. Then show me their step order.",
+    "trace": [
+      {
+        "tool": "query_builder",
+        "type": "https://hypmol.net/ProcedureStep",
+        "filters": [
+          {
+            "path": "https://hypmol.net/observation",
+            "operator": "contains",
+            "value": "Solution remained"
+          },
+          {
+            "path": "https://hypmol.net/stepDescription",
+            "operator": "contains",
+            "value": "and transfer to a"
+          }
+        ],
+        "project": [
+          "https://hypmol.net/stepOrder"
+        ],
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "query_builder",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'm looking into the available information for procedure steps. Find all procedure steps whose step description contains 'bis(2,3,4,5\u2011tetrafluorophenyl) ether in' and whose experimental observation contains 'clear and'. Then show me their experimental observation.",
+    "trace": [
+      {
+        "tool": "query_builder",
+        "type": "https://hypmol.net/ProcedureStep",
+        "filters": [
+          {
+            "path": "https://hypmol.net/stepDescription",
+            "operator": "contains",
+            "value": "bis(2,3,4,5\u2011tetrafluorophenyl) ether in"
+          },
+          {
+            "path": "https://hypmol.net/observation",
+            "operator": "contains",
+            "value": "clear and"
+          }
+        ],
+        "project": [
+          "https://hypmol.net/observation"
+        ],
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "query_builder",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'm curious about the dataset entries. Find all datasets where the experiment is 'https://hypmol.net/Experiment/faa574fc-ac28-42eb-9c4c-deb02c5e5118'. Then show me their url.",
+    "trace": [
+      {
+        "tool": "query_builder",
+        "type": "http://schema.org/Dataset",
+        "filters": [
+          {
+            "path": "https://hypmol.net/hasExperiment",
+            "operator": "=",
+            "value": "https://hypmol.net/Experiment/faa574fc-ac28-42eb-9c4c-deb02c5e5118"
+          }
+        ],
+        "project": [
+          "http://schema.org/url"
+        ],
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "query_builder",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "What can you tell me about 'EPR (post\u2011irradiation) measurement'? please find its measurement result and its measurement method.",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Measurement/028b35e7-477e-4def-8964-b342c16565ad",
+        "predicate": "https://hypmol.net/measurementMethod",
+        "object": "EPR (post\u2011irradiation)",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Measurement/028b35e7-477e-4def-8964-b342c16565ad",
+        "predicate": "https://hypmol.net/measurementResult",
+        "object": "Signal consistent with the expected nitroxide radical; g\u2011value = 2.0057.",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "direct",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'm curious about 'Cyclisation: Dissolve the intermediate (10\u202fmmol, 3.2\u202fg) in DMF (50\u202fmL), add Na\u2082CO\u2083 (20\u202fmmol, 2.12\u202fg) and heat at 150\u202f\u00b0C for 6\u202fh.'. What info exists on its procedure date?",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/c20fd6a1-e075-479f-a5f3-e050594b6ffe",
+        "predicate": "https://hypmol.net/procedureDate",
+        "object": "2025-12-06",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "direct",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "Can you find some information about 'Weigh 0.512\u202fg (2.0\u202fmmol) of (e)-1,2\u2011difluoro\u20113\u2011tert\u2011butyl\u2011prop\u20112\u2011en\u20111\u2011yl nitroxide into a dry 50\u202fmL Schlenk flask under nitrogen.'? please find its step description and its experimental observation.",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/d9e1f2fd-f6ab-4ab6-b72c-1795821c0953",
+        "predicate": "https://hypmol.net/observation",
+        "object": "The solid appeared as a pale orange powder; no visible moisture.",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/d9e1f2fd-f6ab-4ab6-b72c-1795821c0953",
+        "predicate": "https://hypmol.net/stepDescription",
+        "object": "Weigh 0.512\u202fg (2.0\u202fmmol) of (e)-1,2\u2011difluoro\u20113\u2011tert\u2011butyl\u2011prop\u20112\u2011en\u20111\u2011yl nitroxide into a dry 50\u202fmL Schlenk flask under nitrogen.",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "direct",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "Can you find some information about 'Heat the reaction mixture to 110\u202f\u00b0C and stir for 6\u202fh under a gentle nitrogen flow.'? please find its experimental observation and its step description.",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/a6326e52-1940-46a5-acd9-79bfafc6ca07",
+        "predicate": "https://hypmol.net/stepDescription",
+        "object": "Heat the reaction mixture to 110\u202f\u00b0C and stir for 6\u202fh under a gentle nitrogen flow.",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/a6326e52-1940-46a5-acd9-79bfafc6ca07",
+        "predicate": "https://hypmol.net/observation",
+        "object": "Progress monitored by TLC (hexane/ethyl acetate 9:1) showed consumption of starting ether after 4\u202fh.",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "direct",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "What can you tell me about 'Dataset\u202fSC\u2011001 \u2013 Magnetic\u2011Field Effect on Fluorinated Radical Pair'? I'd like to check its encoding format and its name.",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Dataset/b50e805e-76b0-4e08-9a2d-297c7977241f",
+        "predicate": "http://schema.org/name",
+        "object": "Dataset\u202fSC\u2011001 \u2013 Magnetic\u2011Field Effect on Fluorinated Radical Pair",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Dataset/b50e805e-76b0-4e08-9a2d-297c7977241f",
+        "predicate": "http://schema.org/encodingFormat",
+        "object": "application/json",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "direct",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'm curious about 'Transfer 0.5\u202fmL of the mixture into a quartz cuvette, mount in the EPR resonator, cool to \u221220\u202f\u00b0C.'. what is its procedure date?",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/8503776d-da83-4b15-a774-185d473da08e",
+        "predicate": "https://hypmol.net/procedureDate",
+        "object": "2025-12-11",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "direct",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'd like to know more about 'Cool to rt, dilute with 30\u202fmL ethyl acetate, wash with 20\u202fmL water, then 20\u202fmL brine.'. could you please identify its procedure date?",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/b3339f6a-cc52-4914-8afa-e0a12afb156c",
+        "predicate": "https://hypmol.net/procedureDate",
+        "object": "2025-11-13",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "direct",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'm curious about 'MFE Study of 4\u2011[(e)-3-(n,n\u2011diethylamino)prop\u20112\u2011en\u20111\u2011yl]benzenesulfonamide Radical Pair'. What info exists on its experiment notes?",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/02f8cc0f-05cb-48f3-a556-6a8dfae65deb",
+        "predicate": "https://hypmol.net/experimentNotes",
+        "object": "Solutions kept under N\u2082 to avoid premature oxidation.",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "direct",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "What can you tell me about 'Repeat illumination under magnetic fields of 25\u202fmT, 75\u202fmT, and 150\u202fmT, acquiring EPR spectra after each pulse.'? I'd like to check its step description and its procedure date.",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/436ff16b-03d8-46aa-b47d-7cf10b56bc42",
+        "predicate": "https://hypmol.net/procedureDate",
+        "object": "2025-11-12",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/436ff16b-03d8-46aa-b47d-7cf10b56bc42",
+        "predicate": "https://hypmol.net/stepDescription",
+        "object": "Repeat illumination under magnetic fields of 25\u202fmT, 75\u202fmT, and 150\u202fmT, acquiring EPR spectra after each pulse.",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "direct",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'm curious about 'Charge a flame\u2011dried 50\u202fmL flask with 0.240\u202fg (0.80\u202fmmol) 1,4\u2011dichloro\u20112,5\u2011dimethyl\u20113\u2011hexynyl (z)\u2011prop\u20112\u2011enoate and 0.180\u202fg (0.80\u202fmmol) 4\u2011(bromomethyl)\u20114\u2011[(e)\u20112\u2011(trifluoromethyl)ethenyl)phenyl acetate.'. I'd like to check its step order and its step description.",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/cb151bd5-8a68-49b1-a43a-01e11e223789",
+        "predicate": "https://hypmol.net/stepDescription",
+        "object": "Charge a flame\u2011dried 50\u202fmL flask with 0.240\u202fg (0.80\u202fmmol) 1,4\u2011dichloro\u20112,5\u2011dimethyl\u20113\u2011hexynyl (z)\u2011prop\u20112\u2011enoate and 0.180\u202fg (0.80\u202fmmol) 4\u2011(bromomethyl)\u20114\u2011[(e)\u20112\u2011(trifluoromethyl)ethenyl)phenyl acetate.",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/cb151bd5-8a68-49b1-a43a-01e11e223789",
+        "predicate": "https://hypmol.net/stepOrder",
+        "object": "1",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "direct",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "What can you tell me about 'Add 5\u202fmL of freshly distilled tetrafluoroethylbenzene as solvent, seal the tube, and vortex for 30\u202fs.'? I'd like to check its experimental observation and its step order.",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/0ddcb851-bfa2-4321-9aee-5e34b9fcc6ba",
+        "predicate": "https://hypmol.net/stepOrder",
+        "object": "2",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/0ddcb851-bfa2-4321-9aee-5e34b9fcc6ba",
+        "predicate": "https://hypmol.net/observation",
+        "object": "Clear, homogeneous solution formed; no precipitation.",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "direct",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'd like to know more about 'Purify by flash chromatography (hexanes/EtOAc\u202f=\u202f3:1) to afford 1.68\u202fg of 4\u2011(4\u2011fluorophenyl)-3,6\u2011dihydro\u20112H\u2011thieno[3,2,1\u2011ij]quinolin\u20118\u2011one as a white solid.'. I'd like to check its step description and its step order.",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/b99f39b9-dcee-40aa-ac6e-8314889d6298",
+        "predicate": "https://hypmol.net/stepOrder",
+        "object": "5",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/b99f39b9-dcee-40aa-ac6e-8314889d6298",
+        "predicate": "https://hypmol.net/stepDescription",
+        "object": "Purify by flash chromatography (hexanes/EtOAc\u202f=\u202f3:1) to afford 1.68\u202fg of 4\u2011(4\u2011fluorophenyl)-3,6\u2011dihydro\u20112H\u2011thieno[3,2,1\u2011ij]quinolin\u20118\u2011one as a white solid.",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "direct",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'm curious about 'Magnetic\u2011Field Effect on Nitroxide\u2011Tagged Radical Pairs (SpinChem\u2011001)'. Can you provide details on its date published and its text?",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Dataset/2d45927e-7355-4a17-99b3-bd43ff751efa",
+        "predicate": "http://schema.org/text",
+        "object": "The dataset captures time\u2011resolved EPR spectra of a nitroxide\u2011tagged radical pair under varied magnetic fields, revealing a clear field\u2011dependent modulation of the singlet\u2013triplet interconversion rate.",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Dataset/2d45927e-7355-4a17-99b3-bd43ff751efa",
+        "predicate": "http://schema.org/datePublished",
+        "object": "2025-11-12T14:30:00+00:00",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "direct",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'm curious about 'Repeat the illumination\u2011acquire cycle at magnetic field strengths of 25, 50, 100, and 150\u202fmT, allowing 2\u202fmin equilibration between steps.'. I'd like to check its step order and its step description.",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/026f5374-7a2d-46d0-a2bc-3d548a82f866",
+        "predicate": "https://hypmol.net/stepDescription",
+        "object": "Repeat the illumination\u2011acquire cycle at magnetic field strengths of 25, 50, 100, and 150\u202fmT, allowing 2\u202fmin equilibration between steps.",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/026f5374-7a2d-46d0-a2bc-3d548a82f866",
+        "predicate": "https://hypmol.net/stepOrder",
+        "object": "5",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "direct",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'm curious about 'TTET between tris(1,4-dimethyl-2-pyrazolyl)borate and bis(3,5-di-tert-butyl-2-hydroxyphenyl)methane'. I'd like to check its experiment designation and its equipment and apparatus.",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/b6720175-b88f-4121-90c0-d5fd9d7464a9",
+        "predicate": "https://hypmol.net/equipment",
+        "object": "Pulse laser (355\u202fnm), quartz cuvette (1\u202fcm), nanosecond transient spectrometer, oxygen purge system, temperature controller (298\u202fK), magnetic stirrer",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/b6720175-b88f-4121-90c0-d5fd9d7464a9",
+        "predicate": "https://hypmol.net/experimentDesignation",
+        "object": "EXP-089",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "direct",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'm curious about 'Add 0.30\u202fg (0.0018\u202fmol) n,n\u2011diethyl\u20112\u2011oxo\u20111\u2011azabicyclo[2.2.2]octane\u20113\u2011carboxylic acid as a proton source and stir at 80\u202f\u00b0C for 4\u202fh.'. I'd like to check its step description and its step order.",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/3bf0d340-d0ac-47de-b049-121eb9dfad23",
+        "predicate": "https://hypmol.net/stepOrder",
+        "object": "2",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/3bf0d340-d0ac-47de-b049-121eb9dfad23",
+        "predicate": "https://hypmol.net/stepDescription",
+        "object": "Add 0.30\u202fg (0.0018\u202fmol) n,n\u2011diethyl\u20112\u2011oxo\u20111\u2011azabicyclo[2.2.2]octane\u20113\u2011carboxylic acid as a proton source and stir at 80\u202f\u00b0C for 4\u202fh.",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "direct",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "What can you tell me about 'Repeat the laser excitation and EPR acquisition at static magnetic fields of 20\u202fmT, 50\u202fmT, and 80\u202fmT, allowing 10\u202fmin equilibration at each field.'? please find its step order and its experimental observation.",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/31b05904-4721-443f-9ab5-0fceceac9821",
+        "predicate": "https://hypmol.net/observation",
+        "object": "The recombination rate decreased with increasing field, evident from slower decay of the transient signal.",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/31b05904-4721-443f-9ab5-0fceceac9821",
+        "predicate": "https://hypmol.net/stepOrder",
+        "object": "4",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "direct",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "Can you find some information about 'Transfer 20\u202fmL of dry, degassed toluene into a nitrogen\u2011filled glovebox and add 0.125\u202fg (0.58\u202fmmol) of tetrafluoroethylbenzene.'? Can you provide details on its step order and its procedure date?",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/498e3f76-3f57-41d4-aec6-b6ee5f17bf21",
+        "predicate": "https://hypmol.net/procedureDate",
+        "object": "2025-11-15",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/498e3f76-3f57-41d4-aec6-b6ee5f17bf21",
+        "predicate": "https://hypmol.net/stepOrder",
+        "object": "1",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "direct",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'm curious about 'Phosphonate_Ester_Synthesis_2023'. what is its date created?",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Dataset/18489a17-acaf-4cd4-b620-ccfcbee6cf5f",
+        "predicate": "http://schema.org/dateCreated",
+        "object": "2023-09-10T08:45:00+00:00",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "direct",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'd like to know more about '2,4,6-Tri-tert-butylpyridine'. please find its molar mass and its molecular formula.",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ChemicalSubstance/eadb19f7-4922-4f0f-9288-476e3f11efa7",
+        "predicate": "https://hypmol.net/molecularFormula",
+        "object": "C17H29N",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ChemicalSubstance/eadb19f7-4922-4f0f-9288-476e3f11efa7",
+        "predicate": "https://hypmol.net/molarMass",
+        "object": "241.42",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "direct",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'm curious about 'Degas 1\u202fmL of 0.1\u202fM sulfonium-based radical precursor solution in 2,2\u2011dimethyl\u20111,3\u2011dioxolane by three freeze\u2011pump\u2011thaw cycles and back\u2011fill with argon.'. please find its procedure date and its step description.",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/98040c95-c45b-4384-8731-6deaf948efa0",
+        "predicate": "https://hypmol.net/stepDescription",
+        "object": "Degas 1\u202fmL of 0.1\u202fM sulfonium-based radical precursor solution in 2,2\u2011dimethyl\u20111,3\u2011dioxolane by three freeze\u2011pump\u2011thaw cycles and back\u2011fill with argon.",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/98040c95-c45b-4384-8731-6deaf948efa0",
+        "predicate": "https://hypmol.net/procedureDate",
+        "object": "2025-05-28",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "direct",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'm curious about 'Time\u2011Resolved UV\u2011Vis measurement'. Can you provide details on its measurement method and its measurement result?",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Measurement/764ded92-8240-47f9-b6f0-98b5b1a83558",
+        "predicate": "https://hypmol.net/measurementResult",
+        "object": "Transient absorption at 460\u202fnm correlates with EPR\u2010active species.",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Measurement/764ded92-8240-47f9-b6f0-98b5b1a83558",
+        "predicate": "https://hypmol.net/measurementMethod",
+        "object": "Time\u2011Resolved UV\u2011Vis",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "direct",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'm curious about 'Cool to room temperature, dilute with 30\u202fmL ethyl acetate, filter through Celite, and wash with brine.'. what is its step order?",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/612e4955-7b4b-4105-b195-cae52683c35e",
+        "predicate": "https://hypmol.net/stepOrder",
+        "object": "5",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "direct",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "What can you tell me about 'Activate the 532\u202fnm laser (pulse energy 2\u202fmJ) and simultaneously apply a static magnetic field of 100\u202fmT; acquire time\u2011resolved ESR traces with 100\u202fns resolution for 5\u202f\u00b5s after each pulse.'? Can you provide details on its experimental observation and its step order?",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/00b466ff-640b-4b47-a8ca-0e83ff9fff9c",
+        "predicate": "https://hypmol.net/stepOrder",
+        "object": "4",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/00b466ff-640b-4b47-a8ca-0e83ff9fff9c",
+        "predicate": "https://hypmol.net/observation",
+        "object": "Prompt appearance of an S\u2011centered radical signal (g \u2248 2.008) within 200\u202fns of the laser shot.",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "direct",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "What can you tell me about 'Fatima Bakare'? please find its position and its email.",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Person/70b3381d-cebf-48a1-814c-e4c5c80a159f",
+        "predicate": "http://schema.org/email",
+        "object": "f.bakare@ox.ac.uk",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Person/70b3381d-cebf-48a1-814c-e4c5c80a159f",
+        "predicate": "https://hypmol.net/position",
+        "object": "PhD Student",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "direct",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "Can you find some information about 'Added 0.05\u202fg of sulfonium\u2011based radical precursor and purged the mixture with nitrogen for 10\u202fmin.'? please find its procedure date and its step order.",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/ea865b39-bcca-4ed4-816b-4f3a22937976",
+        "predicate": "https://hypmol.net/stepOrder",
+        "object": "2",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/ea865b39-bcca-4ed4-816b-4f3a22937976",
+        "predicate": "https://hypmol.net/procedureDate",
+        "object": "2025-10-20",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "direct",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'd like to know more about 'Dissolved 4\u2011(2\u2011hydroxyethyl)morpholine (0.500\u202fg, 3.4\u202fmmol) in 20\u202fmL of degassed tetrafluoroethylbenzene (0.05\u202fM).'. I'd like to check its step order and its procedure date.",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/2952c964-4b84-4b46-848b-3a2332de5ff6",
+        "predicate": "https://hypmol.net/procedureDate",
+        "object": "2025-09-01",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/2952c964-4b84-4b46-848b-3a2332de5ff6",
+        "predicate": "https://hypmol.net/stepOrder",
+        "object": "1",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "direct",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "What can you tell me about 'Fluorinated diaryl ether formation using cyclobutyl\u2011palladium complex'? please find its experiment notes and its experiment designation.",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/bd1453e4-807f-41d7-a19d-42df2185d4b3",
+        "predicate": "https://hypmol.net/experimentDesignation",
+        "object": "EXP\u2011042",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/bd1453e4-807f-41d7-a19d-42df2185d4b3",
+        "predicate": "https://hypmol.net/experimentNotes",
+        "object": "Reactions carried out under inert atmosphere to prevent palladium oxidation.",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "direct",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "What can you tell me about 'Introduce 50 mg of hexanethiol-4-yl 2,2,2-trifluoroacetate into the solution using a gas-tight microsyringe.'? Can you provide details on its step description and its step order?",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/212c915d-b343-4d48-aa2c-d41374756665",
+        "predicate": "https://hypmol.net/stepOrder",
+        "object": "2",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/212c915d-b343-4d48-aa2c-d41374756665",
+        "predicate": "https://hypmol.net/stepDescription",
+        "object": "Introduce 50 mg of hexanethiol-4-yl 2,2,2-trifluoroacetate into the solution using a gas-tight microsyringe.",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "direct",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "Can you find some information about 'High-Efficiency Heterogeneous Magnetic Nanocatalysts for Sustainable Oxidation Reactions in Organic Synthesis'? could you please identify its project title?",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Project/674d89cf-03f1-4bba-b31f-ee3f14317942",
+        "predicate": "https://hypmol.net/projectTitle",
+        "object": "High-Efficiency Heterogeneous Magnetic Nanocatalysts for Sustainable Oxidation Reactions in Organic Synthesis",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "direct",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "Can you find some information about 'Insert the cuvette into the EPR resonator, set magnetic field to 340\u202fmT, and trigger the 532\u202fnm laser pulse while recording the transient EPR signal (10\u202f\u00b5s window).'? What info exists on its experimental observation?",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/e38f8dd4-7864-4415-93ca-79e0f3b7048f",
+        "predicate": "https://hypmol.net/observation",
+        "object": "A clear radical\u2011pair EPR signal appeared within 150\u202fns after the laser flash.",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "direct",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "Can you find some information about 'Cool to rt, quench with 20\u202fmL sat. NH\u2084Cl, extract with EtOAc (3\u202f\u00d7\u202f30\u202fmL), dry over Na\u2082SO\u2084, filter and concentrate.'? Can you provide details on its step order and its experimental observation?",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/bb09a2e8-5cde-4a6d-9805-7a02791251bc",
+        "predicate": "https://hypmol.net/observation",
+        "object": "Crude orange oil obtained (1.45\u202fg).",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/bb09a2e8-5cde-4a6d-9805-7a02791251bc",
+        "predicate": "https://hypmol.net/stepOrder",
+        "object": "4",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "direct",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'd like to know more about 'Molecular-Scale Magnetoresistance Mapping for Predicting Solid-State Reaction Pathways'. what is its project code?",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Project/f327a411-2783-4af9-af9f-461fe26d7c22",
+        "predicate": "https://hypmol.net/projectCode",
+        "object": "MAG-RES-MS-2025",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "direct",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'm curious about 'Amara Efe'. I'd like to check its position and its email.",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Person/b6be8605-0975-4349-824d-c1f4e7606185",
+        "predicate": "http://schema.org/email",
+        "object": "afee@stanford.edu",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Person/b6be8605-0975-4349-824d-c1f4e7606185",
+        "predicate": "https://hypmol.net/position",
+        "object": "Postdoctoral Researcher",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "direct",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "What can you tell me about '5-(tert-butyl)benzofuran-3-carbaldehyde'? what is its molecular formula?",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ChemicalSubstance/38134c11-1f87-450e-8298-d212d7b7e830",
+        "predicate": "https://hypmol.net/molecularFormula",
+        "object": "C13H14O2",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "direct",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "What can you tell me about 'Transfer 500\u202f\u00b5L of the mixture into a quartz cuvette and place it in the Helmholtz coil assembly. Apply a static magnetic field of 0\u202fmT and record baseline EPR spectrum.'? What info exists on its step description?",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/18e758e8-9d13-4034-a148-5d751abfc201",
+        "predicate": "https://hypmol.net/stepDescription",
+        "object": "Transfer 500\u202f\u00b5L of the mixture into a quartz cuvette and place it in the Helmholtz coil assembly. Apply a static magnetic field of 0\u202fmT and record baseline EPR spectrum.",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "direct",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "What can you tell me about 'Trigger a single 355\u202fnm laser pulse (10\u202fmJ) and record transient absorption from 300\u2011800\u202fnm for 10\u202f\u00b5s.'? What info exists on its experimental observation?",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/ab1f9f47-5e96-43f3-8ec6-38e14823ef62",
+        "predicate": "https://hypmol.net/observation",
+        "object": "New absorption band at 560\u202fnm grew within 200\u202fns and decayed with \u03c4\u202f\u2248\u202f3.2\u202f\u00b5s.",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "direct",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'd like to know more about 'EPR (X\u2011band, 100\u202fK) measurement'. I'd like to check its measurement result and its measurement method.",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Measurement/c5fdee2a-0fb5-44a9-8492-be9241ccc600",
+        "predicate": "https://hypmol.net/measurementMethod",
+        "object": "EPR (X\u2011band, 100\u202fK)",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Measurement/c5fdee2a-0fb5-44a9-8492-be9241ccc600",
+        "predicate": "https://hypmol.net/measurementResult",
+        "object": "Broad singlet (g\u202f\u2248\u202f2.006) characteristic of Te\u2013S radical pair.",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "direct",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "What can you tell me about 'Sofia Chen'? I'm also interested in its involved in project. For that entry, please find its project code and its project title.",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Person/087956b6-3591-45a4-8377-2e74485cb5fe",
+        "predicate": "https://hypmol.net/involvedInProject",
+        "object": "https://hypmol.net/Project/513560d6-ca41-434f-9e43-100f6558d5bb",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Project/513560d6-ca41-434f-9e43-100f6558d5bb",
+        "predicate": "https://hypmol.net/projectTitle",
+        "object": "Hyperpolarized NMR for Real-Time Reaction Monitoring of Polymerization",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Project/513560d6-ca41-434f-9e43-100f6558d5bb",
+        "predicate": "https://hypmol.net/projectCode",
+        "object": "SYNTH-2024-05",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "hop",
+    "hop_bridge_predicate_uri": "https://hypmol.net/involvedInProject",
+    "hop_target_count": 1,
+    "hop_scope": "one"
+  },
+  {
+    "question": "I'd like to know more about 'Pd\u2011Catalyzed Ether Synthesis (EXP\u2011ECO\u201102)'. Could you give me all its procedure step? While we are looking at that procedure step, could you please identify its experimental observation?",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/d03777aa-5259-482f-af5f-e50d1142022e",
+        "predicate": "https://hypmol.net/hasProcedureStep",
+        "object": "https://hypmol.net/ProcedureStep/f2c655c6-f9d7-4eb7-92fa-28e2e3ff3e8e",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/d03777aa-5259-482f-af5f-e50d1142022e",
+        "predicate": "https://hypmol.net/hasProcedureStep",
+        "object": "https://hypmol.net/ProcedureStep/32e3b232-a57e-4f2c-bc22-3f4931937f7a",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/d03777aa-5259-482f-af5f-e50d1142022e",
+        "predicate": "https://hypmol.net/hasProcedureStep",
+        "object": "https://hypmol.net/ProcedureStep/3b358f52-ab9b-4fe2-b273-26f3d5fb4704",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/d03777aa-5259-482f-af5f-e50d1142022e",
+        "predicate": "https://hypmol.net/hasProcedureStep",
+        "object": "https://hypmol.net/ProcedureStep/b7dd4762-6ffb-48eb-8ce1-b3be86a538cd",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/d03777aa-5259-482f-af5f-e50d1142022e",
+        "predicate": "https://hypmol.net/hasProcedureStep",
+        "object": "https://hypmol.net/ProcedureStep/0f2badbe-9fac-4bc5-8ea5-188a477ee82f",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/f2c655c6-f9d7-4eb7-92fa-28e2e3ff3e8e",
+        "predicate": "https://hypmol.net/observation",
+        "object": "Mixture became slightly turbid; stirring continued.",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/32e3b232-a57e-4f2c-bc22-3f4931937f7a",
+        "predicate": "https://hypmol.net/observation",
+        "object": "Product melting point 124\u202f\u00b0C; \u00b9\u00b3C NMR shows expected signals.",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/3b358f52-ab9b-4fe2-b273-26f3d5fb4704",
+        "predicate": "https://hypmol.net/observation",
+        "object": "Crude residue obtained as a white solid.",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/b7dd4762-6ffb-48eb-8ce1-b3be86a538cd",
+        "predicate": "https://hypmol.net/observation",
+        "object": "Catalyst mixture turned pale orange upon stirring at 25\u202f\u00b0C.",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/0f2badbe-9fac-4bc5-8ea5-188a477ee82f",
+        "predicate": "https://hypmol.net/observation",
+        "object": "Colour faded to light yellow; TLC showed consumption of starting aryl halides.",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "hop",
+    "hop_bridge_predicate_uri": "https://hypmol.net/hasProcedureStep",
+    "hop_target_count": 5,
+    "hop_scope": "all"
+  },
+  {
+    "question": "I'm curious about 'SpinChem\u2011Radical\u2011Pair\u2011Magnetic\u2011Effect'. Could you find the author for me? Specifically for that person, I'd like to check its given name and its email.",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Dataset/a0958973-7c90-4a39-896a-ec76ca02f981",
+        "predicate": "http://schema.org/author",
+        "object": "https://hypmol.net/Person/119f9a98-04ed-4f77-bc0f-4dc98efca848",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Person/119f9a98-04ed-4f77-bc0f-4dc98efca848",
+        "predicate": "http://schema.org/email",
+        "object": "amara.patel@spin-lab.org",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Person/119f9a98-04ed-4f77-bc0f-4dc98efca848",
+        "predicate": "http://schema.org/givenName",
+        "object": "Amara Patel",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "hop",
+    "hop_bridge_predicate_uri": "http://schema.org/author",
+    "hop_target_count": 1,
+    "hop_scope": "one"
+  },
+  {
+    "question": "What can you tell me about 'Spin Chemistry \u2013 Magnetic\u2011Field Effect on Fluorinated Oxazoline Radical Pairs'? I'm also interested in its author. Specifically for that person, could you please identify its email?",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Dataset/3020f61e-bceb-42cd-8cca-4f0467c53d77",
+        "predicate": "http://schema.org/author",
+        "object": "https://hypmol.net/Person/2dd0b1ad-f487-4866-80d8-62cab20a1164",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Person/2dd0b1ad-f487-4866-80d8-62cab20a1164",
+        "predicate": "http://schema.org/email",
+        "object": "elena.rodriguez@mit.edu",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "hop",
+    "hop_bridge_predicate_uri": "http://schema.org/author",
+    "hop_target_count": 1,
+    "hop_scope": "one"
+  },
+  {
+    "question": "What can you tell me about 'In Silico Modeling of Protein Folding Pathways in Complex Cellular Environments'? Could you find the primary author for me? Can you provide details on its position and its given name?",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Publication/04667224-5ceb-485d-bc00-a013d8f8f499",
+        "predicate": "https://hypmol.net/hasPrimaryAuthor",
+        "object": "https://hypmol.net/Person/34a576a4-0ea1-4f94-be86-5ca28d294b58",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Person/34a576a4-0ea1-4f94-be86-5ca28d294b58",
+        "predicate": "http://schema.org/givenName",
+        "object": "Li Wei",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Person/34a576a4-0ea1-4f94-be86-5ca28d294b58",
+        "predicate": "https://hypmol.net/position",
+        "object": "Postdoctoral Researcher",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "hop",
+    "hop_bridge_predicate_uri": "https://hypmol.net/hasPrimaryAuthor",
+    "hop_target_count": 1,
+    "hop_scope": "one"
+  },
+  {
+    "question": "I'm curious about 'SynthDB-EE002 \u2013 Etherification of bis(2,3,4,5-tetrafluorophenyl) ether with 1,4-bis(trifluoromethyl)benzene'. Then, tell me more about its author. Regarding that person, could you please identify its position?",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Dataset/09fbf6e3-223c-4bd2-87e3-e2911d8935e5",
+        "predicate": "http://schema.org/author",
+        "object": "https://hypmol.net/Person/481a369f-681e-4514-af94-993fe590cf8d",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Person/481a369f-681e-4514-af94-993fe590cf8d",
+        "predicate": "https://hypmol.net/position",
+        "object": "Professor",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "hop",
+    "hop_bridge_predicate_uri": "http://schema.org/author",
+    "hop_target_count": 1,
+    "hop_scope": "one"
+  },
+  {
+    "question": "What can you tell me about 'Transient absorption of donor\u2011acceptor pair under variable magnetic field'? Then, tell me more about all its procedure step. For that entry, could you please identify its experimental observation?",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/ae9894e9-e74a-4ae0-8e3a-c1a516cb3c06",
+        "predicate": "https://hypmol.net/hasProcedureStep",
+        "object": "https://hypmol.net/ProcedureStep/0088dfb6-5fbc-4827-822b-2333dc586448",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/ae9894e9-e74a-4ae0-8e3a-c1a516cb3c06",
+        "predicate": "https://hypmol.net/hasProcedureStep",
+        "object": "https://hypmol.net/ProcedureStep/2667fdc7-7ce5-491a-a3fa-7d55b9179a3a",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/ae9894e9-e74a-4ae0-8e3a-c1a516cb3c06",
+        "predicate": "https://hypmol.net/hasProcedureStep",
+        "object": "https://hypmol.net/ProcedureStep/53aea4f6-10e3-4896-8129-9a38a146db38",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/ae9894e9-e74a-4ae0-8e3a-c1a516cb3c06",
+        "predicate": "https://hypmol.net/hasProcedureStep",
+        "object": "https://hypmol.net/ProcedureStep/0ccdb22e-4f57-452e-8bef-903d34d2f459",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/ae9894e9-e74a-4ae0-8e3a-c1a516cb3c06",
+        "predicate": "https://hypmol.net/hasProcedureStep",
+        "object": "https://hypmol.net/ProcedureStep/2e5382c5-be32-4831-b4a7-0aff10c7c7bd",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/0088dfb6-5fbc-4827-822b-2333dc586448",
+        "predicate": "https://hypmol.net/observation",
+        "object": "Lifetime increases to 340\u202fns at 0.3\u202fT, then slightly decreases at 0.5\u202fT.",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/2667fdc7-7ce5-491a-a3fa-7d55b9179a3a",
+        "predicate": "https://hypmol.net/observation",
+        "object": "Baseline absorbance stable.",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/53aea4f6-10e3-4896-8129-9a38a146db38",
+        "predicate": "https://hypmol.net/observation",
+        "object": "Fast component unchanged; slow component shows magnetic\u2011field dependence.",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/0ccdb22e-4f57-452e-8bef-903d34d2f459",
+        "predicate": "https://hypmol.net/observation",
+        "object": "Solution turned faint orange, no precipitation.",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/2e5382c5-be32-4831-b4a7-0aff10c7c7bd",
+        "predicate": "https://hypmol.net/observation",
+        "object": "Positive band at 580\u202fnm (charge\u2011separated state) decays with \u03c4 = 250\u202fns.",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "hop",
+    "hop_bridge_predicate_uri": "https://hypmol.net/hasProcedureStep",
+    "hop_target_count": 5,
+    "hop_scope": "all"
+  },
+  {
+    "question": "Can you find some information about 'Dataset\u202fCS\u2011014 \u2013 Fluorinated Quinolinyl Ether Synthesis'? I'm also interested in its experiment. For that entry, I'd like to check its equipment and apparatus and its experiment notes.",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Dataset/c46b1334-4c68-4a07-a7e6-4158e5a034c8",
+        "predicate": "https://hypmol.net/hasExperiment",
+        "object": "https://hypmol.net/Experiment/b146c3f6-c1dc-4b1a-ba11-8740cc3f8442",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/b146c3f6-c1dc-4b1a-ba11-8740cc3f8442",
+        "predicate": "https://hypmol.net/experimentNotes",
+        "object": "Reaction performed under dry N\u2082; all glassware oven\u2011dried.",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/b146c3f6-c1dc-4b1a-ba11-8740cc3f8442",
+        "predicate": "https://hypmol.net/equipment",
+        "object": "50\u202fmL round\u2011bottom flask, reflux condenser, magnetic stir bar, oil bath (150\u202f\u00b0C max), nitrogen inlet, TLC plate (silica, 254\u202fnm), silica gel column (hexane/ethyl acetate 3:1)",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "hop",
+    "hop_bridge_predicate_uri": "https://hypmol.net/hasExperiment",
+    "hop_target_count": 1,
+    "hop_scope": "one"
+  },
+  {
+    "question": "What can you tell me about 'EPR detection of TPAMP radical pair'? Then, tell me more about all its measurement. What info exists on its measurement result?",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/059b7bd5-7e5c-4d39-84bb-dd5ececcb8cc",
+        "predicate": "https://hypmol.net/hasMeasurement",
+        "object": "https://hypmol.net/Measurement/e0250a8f-2f45-4031-b011-30d47f4cfe52",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/059b7bd5-7e5c-4d39-84bb-dd5ececcb8cc",
+        "predicate": "https://hypmol.net/hasMeasurement",
+        "object": "https://hypmol.net/Measurement/efab73de-f187-4548-910b-bffee2967f9a",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Measurement/e0250a8f-2f45-4031-b011-30d47f4cfe52",
+        "predicate": "https://hypmol.net/measurementResult",
+        "object": "Radical\u2011pair decay constant \u03c4 = 1.34\u202f\u00b5s at 0\u202fmT; \u03c4 reduced to 0.86\u202f\u00b5s at 150\u202fmT.",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Measurement/efab73de-f187-4548-910b-bffee2967f9a",
+        "predicate": "https://hypmol.net/measurementResult",
+        "object": "Transient absorption band at 410\u202fnm confirming TPAMP* formation.",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "hop",
+    "hop_bridge_predicate_uri": "https://hypmol.net/hasMeasurement",
+    "hop_target_count": 2,
+    "hop_scope": "all"
+  },
+  {
+    "question": "I'm curious about 'Palladium\u2011Catalyzed Ether Formation of bis(2,3,4,5\u2011tetrafluorophenyl) ether'. Then, tell me more about all its procedure step. Following that procedure step, what is its step description?",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/08e09606-4e23-478f-8d0e-ce7359410e9e",
+        "predicate": "https://hypmol.net/hasProcedureStep",
+        "object": "https://hypmol.net/ProcedureStep/25128527-81f5-4731-a20d-88cd33fcc368",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/08e09606-4e23-478f-8d0e-ce7359410e9e",
+        "predicate": "https://hypmol.net/hasProcedureStep",
+        "object": "https://hypmol.net/ProcedureStep/e940695f-43b4-40cb-a383-95e04931f141",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/08e09606-4e23-478f-8d0e-ce7359410e9e",
+        "predicate": "https://hypmol.net/hasProcedureStep",
+        "object": "https://hypmol.net/ProcedureStep/ff44d18d-6399-4b05-b07a-d73adcff9b56",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/08e09606-4e23-478f-8d0e-ce7359410e9e",
+        "predicate": "https://hypmol.net/hasProcedureStep",
+        "object": "https://hypmol.net/ProcedureStep/6a10b6b9-a4ff-4981-817c-9444873cb205",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/08e09606-4e23-478f-8d0e-ce7359410e9e",
+        "predicate": "https://hypmol.net/hasProcedureStep",
+        "object": "https://hypmol.net/ProcedureStep/d4b86529-439e-4605-a582-665095ebab34",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/25128527-81f5-4731-a20d-88cd33fcc368",
+        "predicate": "https://hypmol.net/stepDescription",
+        "object": "Flamed\u2011dry all glassware, assembled the flask under nitrogen, and added cyclobutyl\u2011palladium complex (0.200\u202fg, 0.48\u202fmmol).",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/e940695f-43b4-40cb-a383-95e04931f141",
+        "predicate": "https://hypmol.net/stepDescription",
+        "object": "Allowed the mixture to cool to 25\u202f\u00b0C, diluted with 100\u202fmL of ethyl acetate, filtered to remove inorganic salts, and washed the filtrate with brine (2\u202f\u00d7\u202f50\u202fmL).",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/ff44d18d-6399-4b05-b07a-d73adcff9b56",
+        "predicate": "https://hypmol.net/stepDescription",
+        "object": "Added tetrafluoroethylbenzene (50\u202fmL, 1.0\u202fM, 50\u202fmmol) and K\u2082CO\u2083 (13.8\u202fg, 100\u202fmmol) to the flask, then introduced bis(4\u2011dimethylamino\u20112\u2011methylphenyl) sulfone (0.350\u202fg, 1.1\u202fmmol) as a supporting ligand.",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/6a10b6b9-a4ff-4981-817c-9444873cb205",
+        "predicate": "https://hypmol.net/stepDescription",
+        "object": "Concentrated the organic phase under reduced pressure, purified the crude product by flash chromatography (hexane/ethyl acetate 95:5) to afford bis(2,3,4,5\u2011tetrafluorophenyl) ether as a white solid (7.2\u202fg, 68\u202f% yield).",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/d4b86529-439e-4605-a582-665095ebab34",
+        "predicate": "https://hypmol.net/stepDescription",
+        "object": "Heated the reaction mixture to 130\u202f\u00b0C under nitrogen for 12\u202fh, monitoring progress by TLC (hexane/ethyl acetate 9:1).",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "hop",
+    "hop_bridge_predicate_uri": "https://hypmol.net/hasProcedureStep",
+    "hop_target_count": 5,
+    "hop_scope": "all"
+  },
+  {
+    "question": "What can you tell me about 'Tomas Novak'? I'm also interested in its involved in project. What info exists on its project title?",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Person/a2a477b5-acc7-41df-9154-392997ea242c",
+        "predicate": "https://hypmol.net/involvedInProject",
+        "object": "https://hypmol.net/Project/267f1f30-3d43-436c-96ac-735dd17754ec",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Project/267f1f30-3d43-436c-96ac-735dd17754ec",
+        "predicate": "https://hypmol.net/projectTitle",
+        "object": "Quantum Coherence Engineering in Synthetic Catalysis: Advancing C-H Functionalization with High-Pressure NMR",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "hop",
+    "hop_bridge_predicate_uri": "https://hypmol.net/involvedInProject",
+    "hop_target_count": 1,
+    "hop_scope": "one"
+  },
+  {
+    "question": "I'd like to know more about 'Synthesis of Fluoro\u2011alkylated Morpholine Derivative'. Now, please look into its experiment. While we are looking at that experiment, could you please identify its equipment and apparatus?",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Dataset/66540bcb-3aeb-4860-b925-332061872fd3",
+        "predicate": "https://hypmol.net/hasExperiment",
+        "object": "https://hypmol.net/Experiment/f6630b86-2259-4329-a481-d3bf3e1eb264",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/f6630b86-2259-4329-a481-d3bf3e1eb264",
+        "predicate": "https://hypmol.net/equipment",
+        "object": "Schlenk line, 250\u202fmL round\u2011bottom flask, reflux condenser, magnetic stir bar, oil bath, inert gas (Ar), TLC plates, GC\u2011MS, NMR spectrometer (400\u202fMHz)",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "hop",
+    "hop_bridge_predicate_uri": "https://hypmol.net/hasExperiment",
+    "hop_target_count": 1,
+    "hop_scope": "one"
+  },
+  {
+    "question": "Can you find some information about 'Photochemical Spin\u2011Trap Study of Fluorinated Thieno\u2011Quinolinone'? Could you find the experiment for me? Can you provide details on its experiment designation and its substitution check?",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Dataset/7785d4e4-5c30-462a-b01a-15f46f7deee4",
+        "predicate": "https://hypmol.net/hasExperiment",
+        "object": "https://hypmol.net/Experiment/858c50ed-33e1-4ef8-942e-5688fae29332",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/858c50ed-33e1-4ef8-942e-5688fae29332",
+        "predicate": "https://hypmol.net/substitutionCheck",
+        "object": "Spin trap synthesized without deuterium labeling.",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/858c50ed-33e1-4ef8-942e-5688fae29332",
+        "predicate": "https://hypmol.net/experimentDesignation",
+        "object": "EXP\u2011089",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "hop",
+    "hop_bridge_predicate_uri": "https://hypmol.net/hasExperiment",
+    "hop_target_count": 1,
+    "hop_scope": "one"
+  },
+  {
+    "question": "What can you tell me about 'Mikhail Ivanov'? Then, tell me more about its involved in project. For that entry, I'd like to check its project title and its project code.",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Person/5ecbeb0f-cc76-419f-8554-f2c67fbfcb1c",
+        "predicate": "https://hypmol.net/involvedInProject",
+        "object": "https://hypmol.net/Project/f2263fe9-bc59-4e1c-8625-73ac05695a01",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Project/f2263fe9-bc59-4e1c-8625-73ac05695a01",
+        "predicate": "https://hypmol.net/projectCode",
+        "object": "CAT-SPIN-01",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Project/f2263fe9-bc59-4e1c-8625-73ac05695a01",
+        "predicate": "https://hypmol.net/projectTitle",
+        "object": "Spin-Dependent Selective Catalysis using Photoexcited Transition Metal Complexes",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "hop",
+    "hop_bridge_predicate_uri": "https://hypmol.net/involvedInProject",
+    "hop_target_count": 1,
+    "hop_scope": "one"
+  },
+  {
+    "question": "I'm curious about 'Magnetically\u2011Modulated Photo\u2011Spin Polarization of a Diazo\u2011Derived Radical'. Now, please look into all its procedure step. For that entry, what is its procedure date?",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/eabd99b9-a1dc-4dea-bc9d-83646d5c640b",
+        "predicate": "https://hypmol.net/hasProcedureStep",
+        "object": "https://hypmol.net/ProcedureStep/faf9db7e-c45d-4c14-9662-1396a1b47127",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/eabd99b9-a1dc-4dea-bc9d-83646d5c640b",
+        "predicate": "https://hypmol.net/hasProcedureStep",
+        "object": "https://hypmol.net/ProcedureStep/5a62ec01-2f68-4f0d-a931-86b64629ecc1",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/eabd99b9-a1dc-4dea-bc9d-83646d5c640b",
+        "predicate": "https://hypmol.net/hasProcedureStep",
+        "object": "https://hypmol.net/ProcedureStep/b2d1d6cb-4f80-4e17-99d9-413e5bd40636",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/eabd99b9-a1dc-4dea-bc9d-83646d5c640b",
+        "predicate": "https://hypmol.net/hasProcedureStep",
+        "object": "https://hypmol.net/ProcedureStep/aa404d44-c77a-4414-8dec-c51c9b3caec8",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/eabd99b9-a1dc-4dea-bc9d-83646d5c640b",
+        "predicate": "https://hypmol.net/hasProcedureStep",
+        "object": "https://hypmol.net/ProcedureStep/38eae9b0-ab08-4377-8774-fa1f6b651a41",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/faf9db7e-c45d-4c14-9662-1396a1b47127",
+        "predicate": "https://hypmol.net/procedureDate",
+        "object": "2025-12-20",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/5a62ec01-2f68-4f0d-a931-86b64629ecc1",
+        "predicate": "https://hypmol.net/procedureDate",
+        "object": "2025-12-21",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/b2d1d6cb-4f80-4e17-99d9-413e5bd40636",
+        "predicate": "https://hypmol.net/procedureDate",
+        "object": "2025-12-21",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/aa404d44-c77a-4414-8dec-c51c9b3caec8",
+        "predicate": "https://hypmol.net/procedureDate",
+        "object": "2025-12-22",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/38eae9b0-ab08-4377-8774-fa1f6b651a41",
+        "predicate": "https://hypmol.net/procedureDate",
+        "object": "2025-12-20",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "hop",
+    "hop_bridge_predicate_uri": "https://hypmol.net/hasProcedureStep",
+    "hop_target_count": 5,
+    "hop_scope": "all"
+  },
+  {
+    "question": "What can you tell me about 'Catalytic Hydrogenation under Static Magnetic Field'? Now, please look into all its measurement. Specifically for that measurement, what is its measurement method?",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/630c75d0-ec23-473c-9243-ce83c59f36d1",
+        "predicate": "https://hypmol.net/hasMeasurement",
+        "object": "https://hypmol.net/Measurement/073eaab9-f13a-4cce-9d49-804868b3bf57",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/630c75d0-ec23-473c-9243-ce83c59f36d1",
+        "predicate": "https://hypmol.net/hasMeasurement",
+        "object": "https://hypmol.net/Measurement/13abd7be-9247-4b85-9097-fd596e758e99",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Measurement/073eaab9-f13a-4cce-9d49-804868b3bf57",
+        "predicate": "https://hypmol.net/measurementMethod",
+        "object": "EPR (in\u2011situ)",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Measurement/13abd7be-9247-4b85-9097-fd596e758e99",
+        "predicate": "https://hypmol.net/measurementMethod",
+        "object": "GC\u2011MS",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "hop",
+    "hop_bridge_predicate_uri": "https://hypmol.net/hasMeasurement",
+    "hop_target_count": 2,
+    "hop_scope": "all"
+  },
+  {
+    "question": "Can you find some information about 'EPR\u2011Transient\u2011RP\u2011001'? Could you give me all its usage information? And for that usage, could you please identify its mass used in experiment?",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/34298e31-cb44-4c44-8d8c-52142f8887f1",
+        "predicate": "https://hypmol.net/hasUsageInformation",
+        "object": "https://hypmol.net/SubstanceUsageInformation/aa190d01-3891-4559-a947-e898e524fedd",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/34298e31-cb44-4c44-8d8c-52142f8887f1",
+        "predicate": "https://hypmol.net/hasUsageInformation",
+        "object": "https://hypmol.net/SubstanceUsageInformation/48c57ebc-0558-4776-9d57-e7cd940c858f",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/34298e31-cb44-4c44-8d8c-52142f8887f1",
+        "predicate": "https://hypmol.net/hasUsageInformation",
+        "object": "https://hypmol.net/SubstanceUsageInformation/eb848267-e501-4775-9f80-9b19d0d93647",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/SubstanceUsageInformation/aa190d01-3891-4559-a947-e898e524fedd",
+        "predicate": "https://hypmol.net/usedMass",
+        "object": "0.01",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/SubstanceUsageInformation/48c57ebc-0558-4776-9d57-e7cd940c858f",
+        "predicate": "https://hypmol.net/usedMass",
+        "object": "0.015",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/SubstanceUsageInformation/eb848267-e501-4775-9f80-9b19d0d93647",
+        "predicate": "https://hypmol.net/usedMass",
+        "object": "0.25",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "hop",
+    "hop_bridge_predicate_uri": "https://hypmol.net/hasUsageInformation",
+    "hop_target_count": 3,
+    "hop_scope": "all"
+  },
+  {
+    "question": "Can you find some information about 'Pd\u2011Catalyzed C\u2011O Coupling to Tetrafluoroethylbenzene'? Could you give me all its measurement? What info exists on its measurement method?",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/63162fce-ca99-4809-8478-ecdb89c92cc2",
+        "predicate": "https://hypmol.net/hasMeasurement",
+        "object": "https://hypmol.net/Measurement/ae62fcd8-7f43-4710-8cfa-bb40383959b5",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/63162fce-ca99-4809-8478-ecdb89c92cc2",
+        "predicate": "https://hypmol.net/hasMeasurement",
+        "object": "https://hypmol.net/Measurement/8ba6426e-51b1-4618-9a50-3be2e85e86be",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Measurement/ae62fcd8-7f43-4710-8cfa-bb40383959b5",
+        "predicate": "https://hypmol.net/measurementMethod",
+        "object": "GC\u2011MS",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Measurement/8ba6426e-51b1-4618-9a50-3be2e85e86be",
+        "predicate": "https://hypmol.net/measurementMethod",
+        "object": "\u00b9H NMR",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "hop",
+    "hop_bridge_predicate_uri": "https://hypmol.net/hasMeasurement",
+    "hop_target_count": 2,
+    "hop_scope": "all"
+  },
+  {
+    "question": "I'm curious about 'SpinChem_TripletEnergyTransfer_TrisPyrazolylBorate'. I'm also interested in its author. For that entry, I'd like to check its given name and its position.",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Dataset/cf0f7554-331d-4c99-9868-6351f352d01f",
+        "predicate": "http://schema.org/author",
+        "object": "https://hypmol.net/Person/138d13d1-281a-432c-9100-1210dafb6e6c",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Person/138d13d1-281a-432c-9100-1210dafb6e6c",
+        "predicate": "https://hypmol.net/position",
+        "object": "Senior Research Scientist",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Person/138d13d1-281a-432c-9100-1210dafb6e6c",
+        "predicate": "http://schema.org/givenName",
+        "object": "David",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "hop",
+    "hop_bridge_predicate_uri": "http://schema.org/author",
+    "hop_target_count": 1,
+    "hop_scope": "one"
+  },
+  {
+    "question": "I'm curious about 'SyntheChem-PdCrossCoupling-2025'. Could you find the author for me? Following that person, please find its given name and its family name.",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Dataset/84c99a7f-324c-4812-94e2-a727aa4dc377",
+        "predicate": "http://schema.org/author",
+        "object": "https://hypmol.net/Person/087956b6-3591-45a4-8377-2e74485cb5fe",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Person/087956b6-3591-45a4-8377-2e74485cb5fe",
+        "predicate": "http://schema.org/familyName",
+        "object": "Chen",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Person/087956b6-3591-45a4-8377-2e74485cb5fe",
+        "predicate": "http://schema.org/givenName",
+        "object": "Sofia",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "hop",
+    "hop_bridge_predicate_uri": "http://schema.org/author",
+    "hop_target_count": 1,
+    "hop_scope": "one"
+  },
+  {
+    "question": "What can you tell me about 'Priyanka Das'? Then, tell me more about its involved in project. Following that project, please find its project title and its project code.",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Person/5c421b8a-f630-4ef7-9c19-ec5db02cc0ff",
+        "predicate": "https://hypmol.net/involvedInProject",
+        "object": "https://hypmol.net/Project/7910c9dd-1619-4719-b402-8ce827d7b8d4",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Project/7910c9dd-1619-4719-b402-8ce827d7b8d4",
+        "predicate": "https://hypmol.net/projectCode",
+        "object": "MAGN-459-CHI",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Project/7910c9dd-1619-4719-b402-8ce827d7b8d4",
+        "predicate": "https://hypmol.net/projectTitle",
+        "object": "Magnetic Field Control of Chiral Synthesis: Enantioselective Formation of Complex Organoboranes",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "hop",
+    "hop_bridge_predicate_uri": "https://hypmol.net/involvedInProject",
+    "hop_target_count": 1,
+    "hop_scope": "one"
+  },
+  {
+    "question": "I'm curious about 'Photoinduced Spin Polarization in Cyclobutyl\u2011Palladium / 4\u2011(2\u2011hydroxyethyl)morpholine System'. Now, please look into its author. What info exists on its given name?",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Dataset/621b7056-441e-4a17-a4ba-03aa7b3603ac",
+        "predicate": "http://schema.org/author",
+        "object": "https://hypmol.net/Person/2dd0b1ad-f487-4866-80d8-62cab20a1164",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Person/2dd0b1ad-f487-4866-80d8-62cab20a1164",
+        "predicate": "http://schema.org/givenName",
+        "object": "Elena",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "hop",
+    "hop_bridge_predicate_uri": "http://schema.org/author",
+    "hop_target_count": 1,
+    "hop_scope": "one"
+  },
+  {
+    "question": "What can you tell me about 'TREPR Study of (e)-1,2\u2011difluoro\u20113\u2011tert\u2011butyl\u2011prop\u20112\u2011en\u20111\u2011yl nitroxide / Bis(2,3,4,5-tetrafluorophenyl) ether Pair'? Then, tell me more about all its procedure step. Regarding that procedure step, what is its step description?",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/5e8b9ec4-dee5-40df-ad26-db93a3ef0599",
+        "predicate": "https://hypmol.net/hasProcedureStep",
+        "object": "https://hypmol.net/ProcedureStep/ba103a8e-6c07-4e2e-94ab-e5cabe15a311",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/5e8b9ec4-dee5-40df-ad26-db93a3ef0599",
+        "predicate": "https://hypmol.net/hasProcedureStep",
+        "object": "https://hypmol.net/ProcedureStep/f6200fd9-de29-4a19-b416-f7c3d2921532",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/5e8b9ec4-dee5-40df-ad26-db93a3ef0599",
+        "predicate": "https://hypmol.net/hasProcedureStep",
+        "object": "https://hypmol.net/ProcedureStep/9b8dba90-aea1-47eb-80c8-08826b7cf493",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/5e8b9ec4-dee5-40df-ad26-db93a3ef0599",
+        "predicate": "https://hypmol.net/hasProcedureStep",
+        "object": "https://hypmol.net/ProcedureStep/5410135b-831c-443a-9252-e4f98d4e4bea",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/5e8b9ec4-dee5-40df-ad26-db93a3ef0599",
+        "predicate": "https://hypmol.net/hasProcedureStep",
+        "object": "https://hypmol.net/ProcedureStep/854c2024-0a52-4397-8e58-e06311d968b9",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/ba103a8e-6c07-4e2e-94ab-e5cabe15a311",
+        "predicate": "https://hypmol.net/stepDescription",
+        "object": "Weigh 0.045\u202fg of (e)-1,2\u2011difluoro\u20113\u2011tert\u2011butyl\u2011prop\u20112\u2011en\u20111\u2011yl nitroxide into a dry vial inside the glovebox.",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/f6200fd9-de29-4a19-b416-f7c3d2921532",
+        "predicate": "https://hypmol.net/stepDescription",
+        "object": "Transfer 100\u202f\u00b5L of the solution into a quartz EPR tube, flame\u2011seal under nitrogen, and place the tube in the cryostat set to 120\u202fK.",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/9b8dba90-aea1-47eb-80c8-08826b7cf493",
+        "predicate": "https://hypmol.net/stepDescription",
+        "object": "Dissolve the nitroxide in 3\u202fmL of dry acetonitrile, then add 0.060\u202fg of bis(2,3,4,5-tetrafluorophenyl) ether and stir for 5\u202fmin to form a 1\u202f:\u202f1 molar radical\u2011pair solution (0.25\u202fM total).",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/5410135b-831c-443a-9252-e4f98d4e4bea",
+        "predicate": "https://hypmol.net/stepDescription",
+        "object": "Apply magnetic fields of 0, 50, 150, and 250\u202fmT sequentially, recording TREPR spectra after a 532\u202fnm laser flash (10\u202fns pulse, 1\u202fmJ).",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/854c2024-0a52-4397-8e58-e06311d968b9",
+        "predicate": "https://hypmol.net/stepDescription",
+        "object": "Analyse the time\u2011dependent decay of the radical\u2011pair signal using biexponential fitting to extract singlet and triplet recombination rates.",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "hop",
+    "hop_bridge_predicate_uri": "https://hypmol.net/hasProcedureStep",
+    "hop_target_count": 5,
+    "hop_scope": "all"
+  },
+  {
+    "question": "I'm curious about 'Z\u2011Selective esterification in inert siloxane medium'. I'm also interested in all its procedure step. Following that procedure step, what is its experimental observation?",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/6e67bbd9-c1ec-4747-844d-33602139dbea",
+        "predicate": "https://hypmol.net/hasProcedureStep",
+        "object": "https://hypmol.net/ProcedureStep/f74f9428-6ef8-4c24-b63e-706ceb889efd",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/6e67bbd9-c1ec-4747-844d-33602139dbea",
+        "predicate": "https://hypmol.net/hasProcedureStep",
+        "object": "https://hypmol.net/ProcedureStep/8f02eaf8-7da4-4b1e-9dc2-3245e026d818",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/6e67bbd9-c1ec-4747-844d-33602139dbea",
+        "predicate": "https://hypmol.net/hasProcedureStep",
+        "object": "https://hypmol.net/ProcedureStep/dea0caa2-b03d-450c-aea1-9cb25184174a",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/6e67bbd9-c1ec-4747-844d-33602139dbea",
+        "predicate": "https://hypmol.net/hasProcedureStep",
+        "object": "https://hypmol.net/ProcedureStep/b2bec554-c0d6-491a-8635-8e8da90cc35f",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/f74f9428-6ef8-4c24-b63e-706ceb889efd",
+        "predicate": "https://hypmol.net/observation",
+        "object": "Clear, colorless solution formed.",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/8f02eaf8-7da4-4b1e-9dc2-3245e026d818",
+        "predicate": "https://hypmol.net/observation",
+        "object": "Complete consumption of starting alkenoate after 3\u202fh.",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/dea0caa2-b03d-450c-aea1-9cb25184174a",
+        "predicate": "https://hypmol.net/observation",
+        "object": "Mild exotherm (<5\u202f\u00b0C rise) observed.",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/b2bec554-c0d6-491a-8635-8e8da90cc35f",
+        "predicate": "https://hypmol.net/observation",
+        "object": "Isolated the Z\u2011ester as a pale yellow oil (71\u202f% yield).",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "hop",
+    "hop_bridge_predicate_uri": "https://hypmol.net/hasProcedureStep",
+    "hop_target_count": 4,
+    "hop_scope": "all"
+  },
+  {
+    "question": "Can you find some information about 'Spin Chemistry \u2013 Fluorinated Alkene/Nitroxide Photo\u2011Dynamics'? Could you find the experiment for me? And for that experiment, I'd like to check its experiment designation and its experiment notes.",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Dataset/e53ccdaa-a020-4723-9867-68d1bd3edfd8",
+        "predicate": "https://hypmol.net/hasExperiment",
+        "object": "https://hypmol.net/Experiment/7b1a10e1-3c5b-4b53-bb4e-9af07355a8f9",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/7b1a10e1-3c5b-4b53-bb4e-9af07355a8f9",
+        "predicate": "https://hypmol.net/experimentNotes",
+        "object": "Measurements performed under nitrogen atmosphere to suppress oxygen quenching.",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/7b1a10e1-3c5b-4b53-bb4e-9af07355a8f9",
+        "predicate": "https://hypmol.net/experimentDesignation",
+        "object": "EXP\u2011017",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "hop",
+    "hop_bridge_predicate_uri": "https://hypmol.net/hasExperiment",
+    "hop_target_count": 1,
+    "hop_scope": "one"
+  },
+  {
+    "question": "I'm curious about 'Photolytic Generation of Phenoxy Radicals and Trapping with Fluorinated Nitroxide'. Could you give me all its procedure step? What info exists on its experimental observation?",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/01684980-4913-413d-8386-21dd4d5ceb0f",
+        "predicate": "https://hypmol.net/hasProcedureStep",
+        "object": "https://hypmol.net/ProcedureStep/d38009f2-7bef-421d-a0a8-eac620fcff21",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/01684980-4913-413d-8386-21dd4d5ceb0f",
+        "predicate": "https://hypmol.net/hasProcedureStep",
+        "object": "https://hypmol.net/ProcedureStep/3de9aa12-423c-4936-9081-8f116cfc0971",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/01684980-4913-413d-8386-21dd4d5ceb0f",
+        "predicate": "https://hypmol.net/hasProcedureStep",
+        "object": "https://hypmol.net/ProcedureStep/4c463fcd-fb10-4991-8113-ef63ed3d1893",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/01684980-4913-413d-8386-21dd4d5ceb0f",
+        "predicate": "https://hypmol.net/hasProcedureStep",
+        "object": "https://hypmol.net/ProcedureStep/a8b1f1e2-a01d-4498-9ef8-79d915cb1c9a",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/01684980-4913-413d-8386-21dd4d5ceb0f",
+        "predicate": "https://hypmol.net/hasProcedureStep",
+        "object": "https://hypmol.net/ProcedureStep/3d9e1c53-4ee6-45cd-91a5-8d7957ab8aed",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/d38009f2-7bef-421d-a0a8-eac620fcff21",
+        "predicate": "https://hypmol.net/observation",
+        "object": "Absorbance decreased from 0.78 to 0.32, corresponding to ~59\u202f% azide conversion.",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/3de9aa12-423c-4936-9081-8f116cfc0971",
+        "predicate": "https://hypmol.net/observation",
+        "object": "A new six\u2011line hyperfine pattern appeared, consistent with the trapped phenoxy\u2011nitroxide adduct.",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/4c463fcd-fb10-4991-8113-ef63ed3d1893",
+        "predicate": "https://hypmol.net/observation",
+        "object": "A faint orange tint appeared, characteristic of nitroxide presence.",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/a8b1f1e2-a01d-4498-9ef8-79d915cb1c9a",
+        "predicate": "https://hypmol.net/observation",
+        "object": "During illumination the solution brightened briefly, indicating radical formation.",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/3d9e1c53-4ee6-45cd-91a5-8d7957ab8aed",
+        "predicate": "https://hypmol.net/observation",
+        "object": "Solution turned pale yellow; complete dissolution observed.",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "hop",
+    "hop_bridge_predicate_uri": "https://hypmol.net/hasProcedureStep",
+    "hop_target_count": 5,
+    "hop_scope": "all"
+  },
+  {
+    "question": "What can you tell me about 'Hiroshi Sato'? Could you find the involved in project for me? While we are looking at that project, what is its project title?",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Person/0557a0c2-fea2-4849-98bc-74506fdee221",
+        "predicate": "https://hypmol.net/involvedInProject",
+        "object": "https://hypmol.net/Project/b8aa79df-9eb2-478c-9623-a0a847a7fe97",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Project/b8aa79df-9eb2-478c-9623-a0a847a7fe97",
+        "predicate": "https://hypmol.net/projectTitle",
+        "object": "Quantum Coherent Control of Chiral Induction in Asymmetric Synthesis",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "hop",
+    "hop_bridge_predicate_uri": "https://hypmol.net/involvedInProject",
+    "hop_target_count": 1,
+    "hop_scope": "one"
+  },
+  {
+    "question": "I'd like to know more about 'SpinChem_MFE_2025'. Then, tell me more about its experiment. Regarding that experiment, what is its experiment name?",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Dataset/7edf623c-2fd3-4f9d-b9a9-2e9c1d6021ec",
+        "predicate": "https://hypmol.net/hasExperiment",
+        "object": "https://hypmol.net/Experiment/faa574fc-ac28-42eb-9c4c-deb02c5e5118",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/faa574fc-ac28-42eb-9c4c-deb02c5e5118",
+        "predicate": "https://hypmol.net/experimentName",
+        "object": "Magnetic\u2011Field Effect on Radical\u2011Pair Yield",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "hop",
+    "hop_bridge_predicate_uri": "https://hypmol.net/hasExperiment",
+    "hop_target_count": 1,
+    "hop_scope": "one"
+  },
+  {
+    "question": "I'd like to know more about 'Photochemical Generation of 1,4\u2011Bis(trifluoromethyl)benzene from Trichloromethyl\u20114,5\u2011dihydrooxazole'. Could you find the experiment for me? What info exists on its equipment and apparatus?",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Dataset/eb5f4854-a60e-4fc5-a315-640d5ad5983e",
+        "predicate": "https://hypmol.net/hasExperiment",
+        "object": "https://hypmol.net/Experiment/bb53d3f0-f939-4e4a-a916-71b4a93e7905",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/bb53d3f0-f939-4e4a-a916-71b4a93e7905",
+        "predicate": "https://hypmol.net/equipment",
+        "object": "Quartz photoreactor (10\u202fmL), 365\u202fnm LED array (100\u202fmW\u202fcm\u207b\u00b2), magnetic stir bar, nitrogen glovebox, analytical HPLC, \u00b9\u2079F NMR spectrometer",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "hop",
+    "hop_bridge_predicate_uri": "https://hypmol.net/hasExperiment",
+    "hop_target_count": 1,
+    "hop_scope": "one"
+  },
+  {
+    "question": "Can you find some information about 'Field\u2011Assisted Lewis\u2011Acid Catalysis'? Now, please look into all its procedure step. What info exists on its experimental observation?",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/ee4df81a-ac0b-4305-b16f-06353836c00d",
+        "predicate": "https://hypmol.net/hasProcedureStep",
+        "object": "https://hypmol.net/ProcedureStep/a7e986b5-aaf9-4b49-97ed-07581ea16082",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/ee4df81a-ac0b-4305-b16f-06353836c00d",
+        "predicate": "https://hypmol.net/hasProcedureStep",
+        "object": "https://hypmol.net/ProcedureStep/6a965702-7e90-4fca-bb91-7ea1d07933cb",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/ee4df81a-ac0b-4305-b16f-06353836c00d",
+        "predicate": "https://hypmol.net/hasProcedureStep",
+        "object": "https://hypmol.net/ProcedureStep/f064d07d-6cb8-43a9-8a74-ed9585034971",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/ee4df81a-ac0b-4305-b16f-06353836c00d",
+        "predicate": "https://hypmol.net/hasProcedureStep",
+        "object": "https://hypmol.net/ProcedureStep/069d3d44-26e0-4444-a2d4-4a814d3c4fb7",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/ee4df81a-ac0b-4305-b16f-06353836c00d",
+        "predicate": "https://hypmol.net/hasProcedureStep",
+        "object": "https://hypmol.net/ProcedureStep/1b96b825-c53c-4410-b6eb-c862fb9d0e6b",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/a7e986b5-aaf9-4b49-97ed-07581ea16082",
+        "predicate": "https://hypmol.net/observation",
+        "object": "Homogenization achieved after 10\u202fmin of stirring.",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/6a965702-7e90-4fca-bb91-7ea1d07933cb",
+        "predicate": "https://hypmol.net/observation",
+        "object": "Mixture turned opaque brown upon addition of the borane.",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/f064d07d-6cb8-43a9-8a74-ed9585034971",
+        "predicate": "https://hypmol.net/observation",
+        "object": "Gradual decolorization observed; aliquots taken every hour showed emerging GC peaks at 7.3\u202fmin (target product).",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/069d3d44-26e0-4444-a2d4-4a814d3c4fb7",
+        "predicate": "https://hypmol.net/observation",
+        "object": "Isolated 1.6\u202fg of product (64\u202f% yield).",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/1b96b825-c53c-4410-b6eb-c862fb9d0e6b",
+        "predicate": "https://hypmol.net/observation",
+        "object": "Organic layer was yellow\u2011brown; washed with brine and dried over MgSO\u2084.",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "hop",
+    "hop_bridge_predicate_uri": "https://hypmol.net/hasProcedureStep",
+    "hop_target_count": 5,
+    "hop_scope": "all"
+  },
+  {
+    "question": "I'd like to know more about 'Synthesis of 4\u2011[(e)\u20113\u2011(diethylamino)prop\u20112\u2011en\u20111\u2011yl]\u2011N\u2011(4\u2011(2\u2011hydroxyethyl)morpholinyl)benzenesulfonamide'. I'm also interested in all its measurement. What info exists on its measurement method?",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/4cc7f7ab-1fb0-497b-a125-3ec284317f01",
+        "predicate": "https://hypmol.net/hasMeasurement",
+        "object": "https://hypmol.net/Measurement/18f52894-6c51-456f-bb83-65ad05670d37",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/4cc7f7ab-1fb0-497b-a125-3ec284317f01",
+        "predicate": "https://hypmol.net/hasMeasurement",
+        "object": "https://hypmol.net/Measurement/a28cdc4d-b7eb-4c94-931e-6e1ca360dbf7",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Measurement/18f52894-6c51-456f-bb83-65ad05670d37",
+        "predicate": "https://hypmol.net/measurementMethod",
+        "object": "\u00b9H NMR (400\u202fMHz, CDCl\u2083)",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Measurement/a28cdc4d-b7eb-4c94-931e-6e1ca360dbf7",
+        "predicate": "https://hypmol.net/measurementMethod",
+        "object": "IR (ATR)",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "hop",
+    "hop_bridge_predicate_uri": "https://hypmol.net/hasMeasurement",
+    "hop_target_count": 2,
+    "hop_scope": "all"
+  },
+  {
+    "question": "I'm curious about 'Quantifying the Impact of Atmospheric CO2 Variability on Global Temperature Anomalies through Machine Learning Models'. Then, tell me more about all its author. Specifically for that person, what is its position?",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Publication/dbaaa9ca-870c-447e-8d1e-a5cb59c16f76",
+        "predicate": "https://hypmol.net/hasAuthor",
+        "object": "https://hypmol.net/Person/d0444c16-74ba-4dec-a144-1db8574c8985",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Publication/dbaaa9ca-870c-447e-8d1e-a5cb59c16f76",
+        "predicate": "https://hypmol.net/hasAuthor",
+        "object": "https://hypmol.net/Person/081363f8-3e93-4b8e-9c72-338a1055a82d",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Publication/dbaaa9ca-870c-447e-8d1e-a5cb59c16f76",
+        "predicate": "https://hypmol.net/hasAuthor",
+        "object": "https://hypmol.net/Person/3674f98a-d4b4-4cc6-8610-99f374baf511",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Publication/dbaaa9ca-870c-447e-8d1e-a5cb59c16f76",
+        "predicate": "https://hypmol.net/hasAuthor",
+        "object": "https://hypmol.net/Person/492daaf0-0ab2-4e9f-9ac5-640ca93560ad",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Publication/dbaaa9ca-870c-447e-8d1e-a5cb59c16f76",
+        "predicate": "https://hypmol.net/hasAuthor",
+        "object": "https://hypmol.net/Person/546b37b8-a68c-45e0-8252-9af993560a2c",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Publication/dbaaa9ca-870c-447e-8d1e-a5cb59c16f76",
+        "predicate": "https://hypmol.net/hasAuthor",
+        "object": "https://hypmol.net/Person/8d400ae3-6613-45ed-aaad-9f18fbf42312",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Person/d0444c16-74ba-4dec-a144-1db8574c8985",
+        "predicate": "https://hypmol.net/position",
+        "object": "Research Scientist",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Person/081363f8-3e93-4b8e-9c72-338a1055a82d",
+        "predicate": "https://hypmol.net/position",
+        "object": "PhD Student",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Person/3674f98a-d4b4-4cc6-8610-99f374baf511",
+        "predicate": "https://hypmol.net/position",
+        "object": "Professor",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Person/492daaf0-0ab2-4e9f-9ac5-640ca93560ad",
+        "predicate": "https://hypmol.net/position",
+        "object": "Postdoc",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Person/546b37b8-a68c-45e0-8252-9af993560a2c",
+        "predicate": "https://hypmol.net/position",
+        "object": "Senior Researcher",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Person/8d400ae3-6613-45ed-aaad-9f18fbf42312",
+        "predicate": "https://hypmol.net/position",
+        "object": "Lab Technician",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "hop",
+    "hop_bridge_predicate_uri": "https://hypmol.net/hasAuthor",
+    "hop_target_count": 6,
+    "hop_scope": "all"
+  },
+  {
+    "question": "Can you find some information about 'Quantum Entanglement Distribution in Optical Fiber Networks: A Long-Term Stability Analysis'? I'm also interested in its primary author. Specifically for that person, please find its family name and its position.",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Publication/7524e10b-f3b7-420a-a21f-33c9d07da97d",
+        "predicate": "https://hypmol.net/hasPrimaryAuthor",
+        "object": "https://hypmol.net/Person/0557a0c2-fea2-4849-98bc-74506fdee221",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Person/0557a0c2-fea2-4849-98bc-74506fdee221",
+        "predicate": "https://hypmol.net/position",
+        "object": "Professor",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Person/0557a0c2-fea2-4849-98bc-74506fdee221",
+        "predicate": "http://schema.org/familyName",
+        "object": "Sato",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "hop",
+    "hop_bridge_predicate_uri": "https://hypmol.net/hasPrimaryAuthor",
+    "hop_target_count": 1,
+    "hop_scope": "one"
+  },
+  {
+    "question": "I'm curious about 'Kinetic Analysis of Nitroxide Radical Formation via EPR Spin Trapping'. Could you give me all its procedure step? Regarding that procedure step, what is its procedure date?",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/50cdd7b5-f115-47bd-b9ad-ad731f49ffc0",
+        "predicate": "https://hypmol.net/hasProcedureStep",
+        "object": "https://hypmol.net/ProcedureStep/b2542086-7d8e-4451-88ed-940de05a7df8",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/50cdd7b5-f115-47bd-b9ad-ad731f49ffc0",
+        "predicate": "https://hypmol.net/hasProcedureStep",
+        "object": "https://hypmol.net/ProcedureStep/ed593b2c-0a11-4bc5-8f21-13abfa5aa727",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/50cdd7b5-f115-47bd-b9ad-ad731f49ffc0",
+        "predicate": "https://hypmol.net/hasProcedureStep",
+        "object": "https://hypmol.net/ProcedureStep/993d349d-4886-4a66-9df5-4aa4f268d135",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/50cdd7b5-f115-47bd-b9ad-ad731f49ffc0",
+        "predicate": "https://hypmol.net/hasProcedureStep",
+        "object": "https://hypmol.net/ProcedureStep/02564e70-4aa7-417d-83c7-dab396fc3281",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/50cdd7b5-f115-47bd-b9ad-ad731f49ffc0",
+        "predicate": "https://hypmol.net/hasProcedureStep",
+        "object": "https://hypmol.net/ProcedureStep/f1fd5935-3e33-4ac4-a8b9-c2826e7fbb98",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/b2542086-7d8e-4451-88ed-940de05a7df8",
+        "predicate": "https://hypmol.net/procedureDate",
+        "object": "2024-02-28",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/ed593b2c-0a11-4bc5-8f21-13abfa5aa727",
+        "predicate": "https://hypmol.net/procedureDate",
+        "object": "2024-02-28",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/993d349d-4886-4a66-9df5-4aa4f268d135",
+        "predicate": "https://hypmol.net/procedureDate",
+        "object": "2024-02-28",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/02564e70-4aa7-417d-83c7-dab396fc3281",
+        "predicate": "https://hypmol.net/procedureDate",
+        "object": "2024-02-28",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/f1fd5935-3e33-4ac4-a8b9-c2826e7fbb98",
+        "predicate": "https://hypmol.net/procedureDate",
+        "object": "2024-02-28",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "hop",
+    "hop_bridge_predicate_uri": "https://hypmol.net/hasProcedureStep",
+    "hop_target_count": 5,
+    "hop_scope": "all"
+  },
+  {
+    "question": "I'm curious about 'One\u2011Pot Synthesis of 4-(2\u2011hydroxyethyl)morpholine (EXP\u2011045)'. I'm also interested in all its procedure step. What info exists on its step order?",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/f91000b8-49bf-4739-9c2c-f739af8f502f",
+        "predicate": "https://hypmol.net/hasProcedureStep",
+        "object": "https://hypmol.net/ProcedureStep/189a6fff-7389-486c-8570-f68545433e94",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/f91000b8-49bf-4739-9c2c-f739af8f502f",
+        "predicate": "https://hypmol.net/hasProcedureStep",
+        "object": "https://hypmol.net/ProcedureStep/7c110039-0bfc-4b05-a72c-bef9fb17c082",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/f91000b8-49bf-4739-9c2c-f739af8f502f",
+        "predicate": "https://hypmol.net/hasProcedureStep",
+        "object": "https://hypmol.net/ProcedureStep/b7fbe561-8d96-470e-9618-737996645d96",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/f91000b8-49bf-4739-9c2c-f739af8f502f",
+        "predicate": "https://hypmol.net/hasProcedureStep",
+        "object": "https://hypmol.net/ProcedureStep/dffd7ec7-b7a6-4987-b1fe-4c15ea7eb408",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/f91000b8-49bf-4739-9c2c-f739af8f502f",
+        "predicate": "https://hypmol.net/hasProcedureStep",
+        "object": "https://hypmol.net/ProcedureStep/2f59c841-24cc-4dfd-a13a-c13a09655d05",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/189a6fff-7389-486c-8570-f68545433e94",
+        "predicate": "https://hypmol.net/stepOrder",
+        "object": "5",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/7c110039-0bfc-4b05-a72c-bef9fb17c082",
+        "predicate": "https://hypmol.net/stepOrder",
+        "object": "1",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/b7fbe561-8d96-470e-9618-737996645d96",
+        "predicate": "https://hypmol.net/stepOrder",
+        "object": "2",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/dffd7ec7-b7a6-4987-b1fe-4c15ea7eb408",
+        "predicate": "https://hypmol.net/stepOrder",
+        "object": "4",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/ProcedureStep/2f59c841-24cc-4dfd-a13a-c13a09655d05",
+        "predicate": "https://hypmol.net/stepOrder",
+        "object": "3",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "hop",
+    "hop_bridge_predicate_uri": "https://hypmol.net/hasProcedureStep",
+    "hop_target_count": 5,
+    "hop_scope": "all"
+  },
+  {
+    "question": "I'm curious about 'Catalytic Cross\u2011Coupling of Bis(2,3,4,5\u2011tetrafluorophenyl) Ether with 4\u2011(2\u2011hydroxyethyl)morpholine'. I'm also interested in its author. For that entry, I'd like to check its email and its given name.",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Dataset/6abce4ee-bddc-4dd8-8a03-bf0109d88543",
+        "predicate": "http://schema.org/author",
+        "object": "https://hypmol.net/Person/0acbf61a-ba82-40b6-8837-0f1fe8a4308e",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Person/0acbf61a-ba82-40b6-8837-0f1fe8a4308e",
+        "predicate": "http://schema.org/givenName",
+        "object": "Yasmin",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Person/0acbf61a-ba82-40b6-8837-0f1fe8a4308e",
+        "predicate": "http://schema.org/email",
+        "object": "y.al-fayed@university.edu",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "hop",
+    "hop_bridge_predicate_uri": "http://schema.org/author",
+    "hop_target_count": 1,
+    "hop_scope": "one"
+  },
+  {
+    "question": "I'm curious about 'Machine Learning-Driven Predictive Modeling of Protein Folding Stability under Variable Environmental Conditions'. Could you give me all its author? What info exists on its given name?",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Publication/cbeb7f08-87ae-4e37-9acf-0796aff952c8",
+        "predicate": "https://hypmol.net/hasAuthor",
+        "object": "https://hypmol.net/Person/83ad4a8d-fad1-4836-a1eb-c1ae2dd9157d",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Publication/cbeb7f08-87ae-4e37-9acf-0796aff952c8",
+        "predicate": "https://hypmol.net/hasAuthor",
+        "object": "https://hypmol.net/Person/8e00d0f2-830f-4480-bd0c-e830b0dc1d63",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Publication/cbeb7f08-87ae-4e37-9acf-0796aff952c8",
+        "predicate": "https://hypmol.net/hasAuthor",
+        "object": "https://hypmol.net/Person/ca78f5bd-32d8-4272-b0f1-57dfb211a008",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Publication/cbeb7f08-87ae-4e37-9acf-0796aff952c8",
+        "predicate": "https://hypmol.net/hasAuthor",
+        "object": "https://hypmol.net/Person/df16dd3c-9a4b-4e0d-978d-99f15ec58742",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Person/83ad4a8d-fad1-4836-a1eb-c1ae2dd9157d",
+        "predicate": "http://schema.org/givenName",
+        "object": "Dr. James",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Person/8e00d0f2-830f-4480-bd0c-e830b0dc1d63",
+        "predicate": "http://schema.org/givenName",
+        "object": "Lucas",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Person/ca78f5bd-32d8-4272-b0f1-57dfb211a008",
+        "predicate": "http://schema.org/givenName",
+        "object": "Dr. Ahmed",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Person/df16dd3c-9a4b-4e0d-978d-99f15ec58742",
+        "predicate": "http://schema.org/givenName",
+        "object": "Javier",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "hop",
+    "hop_bridge_predicate_uri": "https://hypmol.net/hasAuthor",
+    "hop_target_count": 4,
+    "hop_scope": "all"
+  },
+  {
+    "question": "I'd like to know more about 'Synthesis_FluoroPhenyl_Ether_SilverCatalyzed'. I'm also interested in its experiment. Specifically for that experiment, I'd like to check its substitution check and its reaction equation.",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Dataset/5e1a8403-1f32-4f97-8fcb-1dd7438118fb",
+        "predicate": "https://hypmol.net/hasExperiment",
+        "object": "https://hypmol.net/Experiment/f3d7ccde-84b7-4262-b4fc-e14ea14fb11b",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/f3d7ccde-84b7-4262-b4fc-e14ea14fb11b",
+        "predicate": "https://hypmol.net/reactionEquation",
+        "object": "bis(2,3,4,5-tetrafluorophenyl) ether + 2,2-dimethyl-1,3-dioxolane \u2192[AgOTf, reflux] bis(2,3,4,5-tetrafluorophenyl) ether (product) + by\u2011product",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://hypmol.net/Experiment/f3d7ccde-84b7-4262-b4fc-e14ea14fb11b",
+        "predicate": "https://hypmol.net/substitutionCheck",
+        "object": "Tested 4\u2011fluoro\u2011substituted analogs; comparable yields.",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "hop",
+    "hop_bridge_predicate_uri": "https://hypmol.net/hasExperiment",
+    "hop_target_count": 1,
+    "hop_scope": "one"
+  },
+  {
+    "question": "I'm curious about 'Dr. Sarah Chen'. could you please identify its reaction equation?",
+    "trace": [],
+    "qtype": "impossible",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'm curious about '1,3,5-Triethylbenzene-2,4,6-tricarboxylate'. what is its experiment?",
+    "trace": [],
+    "qtype": "impossible",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'm curious about 'Place cuvette in the EPR resonator, set the Helmholtz coil to 0\u202fmT, equilibrate temperature at 298\u202fK, then trigger the laser pulse (355\u202fnm, 10\u202fns).'. what is its chemical substance?",
+    "trace": [],
+    "qtype": "impossible",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'm curious about 'Add 20\u202fmL of dry dimethylformamide (DMF) under nitrogen and stir at 120\u202f\u00b0C for 18\u202fh.'. what is its project code?",
+    "trace": [],
+    "qtype": "impossible",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "Can you find some information about 'Sofia Velasco'? what is its identifier?",
+    "trace": [],
+    "qtype": "impossible",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "Can you find some information about 'Bis(trifluoroacetyl)ethylenediamine'? What info exists on its step description?",
+    "trace": [],
+    "qtype": "impossible",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "Can you find some information about 'Femtosecond transient absorption of donor\u2011acceptor system'? What info exists on its position?",
+    "trace": [],
+    "qtype": "impossible",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'm curious about 'Transient absorption (pump\u2011probe) measurement'. What info exists on its amount of substance?",
+    "trace": [],
+    "qtype": "impossible",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'd like to know more about 'Charge a 250\u202fmL flask with cyclobutyl\u2011palladium complex (0.500\u202fg, 2\u202fmmol) and trimethyl\u2011phosphazene oxide (0.120\u202fg, 0.8\u202fmmol) as ligand.'. What info exists on its email?",
+    "trace": [],
+    "qtype": "impossible",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'd like to know more about 'Record EPR spectra at static magnetic fields of 0, 30, 60, and 90\u202fmT, each for a duration of 200\u202fs.'. What info exists on its experiment notes?",
+    "trace": [],
+    "qtype": "impossible",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "What can you tell me about 'Transfer 200\u202f\u00b5L of the solution into the quartz cuvette and place it in the EPR resonator.'? could you please identify its usage information?",
+    "trace": [],
+    "qtype": "impossible",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "What can you tell me about 'Usage of octahydrotetrazabicyclo[5.3.0]decane-2-carboxylic acid'? What info exists on its name?",
+    "trace": [],
+    "qtype": "impossible",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'd like to know more about 'SpinChem_TripletYield_FluoroNitroxide_2025'. could you please identify its molar mass?",
+    "trace": [],
+    "qtype": "impossible",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "Can you find some information about 'MFE on (e)-1,2\u2011difluoro\u20113\u2011tert\u2011butyl\u2011prop\u20112\u2011en\u20111\u2011yl nitroxide'? could you please identify its volume used in experiment?",
+    "trace": [],
+    "qtype": "impossible",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "What can you tell me about 'Dissolve 2.0\u202fg (0.018\u202fmol) of poly(4\u2011(2\u2011hydroxyethyl)morpholine) in 50\u202fmL dry DMF under nitrogen.'? could you please identify its molecular formula?",
+    "trace": [],
+    "qtype": "impossible",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "What can you tell me about 'Prepare 20\u202fmL of 0.050\u202fM solution of sulfonium\u2011based radical precursor in dry acetonitrile inside the glovebox; degas by three freeze\u2011pump\u2011thaw cycles.'? could you please identify its experiment designation?",
+    "trace": [],
+    "qtype": "impossible",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'd like to know more about 'Transfer the solution to a quartz flow cell, seal with PTFE caps, and purge with argon for 10\u202fmin.'. could you please identify its text?",
+    "trace": [],
+    "qtype": "impossible",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "What can you tell me about 'Photogenerated Radical Pair EPR'? What info exists on its chemical name?",
+    "trace": [],
+    "qtype": "impossible",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "Can you find some information about 'Co\u2011deposit bis(trifluoromethyl)hydrazine with high\u2011purity argon (1\u202f% v/v) onto the cold CaF\u2082 window held at 10\u202fK, forming a transparent matrix (\u22480.5\u202fmm thick).'? What info exists on its involved in project?",
+    "trace": [],
+    "qtype": "impossible",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "Can you find some information about 'Dataset\u202fSC\u2011001 \u2013 Magnetic\u2011Field Effect on Fluorinated Radical Pair'? What info exists on its involved in project?",
+    "trace": [],
+    "qtype": "impossible",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'm curious about 'Position the cuvette in the ESR resonator, set the Helmholtz coils to 0\u202fmT, and trigger a single laser pulse (355\u202fnm, 5\u202fmJ).'. what is its keywords?",
+    "trace": [],
+    "qtype": "impossible",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "Can you find some information about '1-Ethyl-3-(2-thienyl)pyrrolidin-3-yl acetate'? could you please identify its license?",
+    "trace": [],
+    "qtype": "impossible",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "Can you find some information about 'GPC measurement'? What info exists on its primary author?",
+    "trace": [],
+    "qtype": "impossible",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "What can you tell me about 'Dataset: High-Field EPR Spectroscopy of Radical Intermediates'? could you please identify its participant?",
+    "trace": [],
+    "qtype": "impossible",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "Can you find some information about 'Introduce potassium carbonate (10.2\u202fg, 73.8\u202fmmol, 1.9\u202feq) and continue reflux for 6\u202fh, monitoring progress by TLC (hexanes/ethyl acetate\u202f=\u202f3:1).'? could you please identify its encoding format?",
+    "trace": [],
+    "qtype": "impossible",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "Can you find some information about 'Dissolve 0.120\u202fg (0.30\u202fmmol) of 1,4\u2011bis(3,5\u2011di\u2011tert\u2011butyl\u20114\u2011hydroxyphenyl)butane in 15\u202fmL phosphate buffer (0.1\u202fM, pH\u202f7).'? could you please identify its keywords?",
+    "trace": [],
+    "qtype": "impossible",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'm curious about 'Pd\u2011Catalyzed Ether Synthesis (EXP\u2011ECO\u201102)'. could you please identify its publication title?",
+    "trace": [],
+    "qtype": "impossible",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "What can you tell me about 'Transfer 2\u202fmL of the mixture into a quartz cuvette, seal with a septum, and purge with nitrogen for 10\u202fmin.'? could you please identify its molecular formula?",
+    "trace": [],
+    "qtype": "impossible",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'm curious about 'Cool to rt, quench with 10\u202fmL of saturated NaHCO\u2083 solution, extract with 3\u202f\u00d7\u202f20\u202fmL hexane.'. what is its part?",
+    "trace": [],
+    "qtype": "impossible",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'd like to know more about 'Excite the sample with a 355\u202fnm, 10\u202fns laser pulse; trigger the ESR spectrometer after a 5\u202f\u00b5s delay while applying a static field of 0\u202fmT (control).'. What info exists on its text?",
+    "trace": [],
+    "qtype": "impossible",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  }
+]

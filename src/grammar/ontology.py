@@ -169,7 +169,7 @@ class OntologySampler:
             ?p a ?t .
         }
         """
-        results = self._query(sparql)
+        results = self._query(sparql, use_cache=True)
         
         props = []
         for row in results:
@@ -222,7 +222,7 @@ class OntologySampler:
         pattern = f"<{entity_uri}> ?p ?o" if direction == "out" else f"?s ?p <{entity_uri}>"
         
         sparql = f"SELECT DISTINCT ?p ?{'o' if direction == 'out' else 's'} WHERE {{ ?p rdfs:label ?l . {pattern} . FILTER({sparql_filter}) }}"
-        results = self._query(sparql)
+        results = self._query(sparql, use_cache=True)
         
         # Group by property
         groups = group_by_predicate(results)
@@ -289,7 +289,7 @@ class OntologySampler:
             OPTIONAL {{ <{uri}> rdfs:label ?label . }}
         }} LIMIT 1
         """
-        results = self._query(sparql)
+        results = self._query(sparql, use_cache=True)
         if not results:
              # Fallback if no type is found
              label = self.get_label(uri)
@@ -303,6 +303,67 @@ class OntologySampler:
         row = results[0]
         label = str(row[0]) if row[0] else self.get_label(uri)
         return EntityNode(uri, label, cast(URIRef, type_uri))
+
+    def count_entities_by_label_and_type(self, label: str, type_uri: URIRef) -> int:
+        """Count entities with exact rdfs:label and rdf:type."""
+        escaped = label.replace("\\", "\\\\").replace('"', '\\"')
+        sparql = f"""
+        PREFIX rdf: <{RDF}>
+        PREFIX rdfs: <{RDFS}>
+        SELECT (COUNT(DISTINCT ?s) AS ?count) WHERE {{
+            ?s rdf:type <{type_uri}> ;
+               rdfs:label "{escaped}" .
+        }}
+        """
+        rows = self._query(sparql, use_cache=True)
+        if not rows:
+            return 0
+        try:
+            return int(rows[0][0].toPython())
+        except Exception:
+            return 0
+
+    def get_entity_primary_type(self, entity_uri: URIRef) -> Optional[URIRef]:
+        """Return one non-boring rdf:type for an entity, if any."""
+        sparql = f"""
+        PREFIX rdf: <{RDF}>
+        SELECT DISTINCT ?type WHERE {{
+            <{entity_uri}> rdf:type ?type .
+        }}
+        """
+        rows = self._query(sparql, use_cache=True)
+        if not rows:
+            return None
+        type_uris = [str(row[0]) for row in rows]
+        filtered = filter_out_boring_stuff(type_uris)
+        chosen = filtered[0] if filtered else type_uris[0]
+        return URIRef(chosen) if chosen else None
+
+    def get_distinct_object_iris(self, subject_uri: URIRef, predicate_uri: URIRef) -> List[URIRef]:
+        """Return all distinct IRI objects for (subject, predicate, ?o)."""
+        sparql = f"""
+        SELECT DISTINCT ?o WHERE {{
+            <{subject_uri}> <{predicate_uri}> ?o .
+            FILTER(isIRI(?o))
+        }}
+        """
+        rows = self._query(sparql, use_cache=True)
+        out: List[URIRef] = []
+        for row in rows:
+            obj = row[0]
+            if isinstance(obj, URIRef):
+                out.append(obj)
+        return out
+
+    def get_triples_for_subject_predicate(self, subject_uri: URIRef, predicate_uri: URIRef) -> List[tuple[str, str, str]]:
+        """Return all triples for fixed subject and predicate."""
+        sparql = f"""
+        SELECT ?o WHERE {{
+            <{subject_uri}> <{predicate_uri}> ?o .
+        }}
+        """
+        rows = self._query(sparql, use_cache=True)
+        return [(str(subject_uri), str(predicate_uri), str(row[0])) for row in rows]
 
 
     def sample_random_literal_value(self, prop_uri: URIRef) -> Literal:

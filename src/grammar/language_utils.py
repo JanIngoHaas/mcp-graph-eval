@@ -77,8 +77,17 @@ def humanize_operator(op: str) -> str:
     }
     return mapping.get(op, op)
 
-def get_hop_phrases(label: str, target_label: Optional[str] = None) -> list[str]:
-    """Returns phrases for forward transition hops. Target label is optional to avoid spoilers."""
+def get_hop_phrases(
+    label: str,
+    target_label: Optional[str] = None,
+    scope: str = "one",
+) -> list[str]:
+    """Returns phrases for forward transition hops.
+
+    scope:
+      - "one": ask about a single related target
+      - "all": ask for all related targets
+    """
     phrase = format_property_as_noun_phrase(label)
     
     # Anchor the question to the current entity ("its X", "the Y of this")
@@ -89,12 +98,25 @@ def get_hop_phrases(label: str, target_label: Optional[str] = None) -> list[str]
         target_info = ""
 
     if phrase.lower().startswith(("who", "what", "where", "how")):
+        if scope == "all":
+            return [
+                f"Now, I'd like to find all cases where {phrase}{target_info}. ",
+                f"Regarding that, can you check every case where {phrase}{target_info}? ",
+                f"And I'd also like to see all relevant details for {phrase}{target_info}. ",
+            ]
         return [
             f"Now, I'm curious {phrase}{target_info}. ",
             f"Regarding that, can you check {phrase}{target_info}? ",
             f"And I'd also like to see more details for the {phrase.split()[-1]}{target_info}. ",
         ]
     else:
+        if scope == "all":
+            return [
+                f"Now, please look into all its {phrase}{target_info}. ",
+                f"I'm also interested in all its {phrase}{target_info}. ",
+                f"Then, tell me more about all its {phrase}{target_info}. ",
+                f"Could you give me all its {phrase}{target_info}? ",
+            ]
         # "its publisher"
         return [
             f"Now, please look into its {phrase}{target_info}. ",

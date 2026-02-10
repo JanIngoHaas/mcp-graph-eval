@@ -26,6 +26,9 @@ RESET_KEYS = [
     "answer_triples",
     "qtype",
     "qb",
+    "hop_bridge_predicate_uri",
+    "hop_target_count",
+    "hop_scope",
 ]
 
 def compute_qtype_targets(total_amount: int, weights: Iterable[Tuple[str, float]]) -> Dict[str, int]:
@@ -50,12 +53,26 @@ def collect_sample(data: dict):
         "question": question,
         "trace": data.get("trace") or [],
         "qtype": data.get("qtype"),
+        "hop_bridge_predicate_uri": data.get("hop_bridge_predicate_uri"),
+        "hop_target_count": data.get("hop_target_count"),
+        "hop_scope": data.get("hop_scope"),
     })
 
 def sample(rule_node):
     return Rule(
         rule_node,
-        APPLY(collect_sample, access=["samples", "nl", "trace", "qtype"]),
+        APPLY(
+            collect_sample,
+            access=[
+                "samples",
+                "nl",
+                "trace",
+                "qtype",
+                "hop_bridge_predicate_uri",
+                "hop_target_count",
+                "hop_scope",
+            ],
+        ),
     )
 
 def root(total_amount: int = 150, qtype_weights: Dict[str, float] | None = None):
@@ -77,7 +94,7 @@ def Rule_impossible():
         APPLY(ops.gen_impossible_fact, access=["s_entities", "trace", "s_facts"]),
         Rule_fact_finale(),
         APPLY(ops.add_type_to_question("impossible"), access=["qtype"]),
-    ), n=5)
+    ), n=25)
 
 def Rule_query_builder(preamble=None):
     """Generates a complex structured query. 'preamble' establishes the anchor entity."""
@@ -98,7 +115,7 @@ def Rule_query_builder(preamble=None):
         ),
         APPLY(ops.qb_finalize_question, access=["qb", "trace", "nl"]),
         APPLY(ops.add_type_to_question("query_builder"), access=["qtype"]),
-    ), n=5)
+    ), n=25)
 
 def Rule_direct(max_facts=2):
     """Simple direct fact lookup about an entity."""
@@ -108,7 +125,7 @@ def Rule_direct(max_facts=2):
         Rule_sample_facts(max_facts=max_facts),
         Rule_fact_finale(),
         APPLY(ops.add_type_to_question("direct"), access=["qtype"]),
-    ), n=5)
+    ), n=25)
 
 def Rule_forward_hop():
     """Starts at an entity, hops to a related entity, and asks about it."""
@@ -120,7 +137,7 @@ def Rule_forward_hop():
         Rule_sample_facts(),
         Rule_fact_finale(),
         APPLY(ops.add_type_to_question("hop"), access=["qtype"]),
-    ), n=5)
+    ), n=25)
 
 def Rule_sample_facts(max_facts: int = 2):
     """Samples properties and values for the current focal entity."""
@@ -130,14 +147,14 @@ def Rule_search():
     """Initial discovery step."""
     return Rule(
         APPLY(ops.sel_random_entity, access=["s_entities"]),
-        APPLY(ops.gen_search, access=["s_entities", "trace", "nl"])
+        APPLY(ops.gen_search, access=["s_entities", "trace", "nl"]),
     )
 
 def Rule_search_hoppable():
     """Initial discovery step for hop questions (requires an outgoing object property)."""
     return Rule(
         APPLY(ops.sel_hoppable_entity, access=["s_entities"]),
-        APPLY(ops.gen_search, access=["s_entities", "trace", "nl"])
+        APPLY(ops.gen_search, access=["s_entities", "trace", "nl"]),
     )
 
 def Rule_inspect_anchor():
@@ -146,7 +163,10 @@ def Rule_inspect_anchor():
 
 def Rule_hop():
     """Transitions from the current entity to a related one."""
-    return APPLY(ops.sel_hop_target, access=["s_entities", "trace", "nl"])
+    return APPLY(
+        ops.sel_hop_target,
+        access=["s_entities", "trace", "nl", "hop_bridge_predicate_uri", "hop_target_count", "hop_scope"],
+    )
 
 def Rule_fact_finale():
     """Generates the final question based on gathered facts."""

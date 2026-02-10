@@ -15,6 +15,9 @@ def generate_samples(num_samples: int):
         "answer_triples": [],
         "qtype": None,
         "qb": None,
+        "hop_bridge_predicate_uri": None,
+        "hop_target_count": None,
+        "hop_scope": None,
     })
     root_node = rules.root(num_samples)
 
