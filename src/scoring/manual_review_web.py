@@ -1023,6 +1023,14 @@ def create_app(state: ReviewState) -> Flask:
                 tool, params = _resolve_tool_params_received(received_steps[row_idx])
             elif side == "expected":
                 expected_steps_raw = eval_entry.get("expected", {}).get("trace", [])
+                ambiguity_expansion = state._get_ambiguity_expansion(eval_entry)
+                if ambiguity_expansion is not None:
+                    expected_steps_raw = build_effective_ambiguity_trace(
+                        original_expected_trace=expected_steps_raw,
+                        received_trace=eval_entry.get("received", {}).get("trace", []),
+                        ignored_execution_keys=extract_cited_execution_keys(eval_entry.get("runtime_trace", [])),
+                        ambiguity_expansion=ambiguity_expansion,
+                    )
                 expected_overrides, expected_added = _get_expected_overrides(entry)
                 expected_steps = _apply_expected_overrides(expected_steps_raw, expected_overrides, expected_added)
                 if row_idx < 0 or row_idx >= len(expected_steps):
