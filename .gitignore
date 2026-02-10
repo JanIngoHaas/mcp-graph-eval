@@ -11,3 +11,5 @@ wheels/
 *hypmol.*
 *checkpoint*.ttl
 .env
+*wiproflex.*
+.DS_STORE

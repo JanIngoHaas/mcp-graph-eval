@@ -32,7 +32,8 @@ EVAL_MODELS = [
     # "glm-4.7:cloud"
     # "gemini-3-flash-preview:cloud"
     # "devstral-2:123b-cloud"
-    "gpt-oss:120b-cloud"
+    # "gpt-oss:120b-cloud"
+    "nemotron-3-nano:30b-cloud"
 ]
 
 # --- Runner Helpers ---
