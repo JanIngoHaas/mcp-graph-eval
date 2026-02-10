@@ -5,9 +5,9 @@ deterministic = true
 created_at = "2026-02-09T10:23:41.383132"
 scoring_alpha = 0.5
 total_questions = 151
-factored_questions = 97
-excluded_questions = 54
-manual_review_pending = 52
+factored_questions = 107
+excluded_questions = 44
+manual_review_pending = 42
 
 [metadata.token_usage]
 input_tokens = 7243321
@@ -15,39 +15,39 @@ output_tokens = 220917
 total_tokens = 7464238
 
 [summary.overall.trace_f1]
-mean = 0.8668340250814477
-std = 0.20069236149501818
-n = 97
+mean = 0.8659876468287684
+std = 0.20248331222399335
+n = 107
 
 [summary.overall.trace_precision]
-mean = 0.909106529209622
-std = 0.17690792977322292
-n = 97
+mean = 0.9104361370716512
+std = 0.17590025053057481
+n = 107
 
 [summary.overall.trace_recall]
-mean = 0.8427835051546392
-std = 0.23070076438548892
-n = 97
+mean = 0.8403426791277261
+std = 0.23322141726604048
+n = 107
 
 [summary.overall.triple_f1]
-mean = 0.8419949859323818
-std = 0.20709419711693677
-n = 97
+mean = 0.8062787901720853
+std = 0.24276277652826395
+n = 107
 
 [summary.overall.triple_precision]
-mean = 0.7765998516688573
-std = 0.2738654309034703
-n = 97
+mean = 0.7711543826655374
+std = 0.28343728730111517
+n = 107
 
 [summary.overall.triple_recall]
-mean = 0.9920618556701032
-std = 0.07818165471528869
-n = 97
+mean = 0.9108722741433021
+std = 0.19500112156243507
+n = 107
 
 [summary.overall.combined_f1]
-mean = 0.8544145055069149
-std = 0.17774144209361864
-n = 97
+mean = 0.8361332185004269
+std = 0.19487062541146064
+n = 107
 
 [summary.by_type.query_builder]
 count = 44
@@ -68,40 +68,40 @@ std = 0.10437163289151927
 n = 44
 
 [summary.by_type.direct]
-count = 30
+count = 35
 
 [summary.by_type.direct.trace_f1]
-mean = 0.9322222222222222
-std = 0.1622361301968572
-n = 30
+mean = 0.9647619047619047
+std = 0.1081462508733637
+n = 35
 
 [summary.by_type.direct.triple_f1]
-mean = 0.8449165621317521
-std = 0.20721853028365517
-n = 30
+mean = 0.8315951484938827
+std = 0.23755366818002138
+n = 35
 
 [summary.by_type.direct.combined_f1]
-mean = 0.888569392176987
-std = 0.16671995956904725
-n = 30
+mean = 0.8981785266278937
+std = 0.14418495579825422
+n = 35
 
 [summary.by_type.hop]
-count = 20
+count = 25
 
 [summary.by_type.hop.trace_f1]
-mean = 0.6303571428571428
-std = 0.16511427941139675
-n = 20
+mean = 0.6153968253968255
+std = 0.16999510908441692
+n = 25
 
 [summary.by_type.hop.triple_f1]
-mean = 0.6122222222222222
-std = 0.16133378441449356
-n = 20
+mean = 0.5233771209633279
+std = 0.1583485222549311
+n = 25
 
 [summary.by_type.hop.combined_f1]
-mean = 0.6212896825396825
-std = 0.13364992517383723
-n = 20
+mean = 0.5693869731800767
+std = 0.14299411860146896
+n = 25
 
 [summary.by_type.impossible]
 count = 3
@@ -125,13 +125,12 @@ n = 3
 
 [summary.anomalies]
 triple_perfect_trace_not = 31
-triple_pos_trace_zero = 16
-both_zero = 3
+triple_pos_trace_zero = 18
+both_zero = 2
 literal_subject_mismatch = 1
-overcitation_ratio = 21
-overcitation_low_precision_high_recall = 15
+overcitation_ratio = 11
 trace_pos_triple_zero = 4
-impossible_found_not_false = 27
+impossible_found_not_false = 26
 
 [[per_question]]
 id = 0
@@ -158,6 +157,8 @@ anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "query_builder"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = false
@@ -215,6 +216,8 @@ manual_triple_precision = 1.0
 manual_triple_recall = 1.0
 manual_triple_f1 = 1.0
 manual_combined_f1 = 1.0
+scoring_qtype = "query_builder"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -269,6 +272,8 @@ manual_triple_precision = 0.6666666666666666
 manual_triple_recall = 1.0
 manual_triple_f1 = 0.8
 manual_combined_f1 = 0.7333333333333334
+scoring_qtype = "query_builder"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = false
@@ -327,6 +332,8 @@ manual_triple_precision = 1.0
 manual_triple_recall = 1.0
 manual_triple_f1 = 1.0
 manual_combined_f1 = 1.0
+scoring_qtype = "query_builder"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -382,6 +389,8 @@ manual_triple_precision = 0.6666666666666666
 manual_triple_recall = 1.0
 manual_triple_f1 = 0.8
 manual_combined_f1 = 0.9
+scoring_qtype = "query_builder"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = false
@@ -451,6 +460,8 @@ manual_triple_precision = 1.0
 manual_triple_recall = 1.0
 manual_triple_f1 = 1.0
 manual_combined_f1 = 1.0
+scoring_qtype = "query_builder"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -534,6 +545,8 @@ manual_triple_precision = 1.0
 manual_triple_recall = 1.0
 manual_triple_f1 = 1.0
 manual_combined_f1 = 1.0
+scoring_qtype = "query_builder"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -592,6 +605,8 @@ manual_triple_precision = 1.0
 manual_triple_recall = 1.0
 manual_triple_f1 = 1.0
 manual_combined_f1 = 1.0
+scoring_qtype = "query_builder"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -639,6 +654,8 @@ anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "query_builder"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = false
@@ -676,6 +693,8 @@ manual_triple_precision = 1.0
 manual_triple_recall = 1.0
 manual_triple_f1 = 1.0
 manual_combined_f1 = 0.8333333333333333
+scoring_qtype = "query_builder"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -725,6 +744,8 @@ anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "query_builder"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = false
@@ -778,6 +799,8 @@ manual_triple_precision = 1.0
 manual_triple_recall = 1.0
 manual_triple_f1 = 1.0
 manual_combined_f1 = 1.0
+scoring_qtype = "query_builder"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -883,6 +906,8 @@ manual_triple_precision = 1.0
 manual_triple_recall = 1.0
 manual_triple_f1 = 1.0
 manual_combined_f1 = 1.0
+scoring_qtype = "query_builder"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -937,6 +962,8 @@ manual_triple_precision = 0.6666666666666666
 manual_triple_recall = 1.0
 manual_triple_f1 = 0.8
 manual_combined_f1 = 0.9
+scoring_qtype = "query_builder"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = false
@@ -996,6 +1023,8 @@ anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "query_builder"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = false
@@ -1026,6 +1055,8 @@ anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "query_builder"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = false
@@ -1057,6 +1088,8 @@ anomaly_detected = true
 factored_in = false
 exclude_reason = "manual_skip"
 scoring_source = "excluded"
+scoring_qtype = "query_builder"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -1099,6 +1132,8 @@ anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "query_builder"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = false
@@ -1239,6 +1274,8 @@ anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "query_builder"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = false
@@ -1276,6 +1313,8 @@ manual_triple_precision = 1.0
 manual_triple_recall = 1.0
 manual_triple_f1 = 1.0
 manual_combined_f1 = 1.0
+scoring_qtype = "query_builder"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -1329,6 +1368,8 @@ manual_triple_precision = 1.0
 manual_triple_recall = 1.0
 manual_triple_f1 = 1.0
 manual_combined_f1 = 1.0
+scoring_qtype = "query_builder"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -1383,6 +1424,8 @@ manual_triple_precision = 0.5
 manual_triple_recall = 1.0
 manual_triple_f1 = 0.6666666666666666
 manual_combined_f1 = 0.8333333333333333
+scoring_qtype = "query_builder"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -1454,6 +1497,8 @@ manual_triple_precision = 1.0
 manual_triple_recall = 1.0
 manual_triple_f1 = 1.0
 manual_combined_f1 = 1.0
+scoring_qtype = "query_builder"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -1508,6 +1553,8 @@ manual_triple_precision = 1.0
 manual_triple_recall = 1.0
 manual_triple_f1 = 1.0
 manual_combined_f1 = 1.0
+scoring_qtype = "query_builder"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -1562,6 +1609,8 @@ manual_triple_precision = 1.0
 manual_triple_recall = 1.0
 manual_triple_f1 = 1.0
 manual_combined_f1 = 1.0
+scoring_qtype = "query_builder"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -1617,6 +1666,8 @@ manual_triple_precision = 0.6666666666666666
 manual_triple_recall = 1.0
 manual_triple_f1 = 0.8
 manual_combined_f1 = 0.9
+scoring_qtype = "query_builder"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -1677,6 +1728,8 @@ manual_triple_precision = 1.0
 manual_triple_recall = 1.0
 manual_triple_f1 = 1.0
 manual_combined_f1 = 1.0
+scoring_qtype = "query_builder"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -1847,6 +1900,8 @@ manual_triple_precision = 0.6666666666666666
 manual_triple_recall = 1.0
 manual_triple_f1 = 0.8
 manual_combined_f1 = 0.9
+scoring_qtype = "query_builder"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = false
@@ -1919,6 +1974,8 @@ manual_triple_precision = 1.0
 manual_triple_recall = 1.0
 manual_triple_f1 = 1.0
 manual_combined_f1 = 1.0
+scoring_qtype = "query_builder"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -2043,6 +2100,8 @@ manual_triple_precision = 1.0
 manual_triple_recall = 1.0
 manual_triple_f1 = 1.0
 manual_combined_f1 = 0.7
+scoring_qtype = "query_builder"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -2099,6 +2158,8 @@ manual_triple_precision = 1.0
 manual_triple_recall = 1.0
 manual_triple_f1 = 1.0
 manual_combined_f1 = 1.0
+scoring_qtype = "query_builder"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -2189,6 +2250,8 @@ manual_triple_precision = 1.0
 manual_triple_recall = 1.0
 manual_triple_f1 = 1.0
 manual_combined_f1 = 1.0
+scoring_qtype = "query_builder"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -2248,6 +2311,8 @@ manual_triple_precision = 0.65625
 manual_triple_recall = 1.0
 manual_triple_f1 = 0.7924528301886793
 manual_combined_f1 = 0.8962264150943396
+scoring_qtype = "query_builder"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -2416,6 +2481,8 @@ manual_triple_precision = 1.0
 manual_triple_recall = 1.0
 manual_triple_f1 = 1.0
 manual_combined_f1 = 1.0
+scoring_qtype = "query_builder"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -2470,6 +2537,8 @@ manual_triple_precision = 1.0
 manual_triple_recall = 1.0
 manual_triple_f1 = 1.0
 manual_combined_f1 = 0.8333333333333333
+scoring_qtype = "query_builder"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -2523,6 +2592,8 @@ anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "query_builder"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = false
@@ -2576,6 +2647,8 @@ manual_triple_precision = 1.0
 manual_triple_recall = 1.0
 manual_triple_f1 = 1.0
 manual_combined_f1 = 1.0
+scoring_qtype = "query_builder"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -2634,6 +2707,8 @@ anomaly_flags = ["triple_perfect_trace_not"]
 anomaly_detected = true
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "query_builder"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -2694,6 +2769,8 @@ manual_triple_precision = 1.0
 manual_triple_recall = 1.0
 manual_triple_f1 = 1.0
 manual_combined_f1 = 1.0
+scoring_qtype = "query_builder"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -2749,6 +2826,8 @@ manual_triple_precision = 1.0
 manual_triple_recall = 1.0
 manual_triple_f1 = 1.0
 manual_combined_f1 = 1.0
+scoring_qtype = "query_builder"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -2803,6 +2882,8 @@ manual_triple_precision = 1.0
 manual_triple_recall = 1.0
 manual_triple_f1 = 1.0
 manual_combined_f1 = 1.0
+scoring_qtype = "query_builder"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -2865,6 +2946,8 @@ manual_triple_precision = 0.23
 manual_triple_recall = 0.23
 manual_triple_f1 = 0.23
 manual_combined_f1 = 0.615
+scoring_qtype = "query_builder"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -3214,6 +3297,8 @@ anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "query_builder"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = false
@@ -3401,6 +3486,8 @@ manual_triple_precision = 1.0
 manual_triple_recall = 1.0
 manual_triple_f1 = 1.0
 manual_combined_f1 = 1.0
+scoring_qtype = "query_builder"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -3461,6 +3548,8 @@ anomaly_flags = ["triple_perfect_trace_not"]
 anomaly_detected = true
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "query_builder"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -3507,6 +3596,8 @@ anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "direct"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = false
@@ -3553,6 +3644,8 @@ anomaly_detected = true
 factored_in = false
 exclude_reason = "manual_skip"
 scoring_source = "excluded"
+scoring_qtype = "direct"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -3595,6 +3688,8 @@ anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "direct"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = false
@@ -3642,6 +3737,8 @@ anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "direct"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = false
@@ -3672,19 +3769,19 @@ trace_recall = 1.0
 triple_f1 = 0.8
 triple_precision = 0.6666666666666666
 triple_recall = 1.0
-triples_matched = 2
-triples_expected = 3
+triples_matched = 9
+triples_expected = 9
 triples_received = 12
 combined_f1 = 0.9
 auto_trace_precision = 0.5
 auto_trace_recall = 0.5
 auto_trace_f1 = 0.5
-auto_triple_precision = 0.16666666666666666
+auto_triple_precision = 0.75
 auto_triple_recall = 1.0
-auto_triple_f1 = 0.2857142857142857
-auto_combined_f1 = 0.39285714285714285
-anomaly_flags = ["overcitation_ratio"]
-anomaly_detected = true
+auto_triple_f1 = 0.8571428571428571
+auto_combined_f1 = 0.6785714285714286
+anomaly_flags = []
+anomaly_detected = false
 factored_in = true
 scoring_source = "manual"
 manual_trace_precision = 1.0
@@ -3694,6 +3791,11 @@ manual_triple_precision = 0.6666666666666666
 manual_triple_recall = 1.0
 manual_triple_f1 = 0.8
 manual_combined_f1 = 0.9
+scoring_qtype = "direct"
+ambiguity_expanded = true
+ambiguity_reason = "direct_label_ambiguous"
+ambiguity_label = "HRMS (ESI) measurement"
+ambiguity_candidate_count = 3
 
 [per_question.manual_review]
 required = true
@@ -3737,24 +3839,29 @@ qtype = "direct"
 trace_f1 = 1.0
 trace_precision = 1.0
 trace_recall = 1.0
-triple_f1 = 1.0
+triple_f1 = 0.125
 triple_precision = 1.0
-triple_recall = 1.0
+triple_recall = 0.06666666666666667
 triples_matched = 2
-triples_expected = 3
+triples_expected = 30
 triples_received = 2
-combined_f1 = 1.0
+combined_f1 = 0.5625
 auto_trace_precision = 1.0
 auto_trace_recall = 1.0
 auto_trace_f1 = 1.0
 auto_triple_precision = 1.0
-auto_triple_recall = 1.0
-auto_triple_f1 = 1.0
-auto_combined_f1 = 1.0
+auto_triple_recall = 0.06666666666666667
+auto_triple_f1 = 0.125
+auto_combined_f1 = 0.5625
 anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "direct"
+ambiguity_expanded = true
+ambiguity_reason = "direct_label_ambiguous"
+ambiguity_label = "¹H NMR (CDCl₃, 400 MHz) measurement"
+ambiguity_candidate_count = 10
 
 [per_question.manual_review]
 required = false
@@ -3809,6 +3916,8 @@ manual_triple_precision = 0.3333333333333333
 manual_triple_recall = 1.0
 manual_triple_f1 = 0.5
 manual_combined_f1 = 0.75
+scoring_qtype = "direct"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -3851,19 +3960,19 @@ trace_recall = 0.5
 triple_f1 = 0.430379746835443
 triple_precision = 0.27419354838709675
 triple_recall = 1.0
-triples_matched = 1
-triples_expected = 1
+triples_matched = 34
+triples_expected = 34
 triples_received = 62
 combined_f1 = 0.5485232067510548
 auto_trace_precision = 0.5
 auto_trace_recall = 0.5
 auto_trace_f1 = 0.5
-auto_triple_precision = 0.016129032258064516
+auto_triple_precision = 0.5483870967741935
 auto_triple_recall = 1.0
-auto_triple_f1 = 0.031746031746031744
-auto_combined_f1 = 0.26587301587301587
-anomaly_flags = ["overcitation_low_precision_high_recall", "overcitation_ratio"]
-anomaly_detected = true
+auto_triple_f1 = 0.7083333333333333
+auto_combined_f1 = 0.6041666666666666
+anomaly_flags = []
+anomaly_detected = false
 factored_in = true
 scoring_source = "manual"
 manual_trace_precision = 1.0
@@ -3873,6 +3982,11 @@ manual_triple_precision = 0.27419354838709675
 manual_triple_recall = 1.0
 manual_triple_f1 = 0.430379746835443
 manual_combined_f1 = 0.5485232067510548
+scoring_qtype = "direct"
+ambiguity_expanded = true
+ambiguity_reason = "direct_label_ambiguous"
+ambiguity_label = "Usage of bis(3,5-di-tert-butyl-2-hydroxyphenyl)methane"
+ambiguity_candidate_count = 20
 
 [per_question.manual_review]
 required = true
@@ -3981,6 +4095,8 @@ anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "direct"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = false
@@ -4011,19 +4127,19 @@ trace_recall = 1.0
 triple_f1 = 0.7837837837837839
 triple_precision = 0.6444444444444445
 triple_recall = 1.0
-triples_matched = 1
-triples_expected = 1
+triples_matched = 30
+triples_expected = 30
 triples_received = 45
 combined_f1 = 0.8918918918918919
 auto_trace_precision = 0.5
 auto_trace_recall = 0.5
 auto_trace_f1 = 0.5
-auto_triple_precision = 0.022222222222222223
+auto_triple_precision = 0.6666666666666666
 auto_triple_recall = 1.0
-auto_triple_f1 = 0.04347826086956522
-auto_combined_f1 = 0.2717391304347826
-anomaly_flags = ["overcitation_low_precision_high_recall", "overcitation_ratio"]
-anomaly_detected = true
+auto_triple_f1 = 0.8
+auto_combined_f1 = 0.65
+anomaly_flags = []
+anomaly_detected = false
 factored_in = true
 scoring_source = "manual"
 manual_trace_precision = 1.0
@@ -4033,6 +4149,11 @@ manual_triple_precision = 0.6444444444444445
 manual_triple_recall = 1.0
 manual_triple_f1 = 0.7837837837837839
 manual_combined_f1 = 0.8918918918918919
+scoring_qtype = "direct"
+ambiguity_expanded = true
+ambiguity_reason = "direct_label_ambiguous"
+ambiguity_label = "IR (ATR) measurement"
+ambiguity_candidate_count = 15
 
 [per_question.manual_review]
 required = true
@@ -4134,6 +4255,8 @@ manual_triple_precision = 1.0
 manual_triple_recall = 1.0
 manual_triple_f1 = 1.0
 manual_combined_f1 = 1.0
+scoring_qtype = "direct"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = false
@@ -4182,6 +4305,8 @@ anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "direct"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = false
@@ -4232,6 +4357,8 @@ anomaly_detected = true
 factored_in = false
 exclude_reason = "triple_perfect_trace_not"
 scoring_source = "excluded"
+scoring_qtype = "direct"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -4262,6 +4389,8 @@ anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "direct"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = false
@@ -4274,29 +4403,344 @@ qtype = "direct"
 trace_f1 = 0.0
 trace_precision = 0.0
 trace_recall = 0.0
-triple_f1 = 0.006756756756756757
-triple_precision = 0.003389830508474576
-triple_recall = 1.0
-triples_matched = 1
-triples_expected = 1
+triple_f1 = 0.6591422121896162
+triple_precision = 0.49491525423728816
+triple_recall = 0.9864864864864865
+triples_matched = 146
+triples_expected = 148
 triples_received = 295
-combined_f1 = 0.0033783783783783786
+combined_f1 = 0.3295711060948081
 auto_trace_precision = 0.0
 auto_trace_recall = 0.0
 auto_trace_f1 = 0.0
-auto_triple_precision = 0.003389830508474576
-auto_triple_recall = 1.0
-auto_triple_f1 = 0.006756756756756757
-auto_combined_f1 = 0.0033783783783783786
-anomaly_flags = ["both_zero", "overcitation_low_precision_high_recall", "overcitation_ratio"]
+auto_triple_precision = 0.49491525423728816
+auto_triple_recall = 0.9864864864864865
+auto_triple_f1 = 0.6591422121896162
+auto_combined_f1 = 0.3295711060948081
+anomaly_flags = ["triple_pos_trace_zero"]
 anomaly_detected = true
 factored_in = false
-exclude_reason = "both_zero,overcitation_low_precision_high_recall,overcitation_ratio"
+exclude_reason = "triple_pos_trace_zero"
 scoring_source = "excluded"
+scoring_qtype = "direct"
+ambiguity_expanded = true
+ambiguity_reason = "direct_label_ambiguous"
+ambiguity_label = "Usage of 4-(2-hydroxyethyl)morpholine"
+ambiguity_candidate_count = 103
 
 [per_question.manual_review]
 required = true
 status = "pending"
+seeded_from_auto = true
+comments = []
+
+[per_question.manual_review.trace]
+added_expected_steps = []
+
+[per_question.manual_review.trace.expected_required_overrides]
+
+[per_question.manual_review.trace.received_labels]
+0 = "wrong"
+1 = "wrong"
+2 = "wrong"
+3 = "wrong"
+
+[per_question.manual_review.triples.received_labels]
+0 = "reject"
+1 = "reject"
+2 = "reject"
+3 = "reject"
+4 = "reject"
+5 = "reject"
+6 = "reject"
+7 = "reject"
+8 = "reject"
+9 = "reject"
+10 = "reject"
+11 = "reject"
+12 = "reject"
+13 = "reject"
+14 = "reject"
+15 = "reject"
+16 = "reject"
+17 = "reject"
+18 = "reject"
+19 = "reject"
+20 = "reject"
+21 = "reject"
+22 = "reject"
+23 = "reject"
+24 = "reject"
+25 = "reject"
+26 = "reject"
+27 = "reject"
+28 = "reject"
+29 = "reject"
+30 = "reject"
+31 = "reject"
+32 = "reject"
+33 = "reject"
+34 = "reject"
+35 = "reject"
+36 = "reject"
+37 = "reject"
+38 = "reject"
+39 = "reject"
+40 = "reject"
+41 = "reject"
+42 = "reject"
+43 = "reject"
+44 = "reject"
+45 = "reject"
+46 = "reject"
+47 = "reject"
+48 = "reject"
+49 = "reject"
+50 = "reject"
+51 = "reject"
+52 = "reject"
+53 = "reject"
+54 = "reject"
+55 = "reject"
+56 = "reject"
+57 = "reject"
+58 = "reject"
+59 = "reject"
+60 = "reject"
+61 = "reject"
+62 = "reject"
+63 = "reject"
+64 = "reject"
+65 = "reject"
+66 = "reject"
+67 = "reject"
+68 = "reject"
+69 = "reject"
+70 = "reject"
+71 = "reject"
+72 = "reject"
+73 = "reject"
+74 = "reject"
+75 = "reject"
+76 = "reject"
+77 = "reject"
+78 = "reject"
+79 = "reject"
+80 = "reject"
+81 = "reject"
+82 = "reject"
+83 = "reject"
+84 = "reject"
+85 = "reject"
+86 = "reject"
+87 = "reject"
+88 = "reject"
+89 = "reject"
+90 = "reject"
+91 = "reject"
+92 = "reject"
+93 = "reject"
+94 = "reject"
+95 = "reject"
+96 = "reject"
+97 = "reject"
+98 = "reject"
+99 = "reject"
+100 = "reject"
+101 = "reject"
+102 = "reject"
+103 = "reject"
+104 = "reject"
+105 = "reject"
+106 = "reject"
+107 = "reject"
+108 = "reject"
+109 = "reject"
+110 = "reject"
+111 = "reject"
+112 = "reject"
+113 = "reject"
+114 = "reject"
+115 = "reject"
+116 = "reject"
+117 = "reject"
+118 = "reject"
+119 = "reject"
+120 = "reject"
+121 = "reject"
+122 = "reject"
+123 = "reject"
+124 = "reject"
+125 = "reject"
+126 = "reject"
+127 = "reject"
+128 = "reject"
+129 = "reject"
+130 = "reject"
+131 = "reject"
+132 = "reject"
+133 = "reject"
+134 = "reject"
+135 = "reject"
+136 = "reject"
+137 = "reject"
+138 = "reject"
+139 = "reject"
+140 = "reject"
+141 = "reject"
+142 = "reject"
+143 = "reject"
+144 = "reject"
+145 = "reject"
+146 = "reject"
+147 = "reject"
+148 = "reject"
+149 = "reject"
+150 = "reject"
+151 = "reject"
+152 = "reject"
+153 = "reject"
+154 = "reject"
+155 = "reject"
+156 = "reject"
+157 = "reject"
+158 = "reject"
+159 = "reject"
+160 = "reject"
+161 = "reject"
+162 = "reject"
+163 = "reject"
+164 = "reject"
+165 = "reject"
+166 = "reject"
+167 = "reject"
+168 = "reject"
+169 = "reject"
+170 = "reject"
+171 = "reject"
+172 = "reject"
+173 = "reject"
+174 = "reject"
+175 = "support"
+176 = "reject"
+177 = "reject"
+178 = "reject"
+179 = "reject"
+180 = "reject"
+181 = "reject"
+182 = "reject"
+183 = "reject"
+184 = "reject"
+185 = "reject"
+186 = "reject"
+187 = "reject"
+188 = "reject"
+189 = "reject"
+190 = "reject"
+191 = "reject"
+192 = "reject"
+193 = "reject"
+194 = "reject"
+195 = "reject"
+196 = "reject"
+197 = "reject"
+198 = "reject"
+199 = "reject"
+200 = "reject"
+201 = "reject"
+202 = "reject"
+203 = "reject"
+204 = "reject"
+205 = "reject"
+206 = "reject"
+207 = "reject"
+208 = "reject"
+209 = "reject"
+210 = "reject"
+211 = "reject"
+212 = "reject"
+213 = "reject"
+214 = "reject"
+215 = "reject"
+216 = "reject"
+217 = "reject"
+218 = "reject"
+219 = "reject"
+220 = "reject"
+221 = "reject"
+222 = "reject"
+223 = "reject"
+224 = "reject"
+225 = "reject"
+226 = "reject"
+227 = "reject"
+228 = "reject"
+229 = "reject"
+230 = "reject"
+231 = "reject"
+232 = "reject"
+233 = "reject"
+234 = "reject"
+235 = "reject"
+236 = "reject"
+237 = "reject"
+238 = "reject"
+239 = "reject"
+240 = "reject"
+241 = "reject"
+242 = "reject"
+243 = "reject"
+244 = "reject"
+245 = "reject"
+246 = "reject"
+247 = "reject"
+248 = "reject"
+249 = "reject"
+250 = "reject"
+251 = "reject"
+252 = "reject"
+253 = "reject"
+254 = "reject"
+255 = "reject"
+256 = "reject"
+257 = "reject"
+258 = "reject"
+259 = "reject"
+260 = "reject"
+261 = "reject"
+262 = "reject"
+263 = "reject"
+264 = "reject"
+265 = "reject"
+266 = "reject"
+267 = "reject"
+268 = "reject"
+269 = "reject"
+270 = "reject"
+271 = "reject"
+272 = "reject"
+273 = "reject"
+274 = "reject"
+275 = "reject"
+276 = "reject"
+277 = "reject"
+278 = "reject"
+279 = "reject"
+280 = "reject"
+281 = "reject"
+282 = "reject"
+283 = "reject"
+284 = "reject"
+285 = "reject"
+286 = "reject"
+287 = "reject"
+288 = "reject"
+289 = "reject"
+290 = "reject"
+291 = "reject"
+292 = "reject"
+293 = "reject"
+294 = "reject"
 
 [[per_question]]
 id = 60
@@ -4305,13 +4749,13 @@ qtype = "direct"
 trace_f1 = 1.0
 trace_precision = 1.0
 trace_recall = 1.0
-triple_f1 = 0.0
-triple_precision = 0.0
+triple_f1 = 1.0
+triple_precision = 1.0
 triple_recall = 1.0
 triples_matched = 0
 triples_expected = 0
 triples_received = 1
-combined_f1 = 0.5
+combined_f1 = 1.0
 auto_trace_precision = 1.0
 auto_trace_recall = 1.0
 auto_trace_f1 = 1.0
@@ -4321,13 +4765,37 @@ auto_triple_f1 = 0.0
 auto_combined_f1 = 0.5
 anomaly_flags = ["trace_pos_triple_zero"]
 anomaly_detected = true
-factored_in = false
-exclude_reason = "trace_pos_triple_zero"
-scoring_source = "excluded"
+factored_in = true
+scoring_source = "manual_perfect"
+scoring_qtype = "direct"
+ambiguity_expanded = false
+manual_trace_precision = 1.0
+manual_trace_recall = 1.0
+manual_trace_f1 = 1.0
+manual_triple_precision = 1.0
+manual_triple_recall = 1.0
+manual_triple_f1 = 1.0
+manual_combined_f1 = 1.0
 
 [per_question.manual_review]
 required = true
-status = "pending"
+status = "scored"
+seeded_from_auto = true
+comments = ["[perfect-answer] model is correct"]
+reviewed = true
+
+[per_question.manual_review.trace]
+added_expected_steps = []
+
+[per_question.manual_review.trace.expected_required_overrides]
+
+[per_question.manual_review.trace.received_labels]
+0 = "ok"
+1 = "ok"
+2 = "ok"
+
+[per_question.manual_review.triples.received_labels]
+0 = "support"
 
 [[per_question]]
 id = 61
@@ -4354,10 +4822,29 @@ anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "direct"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = false
 status = "none"
+seeded_from_auto = true
+comments = []
+
+[per_question.manual_review.trace]
+added_expected_steps = []
+
+[per_question.manual_review.trace.expected_required_overrides]
+
+[per_question.manual_review.trace.received_labels]
+0 = "ok"
+1 = "ok"
+2 = "ok"
+3 = "ok"
+
+[per_question.manual_review.triples.received_labels]
+0 = "support"
+1 = "reject"
 
 [[per_question]]
 id = 62
@@ -4384,25 +4871,42 @@ anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "direct"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = false
 status = "none"
+seeded_from_auto = true
+comments = []
+
+[per_question.manual_review.trace]
+added_expected_steps = []
+
+[per_question.manual_review.trace.expected_required_overrides]
+
+[per_question.manual_review.trace.received_labels]
+0 = "ok"
+1 = "ok"
+2 = "ok"
+
+[per_question.manual_review.triples.received_labels]
+0 = "support"
 
 [[per_question]]
 id = 63
 question = "What can you tell me about 'Cyclohexyl‑1‑oxyl (CHexOx)'? what is its molecular formula?"
 qtype = "direct"
-trace_f1 = 0.5
-trace_precision = 0.5
-trace_recall = 0.5
+trace_f1 = 1.0
+trace_precision = 1.0
+trace_recall = 1.0
 triple_f1 = 0.5
 triple_precision = 0.3333333333333333
 triple_recall = 1.0
 triples_matched = 1
 triples_expected = 1
 triples_received = 3
-combined_f1 = 0.5
+combined_f1 = 0.75
 auto_trace_precision = 0.5
 auto_trace_recall = 0.5
 auto_trace_f1 = 0.5
@@ -4413,11 +4917,44 @@ auto_combined_f1 = 0.5
 anomaly_flags = []
 anomaly_detected = false
 factored_in = true
-scoring_source = "auto"
+scoring_source = "manual"
+scoring_qtype = "direct"
+ambiguity_expanded = false
+manual_trace_precision = 1.0
+manual_trace_recall = 1.0
+manual_trace_f1 = 1.0
+manual_triple_precision = 0.3333333333333333
+manual_triple_recall = 1.0
+manual_triple_f1 = 0.5
+manual_combined_f1 = 0.75
 
 [per_question.manual_review]
 required = false
-status = "none"
+status = "scored"
+seeded_from_auto = true
+comments = ["[apply-manual] Different path, overcitation"]
+reviewed = true
+
+[per_question.manual_review.trace.expected_required_overrides]
+0 = false
+
+[[per_question.manual_review.trace.added_expected_steps]]
+tool = "search"
+required = true
+_manual_added = true
+query = "Cyclohexyl-1-oxyl"
+
+[per_question.manual_review.trace.received_labels]
+0 = "ok"
+1 = "ok"
+2 = "ok"
+3 = "ok"
+4 = "ok"
+
+[per_question.manual_review.triples.received_labels]
+0 = "support"
+1 = "reject"
+2 = "reject"
 
 [[per_question]]
 id = 64
@@ -4426,13 +4963,13 @@ qtype = "direct"
 trace_f1 = 1.0
 trace_precision = 1.0
 trace_recall = 1.0
-triple_f1 = 0.0
-triple_precision = 0.0
+triple_f1 = 1.0
+triple_precision = 1.0
 triple_recall = 1.0
 triples_matched = 0
 triples_expected = 0
 triples_received = 2
-combined_f1 = 0.5
+combined_f1 = 1.0
 auto_trace_precision = 1.0
 auto_trace_recall = 1.0
 auto_trace_f1 = 1.0
@@ -4442,13 +4979,39 @@ auto_triple_f1 = 0.0
 auto_combined_f1 = 0.5
 anomaly_flags = ["trace_pos_triple_zero"]
 anomaly_detected = true
-factored_in = false
-exclude_reason = "trace_pos_triple_zero"
-scoring_source = "excluded"
+factored_in = true
+scoring_source = "manual_perfect"
+scoring_qtype = "direct"
+ambiguity_expanded = false
+manual_trace_precision = 1.0
+manual_trace_recall = 1.0
+manual_trace_f1 = 1.0
+manual_triple_precision = 1.0
+manual_triple_recall = 1.0
+manual_triple_f1 = 1.0
+manual_combined_f1 = 1.0
 
 [per_question.manual_review]
 required = true
-status = "pending"
+status = "scored"
+seeded_from_auto = true
+comments = ["[perfect-answer] Model is correct"]
+reviewed = true
+
+[per_question.manual_review.trace]
+added_expected_steps = []
+
+[per_question.manual_review.trace.expected_required_overrides]
+
+[per_question.manual_review.trace.received_labels]
+0 = "ok"
+1 = "ok"
+2 = "ok"
+3 = "ok"
+
+[per_question.manual_review.triples.received_labels]
+0 = "reject"
+1 = "reject"
 
 [[per_question]]
 id = 65
@@ -4475,10 +5038,28 @@ anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "direct"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = false
-status = "none"
+status = "accepted"
+seeded_from_auto = true
+comments = []
+reviewed = true
+
+[per_question.manual_review.trace]
+added_expected_steps = []
+
+[per_question.manual_review.trace.expected_required_overrides]
+
+[per_question.manual_review.trace.received_labels]
+0 = "ok"
+1 = "ok"
+2 = "ok"
+
+[per_question.manual_review.triples.received_labels]
+0 = "support"
 
 [[per_question]]
 id = 66
@@ -4505,41 +5086,194 @@ anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "direct"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = false
-status = "none"
+status = "accepted"
+seeded_from_auto = true
+comments = []
+reviewed = true
+
+[per_question.manual_review.trace]
+added_expected_steps = []
+
+[per_question.manual_review.trace.expected_required_overrides]
+
+[per_question.manual_review.trace.received_labels]
+0 = "ok"
+1 = "ok"
+2 = "ok"
+3 = "ok"
+
+[per_question.manual_review.triples.received_labels]
+0 = "support"
+1 = "support"
 
 [[per_question]]
 id = 67
 question = "What can you tell me about 'HR‑MS (ESI) measurement'? could you please identify its measurement method?"
 qtype = "direct"
-trace_f1 = 0.5
-trace_precision = 0.5
-trace_recall = 0.5
-triple_f1 = 0.02197802197802198
-triple_precision = 0.011111111111111112
+trace_f1 = 0.8
+trace_precision = 1.0
+trace_recall = 0.6666666666666666
+triple_f1 = 0.8
+triple_precision = 0.6666666666666666
 triple_recall = 1.0
-triples_matched = 1
-triples_expected = 1
+triples_matched = 60
+triples_expected = 60
 triples_received = 90
-combined_f1 = 0.260989010989011
+combined_f1 = 0.8
 auto_trace_precision = 0.5
 auto_trace_recall = 0.5
 auto_trace_f1 = 0.5
-auto_triple_precision = 0.011111111111111112
+auto_triple_precision = 0.6666666666666666
 auto_triple_recall = 1.0
-auto_triple_f1 = 0.02197802197802198
-auto_combined_f1 = 0.260989010989011
-anomaly_flags = ["overcitation_low_precision_high_recall", "overcitation_ratio"]
-anomaly_detected = true
-factored_in = false
-exclude_reason = "overcitation_low_precision_high_recall,overcitation_ratio"
-scoring_source = "excluded"
+auto_triple_f1 = 0.8
+auto_combined_f1 = 0.65
+anomaly_flags = []
+anomaly_detected = false
+factored_in = true
+scoring_source = "manual"
+scoring_qtype = "direct"
+ambiguity_expanded = true
+ambiguity_reason = "direct_label_ambiguous"
+ambiguity_label = "HR‑MS (ESI) measurement"
+ambiguity_candidate_count = 30
+manual_trace_precision = 1.0
+manual_trace_recall = 0.6666666666666666
+manual_trace_f1 = 0.8
+manual_triple_precision = 0.6666666666666666
+manual_triple_recall = 1.0
+manual_triple_f1 = 0.8
+manual_combined_f1 = 0.8
 
 [per_question.manual_review]
+required = false
+status = "scored"
+seeded_from_auto = true
+comments = ["[apply-manual] Overcitation - trace was derived from ambiguous question => expanded triples reflect the correct set now."]
+reviewed = true
+
+[per_question.manual_review.trace.expected_required_overrides]
+0 = true
+1 = false
+
+[[per_question.manual_review.trace.added_expected_steps]]
+tool = "inspect"
 required = true
-status = "pending"
+_manual_added = true
+uri = "https://hypmol.net/Measurement/0ba0e8c5-fba7-4f06-9ec7-e414bd260c06"
+
+[[per_question.manual_review.trace.added_expected_steps]]
+tool = "query_builder"
+required = true
+_manual_added = true
+type = "https://hypmol.net/Measurement"
+project = ["rdfs:label", "https://hypmol.net/measurementMethod"]
+
+[[per_question.manual_review.trace.added_expected_steps.filters]]
+path = "rdfs:label"
+operator = "="
+value = "HR‑MS (ESI) measurement"
+
+[per_question.manual_review.trace.received_labels]
+0 = "ok"
+1 = "ok"
+2 = "ok"
+
+[per_question.manual_review.triples.received_labels]
+0 = "support"
+1 = "support"
+2 = "support"
+3 = "support"
+4 = "support"
+5 = "reject"
+6 = "reject"
+7 = "support"
+8 = "support"
+9 = "support"
+10 = "reject"
+11 = "support"
+12 = "reject"
+13 = "support"
+14 = "support"
+15 = "reject"
+16 = "support"
+17 = "support"
+18 = "reject"
+19 = "reject"
+20 = "support"
+21 = "support"
+22 = "support"
+23 = "support"
+24 = "support"
+25 = "support"
+26 = "reject"
+27 = "reject"
+28 = "support"
+29 = "support"
+30 = "reject"
+31 = "support"
+32 = "support"
+33 = "support"
+34 = "reject"
+35 = "support"
+36 = "support"
+37 = "support"
+38 = "reject"
+39 = "support"
+40 = "reject"
+41 = "support"
+42 = "reject"
+43 = "support"
+44 = "support"
+45 = "support"
+46 = "support"
+47 = "reject"
+48 = "support"
+49 = "support"
+50 = "reject"
+51 = "support"
+52 = "support"
+53 = "support"
+54 = "reject"
+55 = "support"
+56 = "reject"
+57 = "support"
+58 = "reject"
+59 = "support"
+60 = "support"
+61 = "reject"
+62 = "support"
+63 = "support"
+64 = "support"
+65 = "support"
+66 = "support"
+67 = "support"
+68 = "support"
+69 = "support"
+70 = "support"
+71 = "reject"
+72 = "reject"
+73 = "support"
+74 = "reject"
+75 = "support"
+76 = "support"
+77 = "support"
+78 = "reject"
+79 = "support"
+80 = "support"
+81 = "reject"
+82 = "reject"
+83 = "support"
+84 = "reject"
+85 = "reject"
+86 = "reject"
+87 = "reject"
+88 = "support"
+89 = "support"
 
 [[per_question]]
 id = 68
@@ -4548,28 +5282,50 @@ qtype = "direct"
 trace_f1 = 1.0
 trace_precision = 1.0
 trace_recall = 1.0
-triple_f1 = 1.0
+triple_f1 = 0.5
 triple_precision = 1.0
-triple_recall = 1.0
+triple_recall = 0.3333333333333333
 triples_matched = 2
-triples_expected = 3
+triples_expected = 6
 triples_received = 2
-combined_f1 = 1.0
+combined_f1 = 0.75
 auto_trace_precision = 1.0
 auto_trace_recall = 1.0
 auto_trace_f1 = 1.0
 auto_triple_precision = 1.0
-auto_triple_recall = 1.0
-auto_triple_f1 = 1.0
-auto_combined_f1 = 1.0
+auto_triple_recall = 0.3333333333333333
+auto_triple_f1 = 0.5
+auto_combined_f1 = 0.75
 anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "direct"
+ambiguity_expanded = true
+ambiguity_reason = "direct_label_ambiguous"
+ambiguity_label = "Pentafluorobenzenethiol"
+ambiguity_candidate_count = 2
 
 [per_question.manual_review]
 required = false
 status = "none"
+seeded_from_auto = true
+comments = []
+
+[per_question.manual_review.trace]
+added_expected_steps = []
+
+[per_question.manual_review.trace.expected_required_overrides]
+
+[per_question.manual_review.trace.received_labels]
+0 = "ok"
+1 = "ok"
+2 = "ok"
+3 = "ok"
+
+[per_question.manual_review.triples.received_labels]
+0 = "support"
+1 = "support"
 
 [[per_question]]
 id = 69
@@ -4596,6 +5352,8 @@ anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "direct"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = false
@@ -4626,6 +5384,8 @@ anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "direct"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = false
@@ -4639,23 +5399,28 @@ trace_f1 = 0.8
 trace_precision = 0.6666666666666666
 trace_recall = 1.0
 triple_f1 = 0.6666666666666666
-triple_precision = 0.5
-triple_recall = 1.0
-triples_matched = 1
-triples_expected = 1
+triple_precision = 1.0
+triple_recall = 0.5
+triples_matched = 2
+triples_expected = 4
 triples_received = 2
 combined_f1 = 0.7333333333333334
 auto_trace_precision = 0.6666666666666666
 auto_trace_recall = 1.0
 auto_trace_f1 = 0.8
-auto_triple_precision = 0.5
-auto_triple_recall = 1.0
+auto_triple_precision = 1.0
+auto_triple_recall = 0.5
 auto_triple_f1 = 0.6666666666666666
 auto_combined_f1 = 0.7333333333333334
 anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "direct"
+ambiguity_expanded = true
+ambiguity_reason = "direct_label_ambiguous"
+ambiguity_label = "Elena Vasquez"
+ambiguity_candidate_count = 2
 
 [per_question.manual_review]
 required = false
@@ -4686,6 +5451,8 @@ anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "direct"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = false
@@ -4716,6 +5483,8 @@ anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "direct"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = false
@@ -4746,6 +5515,8 @@ anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "direct"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = false
@@ -4776,6 +5547,8 @@ anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "direct"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = false
@@ -4785,16 +5558,16 @@ status = "none"
 id = 76
 question = "Can you find some information about 'Photo‑induced radical pair formation from sulfonium‑based precursor'? could you please identify its experiment name?"
 qtype = "direct"
-trace_f1 = 0.6666666666666666
+trace_f1 = 1.0
 trace_precision = 1.0
-trace_recall = 0.5
+trace_recall = 1.0
 triple_f1 = 1.0
 triple_precision = 1.0
 triple_recall = 1.0
 triples_matched = 1
 triples_expected = 1
 triples_received = 1
-combined_f1 = 0.8333333333333333
+combined_f1 = 1.0
 auto_trace_precision = 1.0
 auto_trace_recall = 0.5
 auto_trace_f1 = 0.6666666666666666
@@ -4804,28 +5577,51 @@ auto_triple_f1 = 1.0
 auto_combined_f1 = 0.8333333333333333
 anomaly_flags = ["triple_perfect_trace_not"]
 anomaly_detected = true
-factored_in = false
-exclude_reason = "triple_perfect_trace_not"
-scoring_source = "excluded"
+factored_in = true
+scoring_source = "manual_perfect"
+scoring_qtype = "direct"
+ambiguity_expanded = false
+manual_trace_precision = 1.0
+manual_trace_recall = 1.0
+manual_trace_f1 = 1.0
+manual_triple_precision = 1.0
+manual_triple_recall = 1.0
+manual_triple_f1 = 1.0
+manual_combined_f1 = 1.0
 
 [per_question.manual_review]
 required = true
-status = "pending"
+status = "scored"
+seeded_from_auto = true
+comments = ["[perfect-answer] Enough information is contained in the search query."]
+reviewed = true
+
+[per_question.manual_review.trace]
+added_expected_steps = []
+
+[per_question.manual_review.trace.expected_required_overrides]
+
+[per_question.manual_review.trace.received_labels]
+0 = "ok"
+1 = "ok"
+
+[per_question.manual_review.triples.received_labels]
+0 = "support"
 
 [[per_question]]
 id = 77
 question = "Can you find some information about 'Optimizing deep learning algorithms for real-time satellite image analysis in disaster response scenarios'? What info exists on its publication title?"
 qtype = "direct"
-trace_f1 = 0.6666666666666666
+trace_f1 = 1.0
 trace_precision = 1.0
-trace_recall = 0.5
+trace_recall = 1.0
 triple_f1 = 1.0
 triple_precision = 1.0
 triple_recall = 1.0
 triples_matched = 1
 triples_expected = 1
 triples_received = 1
-combined_f1 = 0.8333333333333333
+combined_f1 = 1.0
 auto_trace_precision = 1.0
 auto_trace_recall = 0.5
 auto_trace_f1 = 0.6666666666666666
@@ -4835,13 +5631,36 @@ auto_triple_f1 = 1.0
 auto_combined_f1 = 0.8333333333333333
 anomaly_flags = ["triple_perfect_trace_not"]
 anomaly_detected = true
-factored_in = false
-exclude_reason = "triple_perfect_trace_not"
-scoring_source = "excluded"
+factored_in = true
+scoring_source = "manual_perfect"
+scoring_qtype = "direct"
+ambiguity_expanded = false
+manual_trace_precision = 1.0
+manual_trace_recall = 1.0
+manual_trace_f1 = 1.0
+manual_triple_precision = 1.0
+manual_triple_recall = 1.0
+manual_triple_f1 = 1.0
+manual_combined_f1 = 1.0
 
 [per_question.manual_review]
 required = true
-status = "pending"
+status = "scored"
+seeded_from_auto = true
+comments = ["[perfect-answer] Enough information is contained in the search query."]
+reviewed = true
+
+[per_question.manual_review.trace]
+added_expected_steps = []
+
+[per_question.manual_review.trace.expected_required_overrides]
+
+[per_question.manual_review.trace.received_labels]
+0 = "ok"
+1 = "ok"
+
+[per_question.manual_review.triples.received_labels]
+0 = "support"
 
 [[per_question]]
 id = 78
@@ -4868,10 +5687,27 @@ anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "direct"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = false
 status = "none"
+seeded_from_auto = true
+comments = []
+
+[per_question.manual_review.trace]
+added_expected_steps = []
+
+[per_question.manual_review.trace.expected_required_overrides]
+
+[per_question.manual_review.trace.received_labels]
+0 = "ok"
+1 = "ok"
+2 = "ok"
+
+[per_question.manual_review.triples.received_labels]
+0 = "support"
 
 [[per_question]]
 id = 79
@@ -4898,10 +5734,29 @@ anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "direct"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = false
 status = "none"
+seeded_from_auto = true
+comments = []
+
+[per_question.manual_review.trace]
+added_expected_steps = []
+
+[per_question.manual_review.trace.expected_required_overrides]
+
+[per_question.manual_review.trace.received_labels]
+0 = "ok"
+1 = "ok"
+2 = "ok"
+3 = "ok"
+
+[per_question.manual_review.triples.received_labels]
+0 = "support"
+1 = "support"
 
 [[per_question]]
 id = 80
@@ -4910,13 +5765,13 @@ qtype = "direct"
 trace_f1 = 1.0
 trace_precision = 1.0
 trace_recall = 1.0
-triple_f1 = 0.6666666666666666
-triple_precision = 0.5
+triple_f1 = 1.0
+triple_precision = 1.0
 triple_recall = 1.0
 triples_matched = 1
 triples_expected = 1
 triples_received = 2
-combined_f1 = 0.8333333333333333
+combined_f1 = 1.0
 auto_trace_precision = 1.0
 auto_trace_recall = 1.0
 auto_trace_f1 = 1.0
@@ -4927,26 +5782,53 @@ auto_combined_f1 = 0.8333333333333333
 anomaly_flags = []
 anomaly_detected = false
 factored_in = true
-scoring_source = "auto"
+scoring_source = "manual"
+scoring_qtype = "direct"
+ambiguity_expanded = false
+manual_trace_precision = 1.0
+manual_trace_recall = 1.0
+manual_trace_f1 = 1.0
+manual_triple_precision = 1.0
+manual_triple_recall = 1.0
+manual_triple_f1 = 1.0
+manual_combined_f1 = 1.0
 
 [per_question.manual_review]
 required = false
-status = "none"
+status = "scored"
+seeded_from_auto = true
+comments = ["[apply-manual] Model correct - project code missing in expected triples"]
+reviewed = true
+
+[per_question.manual_review.trace]
+added_expected_steps = []
+
+[per_question.manual_review.trace.expected_required_overrides]
+
+[per_question.manual_review.trace.received_labels]
+0 = "ok"
+1 = "ok"
+2 = "ok"
+3 = "ok"
+
+[per_question.manual_review.triples.received_labels]
+0 = "support"
+1 = "support"
 
 [[per_question]]
 id = 81
 question = "What can you tell me about 'FT‑IR (4000‑400 cm⁻¹) measurement'? What info exists on its measurement method?"
 qtype = "direct"
-trace_f1 = 0.5
-trace_precision = 0.5
-trace_recall = 0.5
+trace_f1 = 1.0
+trace_precision = 1.0
+trace_recall = 1.0
 triple_f1 = 0.5
 triple_precision = 0.3333333333333333
 triple_recall = 1.0
 triples_matched = 1
 triples_expected = 1
 triples_received = 3
-combined_f1 = 0.5
+combined_f1 = 0.75
 auto_trace_precision = 0.5
 auto_trace_recall = 0.5
 auto_trace_f1 = 0.5
@@ -4957,11 +5839,44 @@ auto_combined_f1 = 0.5
 anomaly_flags = []
 anomaly_detected = false
 factored_in = true
-scoring_source = "auto"
+scoring_source = "manual"
+scoring_qtype = "direct"
+ambiguity_expanded = false
+manual_trace_precision = 1.0
+manual_trace_recall = 1.0
+manual_trace_f1 = 1.0
+manual_triple_precision = 0.3333333333333333
+manual_triple_recall = 1.0
+manual_triple_f1 = 0.5
+manual_combined_f1 = 0.75
 
 [per_question.manual_review]
 required = false
-status = "none"
+status = "scored"
+seeded_from_auto = true
+comments = ["[apply-manual] overcitation"]
+reviewed = true
+
+[per_question.manual_review.trace.expected_required_overrides]
+0 = false
+
+[[per_question.manual_review.trace.added_expected_steps]]
+tool = "search"
+required = true
+_manual_added = true
+query = "FT-IR (4000-400 cm⁻¹) measurement"
+
+[per_question.manual_review.trace.received_labels]
+0 = "ok"
+1 = "ok"
+2 = "ok"
+3 = "ok"
+4 = "ok"
+
+[per_question.manual_review.triples.received_labels]
+0 = "support"
+1 = "reject"
+2 = "reject"
 
 [[per_question]]
 id = 82
@@ -4988,6 +5903,8 @@ anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "direct"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = false
@@ -5000,25 +5917,30 @@ qtype = "hop"
 trace_f1 = 0.5714285714285715
 trace_precision = 0.6666666666666666
 trace_recall = 0.5
-triple_f1 = 0.06349206349206349
+triple_f1 = 0.0625
 triple_precision = 0.03278688524590164
-triple_recall = 1.0
+triple_recall = 0.6666666666666666
 triples_matched = 2
 triples_expected = 3
 triples_received = 61
-combined_f1 = 0.3174603174603175
+combined_f1 = 0.31696428571428575
 auto_trace_precision = 0.6666666666666666
 auto_trace_recall = 0.5
 auto_trace_f1 = 0.5714285714285715
 auto_triple_precision = 0.03278688524590164
-auto_triple_recall = 1.0
-auto_triple_f1 = 0.06349206349206349
-auto_combined_f1 = 0.3174603174603175
-anomaly_flags = ["overcitation_low_precision_high_recall", "overcitation_ratio"]
+auto_triple_recall = 0.6666666666666666
+auto_triple_f1 = 0.0625
+auto_combined_f1 = 0.31696428571428575
+anomaly_flags = ["overcitation_ratio"]
 anomaly_detected = true
 factored_in = false
-exclude_reason = "overcitation_low_precision_high_recall,overcitation_ratio"
+exclude_reason = "overcitation_ratio"
 scoring_source = "excluded"
+scoring_qtype = "hop"
+ambiguity_expanded = true
+ambiguity_reason = "hop_label_ambiguous"
+ambiguity_label = "Usage of sulfonium-based radical precursor"
+ambiguity_candidate_count = 29
 
 [per_question.manual_review]
 required = true
@@ -5050,6 +5972,8 @@ anomaly_detected = true
 factored_in = false
 exclude_reason = "trace_pos_triple_zero"
 scoring_source = "excluded"
+scoring_qtype = "hop"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -5081,6 +6005,8 @@ anomaly_detected = true
 factored_in = false
 exclude_reason = "overcitation_ratio"
 scoring_source = "excluded"
+scoring_qtype = "hop"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -5111,6 +6037,8 @@ anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "hop"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = false
@@ -5123,24 +6051,29 @@ qtype = "hop"
 trace_f1 = 0.3333333333333333
 trace_precision = 0.5
 trace_recall = 0.25
-triple_f1 = 0.5
+triple_f1 = 0.4
 triple_precision = 0.3333333333333333
-triple_recall = 1.0
+triple_recall = 0.5
 triples_matched = 1
-triples_expected = 1
+triples_expected = 2
 triples_received = 3
-combined_f1 = 0.41666666666666663
+combined_f1 = 0.3666666666666667
 auto_trace_precision = 0.5
 auto_trace_recall = 0.25
 auto_trace_f1 = 0.3333333333333333
 auto_triple_precision = 0.3333333333333333
-auto_triple_recall = 1.0
-auto_triple_f1 = 0.5
-auto_combined_f1 = 0.41666666666666663
+auto_triple_recall = 0.5
+auto_triple_f1 = 0.4
+auto_combined_f1 = 0.3666666666666667
 anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "hop"
+ambiguity_expanded = true
+ambiguity_reason = "hop_label_ambiguous"
+ambiguity_label = "Usage of (e)-1,2‑difluoro‑3‑tert‑butyl‑prop‑2‑en‑1‑yl nitroxide"
+ambiguity_candidate_count = 68
 
 [per_question.manual_review]
 required = false
@@ -5153,25 +6086,30 @@ qtype = "hop"
 trace_f1 = 0.3333333333333333
 trace_precision = 0.5
 trace_recall = 0.25
-triple_f1 = 0.052631578947368425
+triple_f1 = 0.05128205128205129
 triple_precision = 0.02702702702702703
-triple_recall = 1.0
+triple_recall = 0.5
 triples_matched = 1
-triples_expected = 1
+triples_expected = 2
 triples_received = 37
-combined_f1 = 0.19298245614035087
+combined_f1 = 0.1923076923076923
 auto_trace_precision = 0.5
 auto_trace_recall = 0.25
 auto_trace_f1 = 0.3333333333333333
 auto_triple_precision = 0.02702702702702703
-auto_triple_recall = 1.0
-auto_triple_f1 = 0.052631578947368425
-auto_combined_f1 = 0.19298245614035087
-anomaly_flags = ["overcitation_low_precision_high_recall", "overcitation_ratio"]
+auto_triple_recall = 0.5
+auto_triple_f1 = 0.05128205128205129
+auto_combined_f1 = 0.1923076923076923
+anomaly_flags = ["overcitation_ratio"]
 anomaly_detected = true
 factored_in = false
-exclude_reason = "overcitation_low_precision_high_recall,overcitation_ratio"
+exclude_reason = "overcitation_ratio"
 scoring_source = "excluded"
+scoring_qtype = "hop"
+ambiguity_expanded = true
+ambiguity_reason = "hop_label_ambiguous"
+ambiguity_label = "Usage of 4-(bromomethyl)-4-[(e)-2-(trifluoromethyl)ethenyl]phenyl acetate"
+ambiguity_candidate_count = 10
 
 [per_question.manual_review]
 required = true
@@ -5184,24 +6122,29 @@ qtype = "hop"
 trace_f1 = 0.5714285714285715
 trace_precision = 0.6666666666666666
 trace_recall = 0.5
-triple_f1 = 0.4
+triple_f1 = 0.3333333333333333
 triple_precision = 0.25
-triple_recall = 1.0
+triple_recall = 0.5
 triples_matched = 1
-triples_expected = 1
+triples_expected = 2
 triples_received = 4
-combined_f1 = 0.48571428571428577
+combined_f1 = 0.45238095238095244
 auto_trace_precision = 0.6666666666666666
 auto_trace_recall = 0.5
 auto_trace_f1 = 0.5714285714285715
 auto_triple_precision = 0.25
-auto_triple_recall = 1.0
-auto_triple_f1 = 0.4
-auto_combined_f1 = 0.48571428571428577
+auto_triple_recall = 0.5
+auto_triple_f1 = 0.3333333333333333
+auto_combined_f1 = 0.45238095238095244
 anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "hop"
+ambiguity_expanded = true
+ambiguity_reason = "hop_label_ambiguous"
+ambiguity_label = "Usage of bis(2‑methoxyethyl)fluorobenzene"
+ambiguity_candidate_count = 24
 
 [per_question.manual_review]
 required = false
@@ -5232,6 +6175,8 @@ anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "hop"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = false
@@ -5244,24 +6189,29 @@ qtype = "hop"
 trace_f1 = 0.28571428571428575
 trace_precision = 0.3333333333333333
 trace_recall = 0.25
-triple_f1 = 0.5
+triple_f1 = 0.4444444444444444
 triple_precision = 0.3333333333333333
-triple_recall = 1.0
+triple_recall = 0.6666666666666666
 triples_matched = 2
 triples_expected = 3
 triples_received = 6
-combined_f1 = 0.3928571428571429
+combined_f1 = 0.3650793650793651
 auto_trace_precision = 0.3333333333333333
 auto_trace_recall = 0.25
 auto_trace_f1 = 0.28571428571428575
 auto_triple_precision = 0.3333333333333333
-auto_triple_recall = 1.0
-auto_triple_f1 = 0.5
-auto_combined_f1 = 0.3928571428571429
+auto_triple_recall = 0.6666666666666666
+auto_triple_f1 = 0.4444444444444444
+auto_combined_f1 = 0.3650793650793651
 anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "hop"
+ambiguity_expanded = true
+ambiguity_reason = "hop_label_ambiguous"
+ambiguity_label = "Usage of (e)-1,2‑difluoro‑3‑tert‑butyl‑prop‑2‑en‑1‑yl nitroxide"
+ambiguity_candidate_count = 68
 
 [per_question.manual_review]
 required = false
@@ -5274,29 +6224,33 @@ qtype = "hop"
 trace_f1 = 0.5714285714285715
 trace_precision = 0.6666666666666666
 trace_recall = 0.5
-triple_f1 = 0.18181818181818182
-triple_precision = 0.1
-triple_recall = 1.0
-triples_matched = 1
-triples_expected = 1
+triple_f1 = 0.5
+triple_precision = 0.4
+triple_recall = 0.6666666666666666
+triples_matched = 4
+triples_expected = 6
 triples_received = 10
-combined_f1 = 0.37662337662337664
+combined_f1 = 0.5357142857142858
 auto_trace_precision = 0.6666666666666666
 auto_trace_recall = 0.5
 auto_trace_f1 = 0.5714285714285715
-auto_triple_precision = 0.1
-auto_triple_recall = 1.0
-auto_triple_f1 = 0.18181818181818182
-auto_combined_f1 = 0.37662337662337664
-anomaly_flags = ["overcitation_low_precision_high_recall", "overcitation_ratio"]
-anomaly_detected = true
-factored_in = false
-exclude_reason = "overcitation_low_precision_high_recall,overcitation_ratio"
-scoring_source = "excluded"
+auto_triple_precision = 0.4
+auto_triple_recall = 0.6666666666666666
+auto_triple_f1 = 0.5
+auto_combined_f1 = 0.5357142857142858
+anomaly_flags = []
+anomaly_detected = false
+factored_in = true
+scoring_source = "auto"
+scoring_qtype = "hop"
+ambiguity_expanded = true
+ambiguity_reason = "hop_label_ambiguous"
+ambiguity_label = "Elena Vasquez"
+ambiguity_candidate_count = 2
 
 [per_question.manual_review]
-required = true
-status = "pending"
+required = false
+status = "none"
 
 [[per_question]]
 id = 93
@@ -5305,24 +6259,29 @@ qtype = "hop"
 trace_f1 = 0.5714285714285715
 trace_precision = 0.6666666666666666
 trace_recall = 0.5
-triple_f1 = 0.6666666666666666
+triple_f1 = 0.5714285714285715
 triple_precision = 0.5
-triple_recall = 1.0
+triple_recall = 0.6666666666666666
 triples_matched = 2
 triples_expected = 3
 triples_received = 4
-combined_f1 = 0.6190476190476191
+combined_f1 = 0.5714285714285715
 auto_trace_precision = 0.6666666666666666
 auto_trace_recall = 0.5
 auto_trace_f1 = 0.5714285714285715
 auto_triple_precision = 0.5
-auto_triple_recall = 1.0
-auto_triple_f1 = 0.6666666666666666
-auto_combined_f1 = 0.6190476190476191
+auto_triple_recall = 0.6666666666666666
+auto_triple_f1 = 0.5714285714285715
+auto_combined_f1 = 0.5714285714285715
 anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "hop"
+ambiguity_expanded = true
+ambiguity_reason = "hop_label_ambiguous"
+ambiguity_label = "Usage of bis(4-(trifluoromethyl)phenyl)disulfide"
+ambiguity_candidate_count = 56
 
 [per_question.manual_review]
 required = false
@@ -5335,24 +6294,29 @@ qtype = "hop"
 trace_f1 = 0.5714285714285715
 trace_precision = 0.6666666666666666
 trace_recall = 0.5
-triple_f1 = 0.8
+triple_f1 = 0.6666666666666666
 triple_precision = 0.6666666666666666
-triple_recall = 1.0
+triple_recall = 0.6666666666666666
 triples_matched = 2
 triples_expected = 3
 triples_received = 3
-combined_f1 = 0.6857142857142857
+combined_f1 = 0.6190476190476191
 auto_trace_precision = 0.6666666666666666
 auto_trace_recall = 0.5
 auto_trace_f1 = 0.5714285714285715
 auto_triple_precision = 0.6666666666666666
-auto_triple_recall = 1.0
-auto_triple_f1 = 0.8
-auto_combined_f1 = 0.6857142857142857
+auto_triple_recall = 0.6666666666666666
+auto_triple_f1 = 0.6666666666666666
+auto_combined_f1 = 0.6190476190476191
 anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "hop"
+ambiguity_expanded = true
+ambiguity_reason = "hop_label_ambiguous"
+ambiguity_label = "Usage of sulfonium-based radical precursor"
+ambiguity_candidate_count = 29
 
 [per_question.manual_review]
 required = false
@@ -5365,24 +6329,29 @@ qtype = "hop"
 trace_f1 = 0.5714285714285715
 trace_precision = 0.6666666666666666
 trace_recall = 0.5
-triple_f1 = 0.4444444444444445
+triple_f1 = 0.4
 triple_precision = 0.2857142857142857
-triple_recall = 1.0
+triple_recall = 0.6666666666666666
 triples_matched = 2
 triples_expected = 3
 triples_received = 7
-combined_f1 = 0.507936507936508
+combined_f1 = 0.48571428571428577
 auto_trace_precision = 0.6666666666666666
 auto_trace_recall = 0.5
 auto_trace_f1 = 0.5714285714285715
 auto_triple_precision = 0.2857142857142857
-auto_triple_recall = 1.0
-auto_triple_f1 = 0.4444444444444445
-auto_combined_f1 = 0.507936507936508
+auto_triple_recall = 0.6666666666666666
+auto_triple_f1 = 0.4
+auto_combined_f1 = 0.48571428571428577
 anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "hop"
+ambiguity_expanded = true
+ambiguity_reason = "hop_label_ambiguous"
+ambiguity_label = "Usage of 4-(2-hydroxyethyl)morpholine"
+ambiguity_candidate_count = 103
 
 [per_question.manual_review]
 required = false
@@ -5414,6 +6383,8 @@ anomaly_detected = true
 factored_in = false
 exclude_reason = "both_zero"
 scoring_source = "excluded"
+scoring_qtype = "hop"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -5426,25 +6397,30 @@ qtype = "hop"
 trace_f1 = 0.5714285714285715
 trace_precision = 0.6666666666666666
 trace_recall = 0.5
-triple_f1 = 0.004728132387706856
+triple_f1 = 0.004716981132075472
 triple_precision = 0.002369668246445498
-triple_recall = 1.0
+triple_recall = 0.5
 triples_matched = 1
-triples_expected = 1
+triples_expected = 2
 triples_received = 422
-combined_f1 = 0.2880783519081392
+combined_f1 = 0.2880727762803235
 auto_trace_precision = 0.6666666666666666
 auto_trace_recall = 0.5
 auto_trace_f1 = 0.5714285714285715
 auto_triple_precision = 0.002369668246445498
-auto_triple_recall = 1.0
-auto_triple_f1 = 0.004728132387706856
-auto_combined_f1 = 0.2880783519081392
-anomaly_flags = ["overcitation_low_precision_high_recall", "overcitation_ratio"]
+auto_triple_recall = 0.5
+auto_triple_f1 = 0.004716981132075472
+auto_combined_f1 = 0.2880727762803235
+anomaly_flags = ["overcitation_ratio"]
 anomaly_detected = true
 factored_in = false
-exclude_reason = "overcitation_low_precision_high_recall,overcitation_ratio"
+exclude_reason = "overcitation_ratio"
 scoring_source = "excluded"
+scoring_qtype = "hop"
+ambiguity_expanded = true
+ambiguity_reason = "hop_label_ambiguous"
+ambiguity_label = "Usage of 4-(2-hydroxyethyl)morpholine"
+ambiguity_candidate_count = 103
 
 [per_question.manual_review]
 required = true
@@ -5457,24 +6433,29 @@ qtype = "hop"
 trace_f1 = 0.5714285714285715
 trace_precision = 0.6666666666666666
 trace_recall = 0.5
-triple_f1 = 0.8
+triple_f1 = 0.6666666666666666
 triple_precision = 0.6666666666666666
-triple_recall = 1.0
+triple_recall = 0.6666666666666666
 triples_matched = 2
 triples_expected = 3
 triples_received = 3
-combined_f1 = 0.6857142857142857
+combined_f1 = 0.6190476190476191
 auto_trace_precision = 0.6666666666666666
 auto_trace_recall = 0.5
 auto_trace_f1 = 0.5714285714285715
 auto_triple_precision = 0.6666666666666666
-auto_triple_recall = 1.0
-auto_triple_f1 = 0.8
-auto_combined_f1 = 0.6857142857142857
+auto_triple_recall = 0.6666666666666666
+auto_triple_f1 = 0.6666666666666666
+auto_combined_f1 = 0.6190476190476191
 anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "hop"
+ambiguity_expanded = true
+ambiguity_reason = "hop_label_ambiguous"
+ambiguity_label = "Usage of tetrafluoroethylbenzene"
+ambiguity_candidate_count = 139
 
 [per_question.manual_review]
 required = false
@@ -5487,24 +6468,29 @@ qtype = "hop"
 trace_f1 = 0.5714285714285715
 trace_precision = 0.6666666666666666
 trace_recall = 0.5
-triple_f1 = 0.6666666666666666
+triple_f1 = 0.5714285714285715
 triple_precision = 0.5
-triple_recall = 1.0
+triple_recall = 0.6666666666666666
 triples_matched = 2
 triples_expected = 3
 triples_received = 4
-combined_f1 = 0.6190476190476191
+combined_f1 = 0.5714285714285715
 auto_trace_precision = 0.6666666666666666
 auto_trace_recall = 0.5
 auto_trace_f1 = 0.5714285714285715
 auto_triple_precision = 0.5
-auto_triple_recall = 1.0
-auto_triple_f1 = 0.6666666666666666
-auto_combined_f1 = 0.6190476190476191
+auto_triple_recall = 0.6666666666666666
+auto_triple_f1 = 0.5714285714285715
+auto_combined_f1 = 0.5714285714285715
 anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "hop"
+ambiguity_expanded = true
+ambiguity_reason = "hop_label_ambiguous"
+ambiguity_label = "Usage of 4-(2-hydroxyethyl)morpholine"
+ambiguity_candidate_count = 103
 
 [per_question.manual_review]
 required = false
@@ -5517,25 +6503,30 @@ qtype = "hop"
 trace_f1 = 0.3333333333333333
 trace_precision = 0.5
 trace_recall = 0.25
-triple_f1 = 0.07999999999999999
-triple_precision = 0.041666666666666664
-triple_recall = 1.0
-triples_matched = 1
-triples_expected = 1
+triple_f1 = 0.25
+triple_precision = 0.16666666666666666
+triple_recall = 0.5
+triples_matched = 4
+triples_expected = 8
 triples_received = 24
-combined_f1 = 0.20666666666666667
+combined_f1 = 0.29166666666666663
 auto_trace_precision = 0.5
 auto_trace_recall = 0.25
 auto_trace_f1 = 0.3333333333333333
-auto_triple_precision = 0.041666666666666664
-auto_triple_recall = 1.0
-auto_triple_f1 = 0.07999999999999999
-auto_combined_f1 = 0.20666666666666667
-anomaly_flags = ["overcitation_low_precision_high_recall", "overcitation_ratio"]
+auto_triple_precision = 0.16666666666666666
+auto_triple_recall = 0.5
+auto_triple_f1 = 0.25
+auto_combined_f1 = 0.29166666666666663
+anomaly_flags = ["overcitation_ratio"]
 anomaly_detected = true
 factored_in = false
-exclude_reason = "overcitation_low_precision_high_recall,overcitation_ratio"
+exclude_reason = "overcitation_ratio"
 scoring_source = "excluded"
+scoring_qtype = "hop"
+ambiguity_expanded = true
+ambiguity_reason = "hop_label_ambiguous"
+ambiguity_label = "Hiroshi Tanaka"
+ambiguity_candidate_count = 4
 
 [per_question.manual_review]
 required = true
@@ -5548,24 +6539,29 @@ qtype = "hop"
 trace_f1 = 0.5714285714285715
 trace_precision = 0.6666666666666666
 trace_recall = 0.5
-triple_f1 = 0.5
+triple_f1 = 0.4
 triple_precision = 0.3333333333333333
-triple_recall = 1.0
+triple_recall = 0.5
 triples_matched = 1
-triples_expected = 1
+triples_expected = 2
 triples_received = 3
-combined_f1 = 0.5357142857142858
+combined_f1 = 0.48571428571428577
 auto_trace_precision = 0.6666666666666666
 auto_trace_recall = 0.5
 auto_trace_f1 = 0.5714285714285715
 auto_triple_precision = 0.3333333333333333
-auto_triple_recall = 1.0
-auto_triple_f1 = 0.5
-auto_combined_f1 = 0.5357142857142858
+auto_triple_recall = 0.5
+auto_triple_f1 = 0.4
+auto_combined_f1 = 0.48571428571428577
 anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "hop"
+ambiguity_expanded = true
+ambiguity_reason = "hop_label_ambiguous"
+ambiguity_label = "Usage of 1,4-dichloro-2,5-dimethyl-3-hexynyl (z)-prop-2-enoate"
+ambiguity_candidate_count = 27
 
 [per_question.manual_review]
 required = false
@@ -5596,6 +6592,8 @@ anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "hop"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = false
@@ -5626,6 +6624,8 @@ anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "hop"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = false
@@ -5656,6 +6656,8 @@ anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "hop"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = false
@@ -5668,29 +6670,33 @@ qtype = "hop"
 trace_f1 = 0.8571428571428571
 trace_precision = 1.0
 trace_recall = 0.75
-triple_f1 = 0.09523809523809523
-triple_precision = 0.05
-triple_recall = 1.0
-triples_matched = 1
-triples_expected = 1
+triple_f1 = 0.41379310344827586
+triple_precision = 0.3
+triple_recall = 0.6666666666666666
+triples_matched = 6
+triples_expected = 9
 triples_received = 20
-combined_f1 = 0.47619047619047616
+combined_f1 = 0.6354679802955665
 auto_trace_precision = 1.0
 auto_trace_recall = 0.75
 auto_trace_f1 = 0.8571428571428571
-auto_triple_precision = 0.05
-auto_triple_recall = 1.0
-auto_triple_f1 = 0.09523809523809523
-auto_combined_f1 = 0.47619047619047616
-anomaly_flags = ["overcitation_low_precision_high_recall", "overcitation_ratio"]
-anomaly_detected = true
-factored_in = false
-exclude_reason = "overcitation_low_precision_high_recall,overcitation_ratio"
-scoring_source = "excluded"
+auto_triple_precision = 0.3
+auto_triple_recall = 0.6666666666666666
+auto_triple_f1 = 0.41379310344827586
+auto_combined_f1 = 0.6354679802955665
+anomaly_flags = []
+anomaly_detected = false
+factored_in = true
+scoring_source = "auto"
+scoring_qtype = "hop"
+ambiguity_expanded = true
+ambiguity_reason = "hop_label_ambiguous"
+ambiguity_label = "Elena Rodriguez"
+ambiguity_candidate_count = 3
 
 [per_question.manual_review]
-required = true
-status = "pending"
+required = false
+status = "none"
 
 [[per_question]]
 id = 106
@@ -5699,25 +6705,30 @@ qtype = "hop"
 trace_f1 = 0.3333333333333333
 trace_precision = 0.5
 trace_recall = 0.25
-triple_f1 = 0.03076923076923077
+triple_f1 = 0.030534351145038167
 triple_precision = 0.015625
-triple_recall = 1.0
+triple_recall = 0.6666666666666666
 triples_matched = 2
 triples_expected = 3
 triples_received = 128
-combined_f1 = 0.18205128205128204
+combined_f1 = 0.18193384223918574
 auto_trace_precision = 0.5
 auto_trace_recall = 0.25
 auto_trace_f1 = 0.3333333333333333
 auto_triple_precision = 0.015625
-auto_triple_recall = 1.0
-auto_triple_f1 = 0.03076923076923077
-auto_combined_f1 = 0.18205128205128204
-anomaly_flags = ["overcitation_low_precision_high_recall", "overcitation_ratio"]
+auto_triple_recall = 0.6666666666666666
+auto_triple_f1 = 0.030534351145038167
+auto_combined_f1 = 0.18193384223918574
+anomaly_flags = ["overcitation_ratio"]
 anomaly_detected = true
 factored_in = false
-exclude_reason = "overcitation_low_precision_high_recall,overcitation_ratio"
+exclude_reason = "overcitation_ratio"
 scoring_source = "excluded"
+scoring_qtype = "hop"
+ambiguity_expanded = true
+ambiguity_reason = "hop_label_ambiguous"
+ambiguity_label = "Usage of 2,2-dimethyl-1,3-dioxolane"
+ambiguity_candidate_count = 43
 
 [per_question.manual_review]
 required = true
@@ -5730,25 +6741,30 @@ qtype = "hop"
 trace_f1 = 0.5
 trace_precision = 0.5
 trace_recall = 0.5
-triple_f1 = 0.2222222222222222
+triple_f1 = 0.2
 triple_precision = 0.125
-triple_recall = 1.0
+triple_recall = 0.5
 triples_matched = 1
-triples_expected = 1
+triples_expected = 2
 triples_received = 8
-combined_f1 = 0.3611111111111111
+combined_f1 = 0.35
 auto_trace_precision = 0.5
 auto_trace_recall = 0.5
 auto_trace_f1 = 0.5
 auto_triple_precision = 0.125
-auto_triple_recall = 1.0
-auto_triple_f1 = 0.2222222222222222
-auto_combined_f1 = 0.3611111111111111
+auto_triple_recall = 0.5
+auto_triple_f1 = 0.2
+auto_combined_f1 = 0.35
 anomaly_flags = ["overcitation_ratio"]
 anomaly_detected = true
 factored_in = false
 exclude_reason = "overcitation_ratio"
 scoring_source = "excluded"
+scoring_qtype = "hop"
+ambiguity_expanded = true
+ambiguity_reason = "hop_label_ambiguous"
+ambiguity_label = "Usage of bis(2,3,4,5-tetrafluorophenyl) ether"
+ambiguity_candidate_count = 81
 
 [per_question.manual_review]
 required = true
@@ -5761,24 +6777,29 @@ qtype = "hop"
 trace_f1 = 0.5714285714285715
 trace_precision = 0.6666666666666666
 trace_recall = 0.5
-triple_f1 = 0.8
+triple_f1 = 0.6666666666666666
 triple_precision = 0.6666666666666666
-triple_recall = 1.0
+triple_recall = 0.6666666666666666
 triples_matched = 2
 triples_expected = 3
 triples_received = 3
-combined_f1 = 0.6857142857142857
+combined_f1 = 0.6190476190476191
 auto_trace_precision = 0.6666666666666666
 auto_trace_recall = 0.5
 auto_trace_f1 = 0.5714285714285715
 auto_triple_precision = 0.6666666666666666
-auto_triple_recall = 1.0
-auto_triple_f1 = 0.8
-auto_combined_f1 = 0.6857142857142857
+auto_triple_recall = 0.6666666666666666
+auto_triple_f1 = 0.6666666666666666
+auto_combined_f1 = 0.6190476190476191
 anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "hop"
+ambiguity_expanded = true
+ambiguity_reason = "hop_label_ambiguous"
+ambiguity_label = "Usage of 4-(2-ethylhexyl)benzyl alcohol"
+ambiguity_candidate_count = 5
 
 [per_question.manual_review]
 required = false
@@ -5791,29 +6812,33 @@ qtype = "hop"
 trace_f1 = 0.4444444444444445
 trace_precision = 0.4
 trace_recall = 0.5
-triple_f1 = 0.125
-triple_precision = 0.06666666666666667
-triple_recall = 1.0
-triples_matched = 1
-triples_expected = 1
+triple_f1 = 0.5
+triple_precision = 0.4
+triple_recall = 0.6666666666666666
+triples_matched = 6
+triples_expected = 9
 triples_received = 15
-combined_f1 = 0.2847222222222222
+combined_f1 = 0.4722222222222222
 auto_trace_precision = 0.4
 auto_trace_recall = 0.5
 auto_trace_f1 = 0.4444444444444445
-auto_triple_precision = 0.06666666666666667
-auto_triple_recall = 1.0
-auto_triple_f1 = 0.125
-auto_combined_f1 = 0.2847222222222222
-anomaly_flags = ["overcitation_low_precision_high_recall", "overcitation_ratio"]
-anomaly_detected = true
-factored_in = false
-exclude_reason = "overcitation_low_precision_high_recall,overcitation_ratio"
-scoring_source = "excluded"
+auto_triple_precision = 0.4
+auto_triple_recall = 0.6666666666666666
+auto_triple_f1 = 0.5
+auto_combined_f1 = 0.4722222222222222
+anomaly_flags = []
+anomaly_detected = false
+factored_in = true
+scoring_source = "auto"
+scoring_qtype = "hop"
+ambiguity_expanded = true
+ambiguity_reason = "hop_label_ambiguous"
+ambiguity_label = "Priya Nair"
+ambiguity_candidate_count = 3
 
 [per_question.manual_review]
-required = true
-status = "pending"
+required = false
+status = "none"
 
 [[per_question]]
 id = 110
@@ -5840,6 +6865,8 @@ anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "hop"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = false
@@ -5852,24 +6879,29 @@ qtype = "hop"
 trace_f1 = 0.5714285714285715
 trace_precision = 0.6666666666666666
 trace_recall = 0.5
-triple_f1 = 0.8
+triple_f1 = 0.6666666666666666
 triple_precision = 0.6666666666666666
-triple_recall = 1.0
+triple_recall = 0.6666666666666666
 triples_matched = 2
 triples_expected = 3
 triples_received = 3
-combined_f1 = 0.6857142857142857
+combined_f1 = 0.6190476190476191
 auto_trace_precision = 0.6666666666666666
 auto_trace_recall = 0.5
 auto_trace_f1 = 0.5714285714285715
 auto_triple_precision = 0.6666666666666666
-auto_triple_recall = 1.0
-auto_triple_f1 = 0.8
-auto_combined_f1 = 0.6857142857142857
+auto_triple_recall = 0.6666666666666666
+auto_triple_f1 = 0.6666666666666666
+auto_combined_f1 = 0.6190476190476191
 anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "hop"
+ambiguity_expanded = true
+ambiguity_reason = "hop_label_ambiguous"
+ambiguity_label = "Usage of 2,2-dimethyl-1,3-dioxolane"
+ambiguity_candidate_count = 43
 
 [per_question.manual_review]
 required = false
@@ -5901,6 +6933,8 @@ anomaly_detected = true
 factored_in = false
 exclude_reason = "trace_pos_triple_zero"
 scoring_source = "excluded"
+scoring_qtype = "hop"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -5913,25 +6947,30 @@ qtype = "hop"
 trace_f1 = 0.3333333333333333
 trace_precision = 0.5
 trace_recall = 0.25
-triple_f1 = 0.020618556701030924
+triple_f1 = 0.020408163265306124
 triple_precision = 0.010416666666666666
-triple_recall = 1.0
+triple_recall = 0.5
 triples_matched = 1
-triples_expected = 1
+triples_expected = 2
 triples_received = 96
-combined_f1 = 0.1769759450171821
+combined_f1 = 0.17687074829931973
 auto_trace_precision = 0.5
 auto_trace_recall = 0.25
 auto_trace_f1 = 0.3333333333333333
 auto_triple_precision = 0.010416666666666666
-auto_triple_recall = 1.0
-auto_triple_f1 = 0.020618556701030924
-auto_combined_f1 = 0.1769759450171821
-anomaly_flags = ["overcitation_low_precision_high_recall", "overcitation_ratio"]
+auto_triple_recall = 0.5
+auto_triple_f1 = 0.020408163265306124
+auto_combined_f1 = 0.17687074829931973
+anomaly_flags = ["overcitation_ratio"]
 anomaly_detected = true
 factored_in = false
-exclude_reason = "overcitation_low_precision_high_recall,overcitation_ratio"
+exclude_reason = "overcitation_ratio"
 scoring_source = "excluded"
+scoring_qtype = "hop"
+ambiguity_expanded = true
+ambiguity_reason = "hop_label_ambiguous"
+ambiguity_label = "Usage of 1,4-bis(trifluoromethyl)benzene"
+ambiguity_candidate_count = 32
 
 [per_question.manual_review]
 required = true
@@ -5962,6 +7001,8 @@ anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "hop"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = false
@@ -5974,24 +7015,29 @@ qtype = "hop"
 trace_f1 = 0.5714285714285715
 trace_precision = 0.6666666666666666
 trace_recall = 0.5
-triple_f1 = 0.4
+triple_f1 = 0.3333333333333333
 triple_precision = 0.25
-triple_recall = 1.0
+triple_recall = 0.5
 triples_matched = 1
-triples_expected = 1
+triples_expected = 2
 triples_received = 4
-combined_f1 = 0.48571428571428577
+combined_f1 = 0.45238095238095244
 auto_trace_precision = 0.6666666666666666
 auto_trace_recall = 0.5
 auto_trace_f1 = 0.5714285714285715
 auto_triple_precision = 0.25
-auto_triple_recall = 1.0
-auto_triple_f1 = 0.4
-auto_combined_f1 = 0.48571428571428577
+auto_triple_recall = 0.5
+auto_triple_f1 = 0.3333333333333333
+auto_combined_f1 = 0.45238095238095244
 anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "hop"
+ambiguity_expanded = true
+ambiguity_reason = "hop_label_ambiguous"
+ambiguity_label = "Usage of tris(1,4-dimethyl-2-pyrazolyl)borate"
+ambiguity_candidate_count = 10
 
 [per_question.manual_review]
 required = false
@@ -6004,25 +7050,30 @@ qtype = "hop"
 trace_f1 = 0.3333333333333333
 trace_precision = 0.5
 trace_recall = 0.25
-triple_f1 = 0.08333333333333333
+triple_f1 = 0.08
 triple_precision = 0.043478260869565216
-triple_recall = 1.0
+triple_recall = 0.5
 triples_matched = 1
-triples_expected = 1
+triples_expected = 2
 triples_received = 23
-combined_f1 = 0.20833333333333331
+combined_f1 = 0.20666666666666667
 auto_trace_precision = 0.5
 auto_trace_recall = 0.25
 auto_trace_f1 = 0.3333333333333333
 auto_triple_precision = 0.043478260869565216
-auto_triple_recall = 1.0
-auto_triple_f1 = 0.08333333333333333
-auto_combined_f1 = 0.20833333333333331
-anomaly_flags = ["overcitation_low_precision_high_recall", "overcitation_ratio"]
+auto_triple_recall = 0.5
+auto_triple_f1 = 0.08
+auto_combined_f1 = 0.20666666666666667
+anomaly_flags = ["overcitation_ratio"]
 anomaly_detected = true
 factored_in = false
-exclude_reason = "overcitation_low_precision_high_recall,overcitation_ratio"
+exclude_reason = "overcitation_ratio"
 scoring_source = "excluded"
+scoring_qtype = "hop"
+ambiguity_expanded = true
+ambiguity_reason = "hop_label_ambiguous"
+ambiguity_label = "Usage of 1,4-bis(3,5-di-tert-butyl-4-hydroxyphenyl)butane"
+ambiguity_candidate_count = 14
 
 [per_question.manual_review]
 required = true
@@ -6035,29 +7086,33 @@ qtype = "hop"
 trace_f1 = 0.5714285714285715
 trace_precision = 0.6666666666666666
 trace_recall = 0.5
-triple_f1 = 0.2857142857142857
+triple_f1 = 0.25
 triple_precision = 0.16666666666666666
-triple_recall = 1.0
+triple_recall = 0.5
 triples_matched = 1
-triples_expected = 1
+triples_expected = 2
 triples_received = 6
-combined_f1 = 0.4285714285714286
+combined_f1 = 0.41071428571428575
 auto_trace_precision = 0.6666666666666666
 auto_trace_recall = 0.5
 auto_trace_f1 = 0.5714285714285715
 auto_triple_precision = 0.16666666666666666
-auto_triple_recall = 1.0
-auto_triple_f1 = 0.2857142857142857
-auto_combined_f1 = 0.4285714285714286
-anomaly_flags = ["overcitation_ratio"]
-anomaly_detected = true
-factored_in = false
-exclude_reason = "overcitation_ratio"
-scoring_source = "excluded"
+auto_triple_recall = 0.5
+auto_triple_f1 = 0.25
+auto_combined_f1 = 0.41071428571428575
+anomaly_flags = []
+anomaly_detected = false
+factored_in = true
+scoring_source = "auto"
+scoring_qtype = "hop"
+ambiguity_expanded = true
+ambiguity_reason = "hop_label_ambiguous"
+ambiguity_label = "Usage of 4-(bromomethyl)-4-[(e)-2-(trifluoromethyl)ethenyl]phenyl acetate"
+ambiguity_candidate_count = 10
 
 [per_question.manual_review]
-required = true
-status = "pending"
+required = false
+status = "none"
 
 [[per_question]]
 id = 118
@@ -6085,6 +7140,8 @@ anomaly_detected = true
 factored_in = false
 exclude_reason = "overcitation_ratio"
 scoring_source = "excluded"
+scoring_qtype = "hop"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -6115,6 +7172,8 @@ anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "hop"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = false
@@ -6127,29 +7186,33 @@ qtype = "hop"
 trace_f1 = 0.3333333333333333
 trace_precision = 0.5
 trace_recall = 0.25
-triple_f1 = 0.11764705882352941
-triple_precision = 0.0625
-triple_recall = 1.0
-triples_matched = 1
-triples_expected = 1
+triple_f1 = 0.3333333333333333
+triple_precision = 0.25
+triple_recall = 0.5
+triples_matched = 4
+triples_expected = 8
 triples_received = 16
-combined_f1 = 0.22549019607843135
+combined_f1 = 0.3333333333333333
 auto_trace_precision = 0.5
 auto_trace_recall = 0.25
 auto_trace_f1 = 0.3333333333333333
-auto_triple_precision = 0.0625
-auto_triple_recall = 1.0
-auto_triple_f1 = 0.11764705882352941
-auto_combined_f1 = 0.22549019607843135
-anomaly_flags = ["overcitation_low_precision_high_recall", "overcitation_ratio"]
-anomaly_detected = true
-factored_in = false
-exclude_reason = "overcitation_low_precision_high_recall,overcitation_ratio"
-scoring_source = "excluded"
+auto_triple_precision = 0.25
+auto_triple_recall = 0.5
+auto_triple_f1 = 0.3333333333333333
+auto_combined_f1 = 0.3333333333333333
+anomaly_flags = []
+anomaly_detected = false
+factored_in = true
+scoring_source = "auto"
+scoring_qtype = "hop"
+ambiguity_expanded = true
+ambiguity_reason = "hop_label_ambiguous"
+ambiguity_label = "Hiroshi Tanaka"
+ambiguity_candidate_count = 4
 
 [per_question.manual_review]
-required = true
-status = "pending"
+required = false
+status = "none"
 
 [[per_question]]
 id = 121
@@ -6177,6 +7240,8 @@ anomaly_detected = true
 factored_in = false
 exclude_reason = "impossible_found_not_false"
 scoring_source = "excluded"
+scoring_qtype = "impossible"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -6208,6 +7273,8 @@ anomaly_detected = true
 factored_in = false
 exclude_reason = "impossible_found_not_false"
 scoring_source = "excluded"
+scoring_qtype = "impossible"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -6220,25 +7287,30 @@ qtype = "impossible"
 trace_f1 = 0.0
 trace_precision = 0.0
 trace_recall = 0.0
-triple_f1 = 0.0
-triple_precision = 0.0
-triple_recall = 0.0
-triples_matched = 0
-triples_expected = 0
+triple_f1 = 0.4
+triple_precision = 1.0
+triple_recall = 0.25
+triples_matched = 1
+triples_expected = 4
 triples_received = 1
-combined_f1 = 0.0
+combined_f1 = 0.2
 auto_trace_precision = 0.0
 auto_trace_recall = 0.0
 auto_trace_f1 = 0.0
-auto_triple_precision = 0.0
-auto_triple_recall = 0.0
-auto_triple_f1 = 0.0
-auto_combined_f1 = 0.0
-anomaly_flags = ["impossible_found_not_false"]
+auto_triple_precision = 1.0
+auto_triple_recall = 0.25
+auto_triple_f1 = 0.4
+auto_combined_f1 = 0.2
+anomaly_flags = ["triple_pos_trace_zero"]
 anomaly_detected = true
 factored_in = false
-exclude_reason = "impossible_found_not_false"
+exclude_reason = "triple_pos_trace_zero"
 scoring_source = "excluded"
+scoring_qtype = "direct"
+ambiguity_expanded = true
+ambiguity_reason = "impossible_label_ambiguous_not_globally_impossible"
+ambiguity_label = "Usage of 4-(bis(tert-butyl)amino)phenylacetylene"
+ambiguity_candidate_count = 7
 
 [per_question.manual_review]
 required = true
@@ -6270,6 +7342,8 @@ anomaly_detected = true
 factored_in = false
 exclude_reason = "impossible_found_not_false"
 scoring_source = "excluded"
+scoring_qtype = "impossible"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -6301,6 +7375,8 @@ anomaly_detected = true
 factored_in = false
 exclude_reason = "impossible_found_not_false"
 scoring_source = "excluded"
+scoring_qtype = "impossible"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -6332,6 +7408,8 @@ anomaly_detected = true
 factored_in = false
 exclude_reason = "impossible_found_not_false"
 scoring_source = "excluded"
+scoring_qtype = "impossible"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -6363,6 +7441,8 @@ anomaly_detected = true
 factored_in = false
 exclude_reason = "impossible_found_not_false"
 scoring_source = "excluded"
+scoring_qtype = "impossible"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -6394,6 +7474,8 @@ anomaly_detected = true
 factored_in = false
 exclude_reason = "impossible_found_not_false"
 scoring_source = "excluded"
+scoring_qtype = "impossible"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -6425,6 +7507,8 @@ anomaly_detected = true
 factored_in = false
 exclude_reason = "impossible_found_not_false"
 scoring_source = "excluded"
+scoring_qtype = "impossible"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -6456,6 +7540,8 @@ anomaly_detected = true
 factored_in = false
 exclude_reason = "impossible_found_not_false"
 scoring_source = "excluded"
+scoring_qtype = "impossible"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -6487,6 +7573,8 @@ anomaly_detected = true
 factored_in = false
 exclude_reason = "impossible_found_not_false"
 scoring_source = "excluded"
+scoring_qtype = "impossible"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -6517,6 +7605,8 @@ anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "impossible"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = false
@@ -6547,6 +7637,8 @@ anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "impossible"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = false
@@ -6578,6 +7670,8 @@ anomaly_detected = true
 factored_in = false
 exclude_reason = "impossible_found_not_false"
 scoring_source = "excluded"
+scoring_qtype = "impossible"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -6609,6 +7703,8 @@ anomaly_detected = true
 factored_in = false
 exclude_reason = "impossible_found_not_false"
 scoring_source = "excluded"
+scoring_qtype = "impossible"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -6640,6 +7736,8 @@ anomaly_detected = true
 factored_in = false
 exclude_reason = "impossible_found_not_false"
 scoring_source = "excluded"
+scoring_qtype = "impossible"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -6671,6 +7769,8 @@ anomaly_detected = true
 factored_in = false
 exclude_reason = "impossible_found_not_false"
 scoring_source = "excluded"
+scoring_qtype = "impossible"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -6702,6 +7802,8 @@ anomaly_detected = true
 factored_in = false
 exclude_reason = "impossible_found_not_false"
 scoring_source = "excluded"
+scoring_qtype = "impossible"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -6733,6 +7835,8 @@ anomaly_detected = true
 factored_in = false
 exclude_reason = "impossible_found_not_false"
 scoring_source = "excluded"
+scoring_qtype = "impossible"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -6764,6 +7868,8 @@ anomaly_detected = true
 factored_in = false
 exclude_reason = "impossible_found_not_false"
 scoring_source = "excluded"
+scoring_qtype = "impossible"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -6795,6 +7901,8 @@ anomaly_detected = true
 factored_in = false
 exclude_reason = "impossible_found_not_false"
 scoring_source = "excluded"
+scoring_qtype = "impossible"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -6826,6 +7934,8 @@ anomaly_detected = true
 factored_in = false
 exclude_reason = "impossible_found_not_false"
 scoring_source = "excluded"
+scoring_qtype = "impossible"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -6857,6 +7967,8 @@ anomaly_detected = true
 factored_in = false
 exclude_reason = "impossible_found_not_false"
 scoring_source = "excluded"
+scoring_qtype = "impossible"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -6887,6 +7999,8 @@ anomaly_flags = []
 anomaly_detected = false
 factored_in = true
 scoring_source = "auto"
+scoring_qtype = "impossible"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = false
@@ -6918,6 +8032,8 @@ anomaly_detected = true
 factored_in = false
 exclude_reason = "impossible_found_not_false"
 scoring_source = "excluded"
+scoring_qtype = "impossible"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -6949,6 +8065,8 @@ anomaly_detected = true
 factored_in = false
 exclude_reason = "impossible_found_not_false"
 scoring_source = "excluded"
+scoring_qtype = "impossible"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -6980,6 +8098,8 @@ anomaly_detected = true
 factored_in = false
 exclude_reason = "impossible_found_not_false"
 scoring_source = "excluded"
+scoring_qtype = "impossible"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -7011,6 +8131,8 @@ anomaly_detected = true
 factored_in = false
 exclude_reason = "impossible_found_not_false"
 scoring_source = "excluded"
+scoring_qtype = "impossible"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -7042,6 +8164,8 @@ anomaly_detected = true
 factored_in = false
 exclude_reason = "impossible_found_not_false"
 scoring_source = "excluded"
+scoring_qtype = "impossible"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true
@@ -7073,6 +8197,8 @@ anomaly_detected = true
 factored_in = false
 exclude_reason = "impossible_found_not_false"
 scoring_source = "excluded"
+scoring_qtype = "impossible"
+ambiguity_expanded = false
 
 [per_question.manual_review]
 required = true

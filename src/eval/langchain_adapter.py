@@ -4,9 +4,8 @@ import traceback
 from typing import List, Dict, Any, Tuple
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
-from langchain_core.messages import HumanMessage, SystemMessage
+from langchain_core.messages import HumanMessage
 from langchain_core.callbacks import BaseCallbackHandler
-from langchain_core.agents import AgentAction, AgentFinish
 from langchain_mcp_adapters.tools import load_mcp_tools
 from langchain_mcp_adapters.client import MultiServerMCPClient
 from langchain.agents import create_agent
@@ -38,6 +37,61 @@ LLM_N = 1
 LLM_FREQUENCY_PENALTY = 0.0
 LLM_PRESENCE_PENALTY = 0.0
 LLM_TOP_K = None
+
+
+def _safe_jsonable(value: Any) -> Any:
+    try:
+        json.dumps(value)
+        return value
+    except Exception:
+        return str(value)
+
+
+def _serialize_runtime_messages(messages: List[Any]) -> List[Dict[str, Any]]:
+    """
+    Serialize final LangChain message history for one question.
+    This is intentionally compact and avoids callback-level event spam.
+    """
+    serialized: List[Dict[str, Any]] = []
+    for msg in messages or []:
+        entry: Dict[str, Any] = {
+            "type": getattr(msg, "type", type(msg).__name__),
+            "content": _safe_jsonable(getattr(msg, "content", None)),
+        }
+
+        name = getattr(msg, "name", None)
+        if name:
+            entry["name"] = name
+
+        tool_call_id = getattr(msg, "tool_call_id", None)
+        if tool_call_id:
+            entry["tool_call_id"] = tool_call_id
+
+        tool_calls = getattr(msg, "tool_calls", None)
+        if tool_calls:
+            compact_calls = []
+            for tc in tool_calls:
+                if isinstance(tc, dict):
+                    compact_calls.append(
+                        {
+                            "name": tc.get("name"),
+                            "args": _safe_jsonable(tc.get("args")),
+                            "id": tc.get("id"),
+                            "type": tc.get("type"),
+                        }
+                    )
+                else:
+                    compact_calls.append(_safe_jsonable(tc))
+            entry["tool_calls"] = compact_calls
+
+        usage = getattr(msg, "usage_metadata", None)
+        if isinstance(usage, dict) and usage:
+            entry["usage"] = _safe_jsonable(usage)
+
+        serialized.append(entry)
+    return serialized
+
+
 class LangChainAdapter(AgentAdapter):
     """Adapter using LangChain ReAct/Tool-calling agent via LangGraph."""
 
@@ -105,16 +159,15 @@ class LangChainAdapter(AgentAdapter):
 
                 # 3. Invoke Agent with a step limit to prevent infinite loops
                 token_handler = TokenUsageCallback()
-                trace_handler = LiveTraceCallback()
                 result = await agent.ainvoke(
                     {"messages": [HumanMessage(content=question)]},
-                    config={"recursion_limit": 50, "callbacks": [token_handler, trace_handler]},
+                    config={"recursion_limit": 50, "callbacks": [token_handler]},
                 )
 
                 # 4. Extract answer
                 answer = result["messages"][-1].content
                 token_usage = token_handler.get_usage()
-                runtime_trace = trace_handler.get_events()
+                runtime_trace = _serialize_runtime_messages(result.get("messages", []))
 
                 # 5. Get raw citation and explanation data from resources
                 citations_data = []
@@ -181,88 +234,3 @@ class TokenUsageCallback(BaseCallbackHandler):
 
     def get_usage(self) -> List[Dict[str, Any]]:
         return self._entries
-
-
-class LiveTraceCallback(BaseCallbackHandler):
-    def __init__(self) -> None:
-        self._step = 0
-        self._events: List[Dict[str, Any]] = []
-
-    def _bump(self, label: str) -> None:
-        self._step += 1
-        print(f"[LiveTrace] {self._step:02d} {label}")
-
-    def _safe_value(self, value: Any) -> Any:
-        try:
-            json.dumps(value)
-            return value
-        except Exception:
-            return str(value)
-
-    def _record(self, event_type: str, **payload: Any) -> None:
-        event = {"step": self._step, "type": event_type}
-        for k, v in payload.items():
-            event[k] = self._safe_value(v)
-        self._events.append(event)
-
-    def get_events(self) -> List[Dict[str, Any]]:
-        return self._events
-
-    def _format_tool_input_full(self, payload: Any) -> str:
-        if isinstance(payload, str):
-            return payload[:400] + "..." if len(payload) > 400 else payload
-        try:
-            if isinstance(payload, dict) or isinstance(payload, list):
-                text = json.dumps(payload, ensure_ascii=True)
-                return text[:400] + "..." if len(text) > 400 else text
-            text = json.dumps(payload, ensure_ascii=True)
-            return text[:400] + "..." if len(text) > 400 else text
-        except Exception:
-            text = str(payload)
-            return text[:400] + "..." if len(text) > 400 else text
-
-    def _summarize_output(self, output: Any) -> str:
-        text = str(output)
-        return text[:200] + "..." if len(text) > 200 else text
-
-    def on_llm_start(self, serialized, prompts, **kwargs) -> None:
-        self._bump("LLM start")
-        self._record("llm_start", prompts=prompts, serialized=serialized)
-
-    def on_llm_end(self, response, **kwargs) -> None:
-        try:
-            generations = getattr(response, "generations", []) or []
-            for gen_list in generations:
-                for gen in gen_list:
-                    msg = getattr(gen, "message", None)
-                    content = getattr(msg, "content", None)
-                    tool_calls = None
-                    if msg is not None:
-                        tool_calls = getattr(msg, "tool_calls", None)
-                        if tool_calls is None:
-                            tool_calls = getattr(msg, "additional_kwargs", {}).get("tool_calls")
-                    self._record("llm_end", content=content, tool_calls=tool_calls)
-                    if isinstance(content, str) and content.strip():
-                        text = content.strip()
-                        if len(text) > 300:
-                            text = text[:300] + "..."
-                        self._bump(f"Reasoning: {text}")
-        except Exception:
-            self._bump("Reasoning step completed")
-
-    def on_tool_start(self, serialized, input_str, **kwargs) -> None:
-        name = serialized.get("name") if isinstance(serialized, dict) else None
-        self._record("tool_start", tool=name or "unknown", input=input_str, serialized=serialized)
-        self._bump(f"Tool call: {name or 'unknown'} | {self._format_tool_input_full(input_str)}")
-
-    def on_tool_end(self, output, **kwargs) -> None:
-        self._record("tool_end", output=output)
-        self._bump(f"Tool result: {self._summarize_output(output)}")
-
-    def on_agent_action(self, action: AgentAction, **kwargs) -> None:
-        self._record("agent_action", tool=action.tool, input=action.tool_input, log=action.log)
-        self._bump(f"Tool call: {action.tool} | {self._format_tool_input_full(action.tool_input)}")
-
-    def on_agent_finish(self, finish: AgentFinish, **kwargs) -> None:
-        self._record("agent_finish", return_values=finish.return_values, log=finish.log)
-        self._bump("Agent finish")

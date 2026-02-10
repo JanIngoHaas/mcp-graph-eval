@@ -93,31 +93,6 @@ def _summarize_token_usage(entries: List[Dict[str, Any]]) -> Dict[str, int]:
     return totals if found else {}
 
 
-def _merge_token_usage_into_trace(runtime_trace: List[Dict[str, Any]], token_usage: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-    if not token_usage:
-        return list(runtime_trace or [])
-    trace = list(runtime_trace or [])
-    merged: List[Dict[str, Any]] = []
-    usage_index = 0
-    for event in trace:
-        merged.append(event)
-        if event.get("type") == "llm_end" and usage_index < len(token_usage):
-            merged.append({
-                "type": "token_usage",
-                "usage": token_usage[usage_index],
-                "step": event.get("step"),
-                "attached_to": "llm_end",
-            })
-            usage_index += 1
-    for leftover in token_usage[usage_index:]:
-        merged.append({
-            "type": "token_usage",
-            "usage": leftover,
-            "step": None,
-            "orphan": True,
-        })
-    return merged
-
 def get_task_list(data: List, output_path: str, limit: int, model_name: str) -> Tuple[List[int], Dict]:
     """Determine which sample IDs need to be processed, prioritizing unfinished ones."""
     if os.path.exists(output_path):
@@ -212,7 +187,7 @@ async def process_single_sample(
                 "triples": res.citations_data,
                 "trace": res.explanation_data
             }
-            entry["runtime_trace"] = _merge_token_usage_into_trace(res.runtime_trace, res.token_usage)
+            entry["runtime_trace"] = list(res.runtime_trace or [])
             entry["answer"] = res.answer
             entry["usage"] = res.token_usage
             if res.answer is not None:

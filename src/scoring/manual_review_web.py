@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import os
 import re
 from dataclasses import dataclass
 from pathlib import Path
@@ -17,6 +18,11 @@ from langchain_mcp_adapters.client import MultiServerMCPClient
 from langchain_mcp_adapters.tools import load_mcp_tools
 
 from src.eval.langchain_adapter import MCP_SERVER_URL
+from .ambiguity import (
+    AmbiguityResolver,
+    AmbiguityExpansion,
+    build_effective_ambiguity_trace,
+)
 from .io_utils import load_data, dump_data, infer_format
 from .metrics import (
     _extract_received_steps,
@@ -495,6 +501,28 @@ def _entry_status(entry: dict) -> str:
     return "unknown"
 
 
+def _ambiguity_badge(entry: dict) -> dict[str, Any]:
+    expanded = bool(entry.get("ambiguity_expanded"))
+    reason = str(entry.get("ambiguity_reason") or "")
+    label = str(entry.get("ambiguity_label") or "")
+    candidate_count = entry.get("ambiguity_candidate_count")
+
+    detail_parts: list[str] = []
+    if reason:
+        detail_parts.append(reason)
+    if label:
+        detail_parts.append(f"label={label}")
+    if isinstance(candidate_count, int):
+        detail_parts.append(f"candidates={candidate_count}")
+
+    detail = "; ".join(detail_parts) if detail_parts else "ambiguity expansion applied"
+    return {
+        "enabled": expanded,
+        "symbol": "A*",
+        "detail": detail,
+    }
+
+
 @dataclass
 class ReviewState:
     scores: dict
@@ -521,6 +549,28 @@ class ReviewState:
         self.alpha = float(metadata.get("scoring_alpha", 0.5))
         self.scoring_mode = str(metadata.get("scoring_mode", "combined")).strip().lower()
         self.triple_only_mode = self.scoring_mode == "triple_only"
+        self._ambiguity_cache: dict[str, AmbiguityExpansion | None] = {}
+
+        sparql_endpoint = (os.getenv("SPARQL_ENDPOINT") or "").strip()
+        self.ambiguity_resolver: AmbiguityResolver | None = None
+        if sparql_endpoint:
+            try:
+                self.ambiguity_resolver = AmbiguityResolver(sparql_endpoint=sparql_endpoint)
+            except Exception:
+                self.ambiguity_resolver = None
+
+    def _get_ambiguity_expansion(self, eval_entry: dict) -> AmbiguityExpansion | None:
+        if self.ambiguity_resolver is None:
+            return None
+        key = _id_key(eval_entry.get("id"))
+        if key in self._ambiguity_cache:
+            return self._ambiguity_cache[key]
+        try:
+            expansion = self.ambiguity_resolver.maybe_expand(eval_entry)
+        except Exception:
+            expansion = None
+        self._ambiguity_cache[key] = expansion
+        return expansion
 
     def total(self) -> int:
         return len(self.review_items)
@@ -565,11 +615,19 @@ class ReviewState:
         expected_steps_raw = eval_entry.get("expected", {}).get("trace", [])
         received_triples = eval_entry.get("received", {}).get("triples", [])
         expected_triples = eval_entry.get("expected", {}).get("triples", [])
+        ignored_execution_keys = extract_cited_execution_keys(eval_entry.get("runtime_trace", []))
+        ambiguity_expansion = self._get_ambiguity_expansion(eval_entry)
+        if ambiguity_expansion is not None:
+            expected_triples = ambiguity_expansion.expected_triples
+            expected_steps_raw = build_effective_ambiguity_trace(
+                original_expected_trace=expected_steps_raw,
+                received_trace=eval_entry.get("received", {}).get("trace", []),
+                ignored_execution_keys=ignored_execution_keys,
+                ambiguity_expansion=ambiguity_expansion,
+            )
 
         expected_overrides, expected_added = _get_expected_overrides(entry)
         expected_steps = _apply_expected_overrides(expected_steps_raw, expected_overrides, expected_added)
-
-        ignored_execution_keys = extract_cited_execution_keys(eval_entry.get("runtime_trace", []))
         _seed_labels_from_auto(entry, expected_steps, received_steps, expected_triples, received_triples)
         received_step_labels = _get_labels(entry, "trace", "received")
         received_triple_labels = _get_labels(entry, "triples", "received")
@@ -656,12 +714,16 @@ class ReviewState:
 
         sidebar_items = []
         for row_idx, row in enumerate(self.review_items):
+            ambiguity_badge = _ambiguity_badge(row)
             sidebar_items.append(
                 {
                     "index": row_idx,
                     "id": row.get("id"),
                     "status": _entry_status(row),
                     "anomaly": bool(row.get("anomaly_detected")),
+                    "ambiguity": ambiguity_badge["enabled"],
+                    "ambiguity_symbol": ambiguity_badge["symbol"],
+                    "ambiguity_detail": ambiguity_badge["detail"],
                     "active": row_idx == idx,
                     "combined_f1": row.get("combined_f1", 0.0),
                 }
@@ -699,6 +761,7 @@ class ReviewState:
             "question": eval_entry.get("question", ""),
             "qtype": entry.get("qtype", "unknown"),
             "status": _entry_status(entry),
+            "ambiguity_badge": _ambiguity_badge(entry),
             "model_trace_rows": model_trace_rows,
             "expected_trace_rows": expected_trace_rows,
             "model_triple_rows": model_triple_rows,
@@ -724,6 +787,9 @@ class ReviewState:
             "runtime_trace_count": len(eval_entry.get("runtime_trace", [])),
             "explain_trace_count": len(explain_trace),
             "explain_summary": explain_summary,
+            "expected_triples_are_expanded": ambiguity_expansion is not None,
+            "expected_triples_expansion_reason": ambiguity_expansion.reason if ambiguity_expansion else "",
+            "expected_triples_expansion_candidates": ambiguity_expansion.candidate_count if ambiguity_expansion else None,
         }
 
 

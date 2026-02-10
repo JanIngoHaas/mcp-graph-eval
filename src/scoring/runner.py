@@ -10,10 +10,13 @@ Usage:
 
 import argparse
 import json
+import os
 import shutil
 import sys
 from pathlib import Path
 from datetime import datetime
+
+from dotenv import load_dotenv
 
 from .metrics import (
     compute_combined_score,
@@ -25,6 +28,11 @@ from .metrics import (
 from .anomalies import load_anomaly_config, detect_anomalies, AnomalyConfig
 from .io_utils import load_data, dump_data, infer_format
 from .summary import summarize_results
+from .ambiguity import (
+    AmbiguityResolver,
+    AmbiguityExpansion,
+    build_effective_ambiguity_trace,
+)
 
 
 def _build_versioned_output_path(path: Path, flavor: str) -> Path:
@@ -66,6 +74,7 @@ def evaluate_single_item(
     item: dict,
     alpha: float,
     anomaly_config: AnomalyConfig,
+    ambiguity_resolver: AmbiguityResolver | None = None,
 ) -> dict:
     """Evaluate a single question/answer pair."""
     question_id = item.get('id', 'unknown')
@@ -81,8 +90,23 @@ def evaluate_single_item(
     
     # Use qtype from item; fall back to 'unknown' if missing
     qtype = item.get('qtype') or 'unknown'
-    
+    scoring_qtype = qtype
+
+    ambiguity_expansion: AmbiguityExpansion | None = None
+    if ambiguity_resolver is not None:
+        ambiguity_expansion = ambiguity_resolver.maybe_expand(item)
+        if ambiguity_expansion is not None:
+            expected_triples = ambiguity_expansion.expected_triples
+            if ambiguity_expansion.qtype_override:
+                scoring_qtype = ambiguity_expansion.qtype_override
     ignored_execution_keys = extract_cited_execution_keys(item.get("runtime_trace", []))
+    if ambiguity_expansion is not None:
+        expected_trace = build_effective_ambiguity_trace(
+            original_expected_trace=expected_trace,
+            received_trace=received_trace,
+            ignored_execution_keys=ignored_execution_keys,
+            ambiguity_expansion=ambiguity_expansion,
+        )
     score = compute_combined_score(
         expected_trace=expected_trace,
         received_trace=received_trace,
@@ -95,7 +119,7 @@ def evaluate_single_item(
     # Special handling for impossible questions:
     # - explain must set found=false
     # - citations are optional and ignored for correctness
-    if qtype == "impossible":
+    if scoring_qtype == "impossible":
         found_flag = _extract_explain_found(received_trace)
         if found_flag is not False:
             score = CombinedScore(
@@ -131,7 +155,7 @@ def evaluate_single_item(
         triple_f1=score.triple_score.f1,
         triple_precision=score.triple_score.precision,
         triple_recall=score.triple_score.recall,
-        qtype=qtype,
+        qtype=scoring_qtype,
         config=anomaly_config,
         expected_triples=expected_triples,
         received_triples=received_triples,
@@ -144,6 +168,7 @@ def evaluate_single_item(
         'id': question_id,
         'question': question,
         'qtype': qtype,
+        'scoring_qtype': scoring_qtype,
         'trace_f1': score.trace_score.f1,
         'trace_precision': score.trace_score.precision,
         'trace_recall': score.trace_score.recall,
@@ -170,6 +195,10 @@ def evaluate_single_item(
         'factored_in': not anomaly_detected,
         'exclude_reason': exclude_reason if anomaly_detected else None,
         'scoring_source': 'excluded' if anomaly_detected else 'auto',
+        'ambiguity_expanded': ambiguity_expansion is not None,
+        'ambiguity_reason': ambiguity_expansion.reason if ambiguity_expansion else None,
+        'ambiguity_label': ambiguity_expansion.label if ambiguity_expansion else None,
+        'ambiguity_candidate_count': ambiguity_expansion.candidate_count if ambiguity_expansion else None,
         'error': item.get('error'),
     }
 
@@ -180,6 +209,7 @@ def evaluate_results(
     anomaly_config: AnomalyConfig,
     include_anomalies: bool,
     scoring_mode: str = "combined",
+    ambiguity_resolver: AmbiguityResolver | None = None,
 ) -> dict:
     """Evaluate all results in an eval file."""
     metadata = data.get('metadata', {})
@@ -187,7 +217,7 @@ def evaluate_results(
     
     results = []
     for item in output:
-        result = evaluate_single_item(item, alpha, anomaly_config)
+        result = evaluate_single_item(item, alpha, anomaly_config, ambiguity_resolver=ambiguity_resolver)
         results.append(result)
     summary = summarize_results(
         results,
@@ -361,6 +391,7 @@ def print_full_report(evaluation: dict, input_file: Path):
 
 
 def main():
+    load_dotenv()
     parser = argparse.ArgumentParser(
         description='Evaluate KG agent results with F1 scoring'
     )
@@ -425,7 +456,6 @@ def main():
         default=5000,
         help='Port for manual review web UI'
     )
-    
     args = parser.parse_args()
     if not 0.0 <= args.alpha <= 1.0:
         print("Error: --alpha must be within [0, 1].", file=sys.stderr)
@@ -449,6 +479,15 @@ def main():
         if default_path.exists():
             anomaly_path = default_path
     anomaly_config = load_anomaly_config(anomaly_path)
+    sparql_endpoint = (os.getenv("SPARQL_ENDPOINT") or "").strip() or None
+    if not sparql_endpoint:
+        print(
+            "Error: ambiguity resolution is mandatory, but SPARQL_ENDPOINT is not set in .env.",
+            file=sys.stderr,
+        )
+        sys.exit(2)
+    ambiguity_resolver = AmbiguityResolver(sparql_endpoint=sparql_endpoint)
+    print(f"Ambiguity expansion enabled with KG: {ambiguity_resolver.source_description}")
 
     output_path = args.output
     if output_path is None:
@@ -469,6 +508,7 @@ def main():
             anomaly_config,
             args.include_anomalies,
             scoring_mode=scoring_mode,
+            ambiguity_resolver=ambiguity_resolver,
         )
         out_format = infer_format(working_output, args.format)
         dump_data(evaluation, working_output, out_format)
@@ -495,6 +535,7 @@ def main():
             anomaly_config,
             args.include_anomalies,
             scoring_mode=scoring_mode,
+            ambiguity_resolver=ambiguity_resolver,
         )
         out_format = infer_format(working_output, args.format)
         dump_data(evaluation, working_output, out_format)

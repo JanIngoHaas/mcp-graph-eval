@@ -167,11 +167,37 @@ body.modal-open {
   grid-column: 1;
 }
 
-.queue-anomaly {
+.queue-flags {
   grid-column: 2;
-  font-size: 0.75rem;
+  display: flex;
+  gap: 0.25rem;
+  justify-content: flex-end;
+}
+
+.queue-flag {
+  display: inline-block;
+  font-size: 0.72rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.03rem 0.34rem;
+}
+
+.queue-flag-anomaly {
   color: var(--warn);
-  text-align: right;
+}
+
+.queue-flag-ambiguity {
+  color: var(--accent-2);
+}
+
+.ambiguity-badge {
+  display: inline-block;
+  border: 1px solid rgba(76, 201, 240, 0.5);
+  border-radius: 999px;
+  padding: 0.02rem 0.38rem;
+  color: var(--accent-2);
+  background: rgba(76, 201, 240, 0.12);
+  font-size: 0.72rem;
 }
 
 .save-form {
@@ -207,6 +233,24 @@ body.modal-open {
   color: var(--muted);
   font-size: 0.84rem;
   line-height: 1.35;
+}
+
+.ambiguity-notice {
+  margin: 0 0 0.65rem;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid rgba(76, 201, 240, 0.65);
+  border-radius: 10px;
+  background: linear-gradient(90deg, rgba(76, 201, 240, 0.22), rgba(76, 201, 240, 0.08));
+  color: #e8f8ff;
+  font-size: 0.96rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+}
+
+.ambiguity-notice-meta {
+  font-size: 0.83rem;
+  font-weight: 600;
+  color: #b9e8fb;
 }
 
 .metrics-card p,

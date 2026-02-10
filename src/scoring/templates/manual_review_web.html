@@ -17,6 +17,12 @@
         <div class="topbar-meta">
           <p><strong>Type:</strong> {{ qtype }}</p>
           <p><strong>Status:</strong> <span class="status status-{{ status|lower }}">{{ status }}</span></p>
+          {% if ambiguity_badge.enabled %}
+            <p>
+              <strong>Ambiguity:</strong>
+              <span class="ambiguity-badge" title="{{ ambiguity_badge.detail }}">{{ ambiguity_badge.symbol }}</span>
+            </p>
+          {% endif %}
           <p><strong>Done:</strong> {{ progress_done }} / {{ total }}</p>
           <p><strong>Ahead:</strong> {{ progress_remaining }}</p>
         </div>
@@ -49,8 +55,15 @@
                   <span class="queue-id">#{{ item.id }}</span>
                   <span class="queue-score">{{ "%.3f"|format(item.combined_f1) }}</span>
                   <span class="queue-status status status-{{ item.status|lower }}">{{ item.status }}</span>
-                  {% if item.anomaly %}
-                    <span class="queue-anomaly">anomaly</span>
+                  {% if item.anomaly or item.ambiguity %}
+                    <span class="queue-flags">
+                      {% if item.anomaly %}
+                        <span class="queue-flag queue-flag-anomaly">anomaly</span>
+                      {% endif %}
+                      {% if item.ambiguity %}
+                        <span class="queue-flag queue-flag-ambiguity" title="{{ item.ambiguity_detail }}">{{ item.ambiguity_symbol }}</span>
+                      {% endif %}
+                    </span>
                   {% endif %}
                 </a>
               </li>
@@ -279,6 +292,14 @@
 
             <div>
               <h2>Expected Triples</h2>
+              {% if expected_triples_are_expanded %}
+                <p class="ambiguity-notice">
+                  Ambiguity expansion active
+                  <span class="ambiguity-notice-meta">
+                    ({{ expected_triples_expansion_reason }}{% if expected_triples_expansion_candidates is not none %}, candidates={{ expected_triples_expansion_candidates }}{% endif %})
+                  </span>
+                </p>
+              {% endif %}
               <table>
                 <thead>
                   <tr>
