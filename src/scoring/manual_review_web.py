@@ -517,7 +517,10 @@ class ReviewState:
             entry.setdefault("auto_triple_precision", entry.get("triple_precision", 0.0))
             entry.setdefault("auto_triple_recall", entry.get("triple_recall", 0.0))
 
-        self.alpha = float(self.scores.get("metadata", {}).get("scoring_alpha", 0.5))
+        metadata = self.scores.get("metadata", {})
+        self.alpha = float(metadata.get("scoring_alpha", 0.5))
+        self.scoring_mode = str(metadata.get("scoring_mode", "combined")).strip().lower()
+        self.triple_only_mode = self.scoring_mode == "triple_only"
 
     def total(self) -> int:
         return len(self.review_items)
@@ -706,6 +709,8 @@ class ReviewState:
             "manual_trace": manual_trace,
             "manual_triple": manual_triple,
             "manual_combined": manual_combined,
+            "scoring_mode": self.scoring_mode,
+            "triple_only_mode": self.triple_only_mode,
             "triple_support_count": triple_support_count,
             "triple_reject_count": triple_reject_count,
             "triple_ignore_count": triple_ignore_count,

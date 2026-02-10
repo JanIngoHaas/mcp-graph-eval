@@ -5,10 +5,12 @@ Usage:
     python -m src.scoring.runner <eval_results_file.json> [--alpha 0.5] [--output results.json]
     python -m src.scoring.runner <eval_results_file.json> --output results.toml --format toml
     python -m src.scoring.runner <eval_results_file.toml> --auto-only
+    python -m src.scoring.runner <eval_results_file.toml> --triple-only
 """
 
 import argparse
 import json
+import shutil
 import sys
 from pathlib import Path
 from datetime import datetime
@@ -23,6 +25,17 @@ from .metrics import (
 from .anomalies import load_anomaly_config, detect_anomalies, AnomalyConfig
 from .io_utils import load_data, dump_data, infer_format
 from .summary import summarize_results
+
+
+def _build_versioned_output_path(path: Path, flavor: str) -> Path:
+    """Return a non-existing sibling path with timestamp suffix."""
+    stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+    candidate = path.with_name(f"{path.stem}.{flavor}-{stamp}{path.suffix}")
+    seq = 2
+    while candidate.exists():
+        candidate = path.with_name(f"{path.stem}.{flavor}-{stamp}-{seq}{path.suffix}")
+        seq += 1
+    return candidate
 
 
 def _coerce_bool(value: object) -> bool | None:
@@ -161,7 +174,13 @@ def evaluate_single_item(
     }
 
 
-def evaluate_results(data: dict, alpha: float, anomaly_config: AnomalyConfig, include_anomalies: bool) -> dict:
+def evaluate_results(
+    data: dict,
+    alpha: float,
+    anomaly_config: AnomalyConfig,
+    include_anomalies: bool,
+    scoring_mode: str = "combined",
+) -> dict:
     """Evaluate all results in an eval file."""
     metadata = data.get('metadata', {})
     output = data.get('output', [])
@@ -172,7 +191,7 @@ def evaluate_results(data: dict, alpha: float, anomaly_config: AnomalyConfig, in
         results.append(result)
     summary = summarize_results(
         results,
-        {**metadata, 'scoring_alpha': alpha},
+        {**metadata, 'scoring_alpha': alpha, 'scoring_mode': scoring_mode},
         include_anomalies,
         compute_pvalues=True,
     )
@@ -228,6 +247,7 @@ def print_full_report(evaluation: dict, input_file: Path):
     print(f"  Factored:       {metadata.get('factored_questions', 0)}")
     print(f"  Excluded:       {metadata.get('excluded_questions', 0)}")
     print(f"  Manual Pending: {metadata.get('manual_review_pending', 0)}")
+    print(f"  Scoring Mode:   {metadata.get('scoring_mode', 'combined')}")
     print(f"  Alpha (weight): {metadata.get('scoring_alpha', 0.5)}")
     print()
     
@@ -356,6 +376,11 @@ def main():
         help='Weight for trace score (0-1). Default: 0.5 (equal weight)'
     )
     parser.add_argument(
+        '--triple-only',
+        action='store_true',
+        help='Compute combined score from triples only (trace weight forced to 0).'
+    )
+    parser.add_argument(
         '--anomaly-config',
         type=Path,
         default=None,
@@ -402,6 +427,14 @@ def main():
     )
     
     args = parser.parse_args()
+    if not 0.0 <= args.alpha <= 1.0:
+        print("Error: --alpha must be within [0, 1].", file=sys.stderr)
+        sys.exit(1)
+
+    effective_alpha = 0.0 if args.triple_only else args.alpha
+    scoring_mode = "triple_only" if args.triple_only else "combined"
+    if args.triple_only and args.alpha != 0.5:
+        print("Note: --triple-only enabled; ignoring --alpha and forcing alpha=0.0.")
     
     # Load input
     if not args.input_file.exists():
@@ -417,18 +450,55 @@ def main():
             anomaly_path = default_path
     anomaly_config = load_anomaly_config(anomaly_path)
 
-    # Evaluate
-    evaluation = evaluate_results(data, args.alpha, anomaly_config, args.include_anomalies)
-    
-    # Output
     output_path = args.output
     if output_path is None:
         suffix = args.input_file.suffix or ".toml"
         output_path = args.input_file.with_name(f"{args.input_file.stem}.scored{suffix}")
 
-    out_format = infer_format(output_path, args.format)
-    dump_data(evaluation, output_path, out_format)
-    print(f"Results saved to: {output_path}")
+    # Never overwrite existing output files with automatic scoring.
+    # Manual review sessions use the existing scored file directly, but make
+    # a backup copy at session start.
+    working_output = output_path
+    if output_path.exists() and args.auto_only:
+        working_output = _build_versioned_output_path(output_path, "fresh")
+        print(f"Existing file preserved: {output_path}")
+        print(f"Auto-scored output will be written to: {working_output}")
+        evaluation = evaluate_results(
+            data,
+            effective_alpha,
+            anomaly_config,
+            args.include_anomalies,
+            scoring_mode=scoring_mode,
+        )
+        out_format = infer_format(working_output, args.format)
+        dump_data(evaluation, working_output, out_format)
+        print(f"Results saved to: {working_output}")
+    elif output_path.exists() and not args.auto_only:
+        backup_path = _build_versioned_output_path(output_path, "session-backup")
+        try:
+            shutil.copy2(output_path, backup_path)
+            print(f"Session backup created: {backup_path}")
+        except OSError as exc:
+            print(f"Warning: failed to create session backup: {exc}", file=sys.stderr)
+        if args.triple_only:
+            print(
+                "Note: --triple-only applies to auto-scoring only. "
+                "Existing output is reused for manual review without recomputation.",
+                file=sys.stderr,
+            )
+        print(f"Using existing scored file for manual review: {output_path}")
+        working_output = output_path
+    else:
+        evaluation = evaluate_results(
+            data,
+            effective_alpha,
+            anomaly_config,
+            args.include_anomalies,
+            scoring_mode=scoring_mode,
+        )
+        out_format = infer_format(working_output, args.format)
+        dump_data(evaluation, working_output, out_format)
+        print(f"Results saved to: {working_output}")
 
     if not args.auto_only:
         try:
@@ -444,9 +514,9 @@ def main():
             sys.exit(2)
 
         run_manual_review_web(
-            scores_path=output_path,
+            scores_path=working_output,
             eval_path=args.input_file,
-            output_path=output_path,
+            output_path=working_output,
             format_hint=args.format,
             anomalies_only=args.anomalies_only,
             host=args.web_host,

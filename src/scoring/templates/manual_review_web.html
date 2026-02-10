@@ -67,16 +67,20 @@
           <section class="cards">
             <article class="card metrics-card">
               <h3>Auto Scores</h3>
-              <p>Trace: P {{ "%.3f"|format(auto_trace.precision) }} | R {{ "%.3f"|format(auto_trace.recall) }} | F1 {{ "%.3f"|format(auto_trace.f1) }}</p>
+              {% if not triple_only_mode %}
+                <p>Trace: P {{ "%.3f"|format(auto_trace.precision) }} | R {{ "%.3f"|format(auto_trace.recall) }} | F1 {{ "%.3f"|format(auto_trace.f1) }}</p>
+              {% endif %}
               <p>Triple: P {{ "%.3f"|format(auto_triple.precision) }} | R {{ "%.3f"|format(auto_triple.recall) }} | F1 {{ "%.3f"|format(auto_triple.f1) }}</p>
-              <p>Combined: {{ "%.3f"|format(auto_combined) }}</p>
+              <p>{% if triple_only_mode %}Combined (triple-only){% else %}Combined{% endif %}: {{ "%.3f"|format(auto_combined) }}</p>
             </article>
 
             <article class="card metrics-card">
               <h3>Manual Preview</h3>
-              <p>Trace: P {{ "%.3f"|format(manual_trace.precision) }} | R {{ "%.3f"|format(manual_trace.recall) }} | F1 {{ "%.3f"|format(manual_trace.f1) }}</p>
+              {% if not triple_only_mode %}
+                <p>Trace: P {{ "%.3f"|format(manual_trace.precision) }} | R {{ "%.3f"|format(manual_trace.recall) }} | F1 {{ "%.3f"|format(manual_trace.f1) }}</p>
+              {% endif %}
               <p>Triple: P {{ "%.3f"|format(manual_triple.precision) }} | R {{ "%.3f"|format(manual_triple.recall) }} | F1 {{ "%.3f"|format(manual_triple.f1) }}</p>
-              <p>Combined: {{ "%.3f"|format(manual_combined) }}</p>
+              <p>{% if triple_only_mode %}Combined (triple-only){% else %}Combined{% endif %}: {{ "%.3f"|format(manual_combined) }}</p>
             </article>
 
             <article class="card action-card">
@@ -89,7 +93,13 @@
                 <button class="btn btn-warn" type="button" id="perfect-answer-btn">Perfect Answer</button>
                 <button class="btn btn-danger" type="submit" name="action" value="exclude">Exclude</button>
               </form>
-              <p class="note">Scores are driven by labels and required/optional trace steps. No direct numeric editing. Apply Manual and Perfect Answer both require a comment. All changes autosave to disk immediately.</p>
+              <p class="note">
+                {% if triple_only_mode %}
+                  Triple-only mode is active: combined scoring uses triple F1 only. No direct numeric editing. Apply Manual and Perfect Answer both require a comment. All changes autosave to disk immediately.
+                {% else %}
+                  Scores are driven by labels and required/optional trace steps. No direct numeric editing. Apply Manual and Perfect Answer both require a comment. All changes autosave to disk immediately.
+                {% endif %}
+              </p>
             </article>
           </section>
 
@@ -104,6 +114,7 @@
             </section>
           {% endif %}
 
+          {% if not triple_only_mode %}
           <section id="trace" class="panel split">
             <div>
               <h2>Model Trace</h2>
@@ -214,6 +225,7 @@
               </table>
             </div>
           </section>
+          {% endif %}
 
           <section id="triples" class="panel split">
             <div>
