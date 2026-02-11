@@ -113,7 +113,11 @@ def _has_explain_tool_call(runtime_trace: list[Any]) -> bool:
     return False
 
 
-def evaluate_results(data: dict[str, Any], force_explanation_present: bool = False) -> dict[str, Any]:
+def evaluate_results(
+    data: dict[str, Any],
+    force_explanation_present: bool = False,
+    exclude_impossible: bool = False,
+) -> dict[str, Any]:
     metadata = data.get("metadata", {}) or {}
     output = data.get("output", []) or []
     per_question = [evaluate_single_item(item) for item in output]
@@ -127,6 +131,13 @@ def evaluate_results(data: dict[str, Any], force_explanation_present: bool = Fal
                 row["triple_f1"] = 0.0
                 row["combined_f1"] = 0.0
                 penalized_ids.append(row.get("id"))
+    excluded_ids: list[Any] = []
+    if exclude_impossible:
+        for row in per_question:
+            if str(row.get("qtype") or "").strip().lower() == "impossible":
+                row["factored_in"] = False
+                row["exclude_reason"] = "qtype_impossible"
+                excluded_ids.append(row.get("id"))
     summary = summarize_results(
         per_question,
         {
@@ -136,6 +147,9 @@ def evaluate_results(data: dict[str, Any], force_explanation_present: bool = Fal
             "force_explanation_present": force_explanation_present,
             "explanation_missing_penalty_count": len(penalized_ids),
             "explanation_missing_penalty_ids": penalized_ids,
+            "exclude_impossible": exclude_impossible,
+            "excluded_impossible_count": len(excluded_ids),
+            "excluded_impossible_ids": excluded_ids,
         },
     )
     return {
@@ -155,6 +169,8 @@ def print_report(evaluation: dict[str, Any], input_file: Path) -> None:
     print(f"Input:             {input_file}")
     print(f"Model:             {metadata.get('model', 'unknown')}")
     print(f"Questions:         {metadata.get('total_questions', 0)}")
+    print(f"Factored:          {metadata.get('factored_questions', 0)}")
+    print(f"Excluded:          {metadata.get('excluded_questions', 0)}")
     print(f"Manual pending:    {metadata.get('manual_review_pending', 0)}")
     print(f"Triple P/R/F1:     {overall.get('triple_precision', {}).get('mean', 0.0):.4f} / "
           f"{overall.get('triple_recall', {}).get('mean', 0.0):.4f} / "
@@ -170,6 +186,7 @@ def _load_or_initialize_scores(
     output_format_hint: str | None,
     auto_only: bool,
     force_explanation_present: bool,
+    exclude_impossible: bool,
 ) -> tuple[dict[str, Any], Path]:
     eval_data = load_data(eval_path)
 
@@ -177,7 +194,11 @@ def _load_or_initialize_scores(
         fresh_path = _build_versioned_output_path(output_path, "fresh")
         print(f"Existing file preserved: {output_path}")
         print(f"Auto-scored output will be written to: {fresh_path}")
-        evaluation = evaluate_results(eval_data, force_explanation_present=force_explanation_present)
+        evaluation = evaluate_results(
+            eval_data,
+            force_explanation_present=force_explanation_present,
+            exclude_impossible=exclude_impossible,
+        )
         written_path = _dump_with_fallback(evaluation, fresh_path, output_format_hint)
         return evaluation, written_path
 
@@ -191,7 +212,11 @@ def _load_or_initialize_scores(
         existing = load_data(output_path)
         return existing, output_path
 
-    evaluation = evaluate_results(eval_data, force_explanation_present=force_explanation_present)
+    evaluation = evaluate_results(
+        eval_data,
+        force_explanation_present=force_explanation_present,
+        exclude_impossible=exclude_impossible,
+    )
     written_path = _dump_with_fallback(evaluation, output_path, output_format_hint)
     return evaluation, written_path
 
@@ -218,6 +243,12 @@ def main() -> None:
         "--auto-only",
         action="store_true",
         help="Run scoring only; do not launch manual review web UI",
+    )
+    parser.add_argument(
+        "-x",
+        "--exclude-impossible",
+        action="store_true",
+        help="Exclude qtype=impossible rows from aggregated metrics.",
     )
     parser.add_argument(
         "--review-all",
@@ -248,6 +279,7 @@ def main() -> None:
         output_format_hint=args.format,
         auto_only=args.auto_only,
         force_explanation_present=args.force_explanation_present,
+        exclude_impossible=args.exclude_impossible,
     )
     print_report(scores, args.input_file)
     print(f"Results saved to: {working_output}")

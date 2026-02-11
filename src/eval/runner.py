@@ -33,12 +33,12 @@ EVAL_MODELS = [
     # "glm-4.7-flash:q8_0",
     # "gpt-oss:120b",
     # "devstral-2:123b"
-    # "kimi-k2.5:cloud",
-    # "glm-4.7:cloud"
-    "gemini-3-flash-preview:cloud"
-    # "devstral-2:123b-cloud"
-    # "gpt-oss:120b-cloud"
-    # "nemotron-3-nano:30b-cloud"
+    "gemini-3-flash-preview:cloud",
+    "kimi-k2.5:cloud",
+    "glm-4.7:cloud",
+    "devstral-2:123b-cloud",
+    "gpt-oss:120b-cloud",
+    "nemotron-3-nano:30b-cloud"
 ]
 
 

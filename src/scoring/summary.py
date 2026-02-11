@@ -19,8 +19,10 @@ def compute_group_stats(results: list[dict], metric_key: str) -> dict[str, Any]:
 
 
 def summarize_results(results: list[dict], metadata: dict[str, Any]) -> dict[str, Any]:
+    factored_rows = [row for row in results if bool(row.get("factored_in", True))]
+
     by_type_rows = defaultdict(list)
-    for row in results:
+    for row in factored_rows:
         by_type_rows[str(row.get("qtype") or "unknown")].append(row)
 
     by_type = {}
@@ -42,30 +44,33 @@ def summarize_results(results: list[dict], metadata: dict[str, Any]) -> dict[str
         }
 
     overall = {
-        "triple_precision": compute_group_stats(results, "triple_precision"),
-        "triple_recall": compute_group_stats(results, "triple_recall"),
-        "triple_f1": compute_group_stats(results, "triple_f1"),
-        "combined_f1": compute_group_stats(results, "combined_f1"),
-        "trace_reviewed_count": sum(1 for r in results if r.get("trace_valid") is not None),
-        "trace_valid_yes_count": sum(1 for r in results if r.get("trace_valid") is True),
-        "trace_valid_no_count": sum(1 for r in results if r.get("trace_valid") is False),
+        "triple_precision": compute_group_stats(factored_rows, "triple_precision"),
+        "triple_recall": compute_group_stats(factored_rows, "triple_recall"),
+        "triple_f1": compute_group_stats(factored_rows, "triple_f1"),
+        "combined_f1": compute_group_stats(factored_rows, "combined_f1"),
+        "trace_reviewed_count": sum(1 for r in factored_rows if r.get("trace_valid") is not None),
+        "trace_valid_yes_count": sum(1 for r in factored_rows if r.get("trace_valid") is True),
+        "trace_valid_no_count": sum(1 for r in factored_rows if r.get("trace_valid") is False),
         "trace_template_exact_rate": (
-            sum(1 for r in results if r.get("trace_template_exact")) / len(results)
-        ) if results else 0.0,
+            sum(1 for r in factored_rows if r.get("trace_template_exact")) / len(factored_rows)
+        ) if factored_rows else 0.0,
     }
 
     total = len(results)
-    overall["trace_reviewed_rate"] = (overall["trace_reviewed_count"] / total) if total else 0.0
+    factored_total = len(factored_rows)
+    overall["trace_reviewed_rate"] = (
+        overall["trace_reviewed_count"] / factored_total
+    ) if factored_total else 0.0
 
     return {
         "metadata": {
             **metadata,
             "total_questions": total,
-            "factored_questions": total,
-            "excluded_questions": 0,
+            "factored_questions": factored_total,
+            "excluded_questions": total - factored_total,
             "manual_review_pending": sum(
                 1
-                for r in results
+                for r in factored_rows
                 if (r.get("manual_review", {}) or {}).get("status") == "pending"
                 or r.get("trace_valid") is None
             ),
