@@ -38,7 +38,9 @@ EVAL_MODELS = [
     "glm-4.7:cloud",
     "devstral-2:123b-cloud",
     "gpt-oss:120b-cloud",
-    "nemotron-3-nano:30b-cloud"
+    "nemotron-3-nano:30b-cloud",
+    "qwen3-coder-next:cloud",
+    ""
 ]
 
 
