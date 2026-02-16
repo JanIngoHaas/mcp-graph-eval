@@ -169,6 +169,7 @@ def gen_random_facts(min_facts: int = 1, max_facts: int = 3):
             all_props = s.get_entity_data_properties(ent.uri)
             candidates = [p for p in all_props if p.uri not in ent.seen_properties]
             if not candidates:
+                # continue
                 raise RetrySignal(f"Entity {ent.label} has no unused properties")
             candidates_by_entity.append(candidates)
 

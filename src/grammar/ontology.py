@@ -247,7 +247,10 @@ class OntologySampler:
         sparql = f"""
         SELECT ?s ?type ?label WHERE {{
             ?s <{str(RDFS.label)}> ?label .
-            FILTER(isIRI(?s))
+            FILTER(isIRI(?s) && !EXISTS {{ 
+                ?s a ?schema_type . 
+                FILTER(?schema_type IN (<{OWL.Class}>, <{OWL.ObjectProperty}>, <{OWL.DatatypeProperty}>))
+            }})
             {type_clause}
         }} ORDER BY RAND() LIMIT 1
         """
@@ -276,8 +279,18 @@ class OntologySampler:
         for _ in range(max_attempts):
             chosen = random.choice(type_candidates)
             node = self.get_random_entity(chosen)
-            if self.get_entity_object_properties(node.uri):
-                return node
+            # We define a hoppable entity as one that has at least one outgoing object property
+            # AND the node that we are hopping to has at least two outgoing data properties
+            # That's kind of a hack, but necessary to avoid getting stuck in a loop
+            # And then failing. 
+            hoppable_object_properties = self.get_entity_object_properties(node.uri)
+            random.shuffle(hoppable_object_properties)
+            for prop in hoppable_object_properties:
+                for val in prop.values:
+                    # Relaxed to >= 1 to ensure compatibility with nodes that only have 1 fact (like Parameter values)
+                    if len(self.get_entity_data_properties(val)) >= 1:
+                        return node
+            
 
         raise RetrySignal("Failed to find a hoppable entity after retries")
 
@@ -312,7 +325,8 @@ class OntologySampler:
         PREFIX rdfs: <{RDFS}>
         SELECT (COUNT(DISTINCT ?s) AS ?count) WHERE {{
             ?s rdf:type <{type_uri}> ;
-               rdfs:label "{escaped}" .
+               rdfs:label ?label .
+            FILTER(STR(?label) = "{escaped}")
         }}
         """
         rows = self._query(sparql, use_cache=True)

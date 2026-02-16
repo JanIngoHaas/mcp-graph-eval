@@ -27,7 +27,8 @@ def generate_samples(num_samples: int):
     return vm.get_ctx("samples") or []
 
 def main():
-    seed(3952356)
+    #seed(3952356)
+    seed(98273892347)
     num_samples = 150
     print(f"Generating {num_samples} samples...")
     qtype_counts = Counter()
