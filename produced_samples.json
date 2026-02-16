@@ -1,170 +1,6 @@
 [
   {
-    "question": "I'm looking into the available information for cmp processes. Find all cmp processes where the input parameter is 'https://tucid/cpmo/instance/Conditioning_2_1107_USAGE_OF_DRESSER'. Then show me their has machine data, has timestamp.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/hasInputParameter",
-            "operator": "=",
-            "value": "https://tucid/cpmo/instance/Conditioning_2_1107_USAGE_OF_DRESSER"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/hasMachineData",
-          "https://tucid/cpmo/hasTimestamp"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm curious about the cmp process entries. Find all cmp processes where the cmp tool component is 'https://tucid/cpmo/instance/Chamber_4_0' and where the input parameter is 'https://tucid/cpmo/instance/SlurryFlow_2_1162_SLURRY_FLOW_LINE_C'. Then show me their machine id, has timestamp.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/hasCMPToolComponent",
-            "operator": "=",
-            "value": "https://tucid/cpmo/instance/Chamber_4_0"
-          },
-          {
-            "path": "https://tucid/cpmo/hasInputParameter",
-            "operator": "=",
-            "value": "https://tucid/cpmo/instance/SlurryFlow_2_1162_SLURRY_FLOW_LINE_C"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/machineID",
-          "https://tucid/cpmo/hasTimestamp"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm looking into the available information for cmp processes. Find all cmp processes where the input parameter is 'https://tucid/cpmo/instance/HeadSpeed_2_852_HEAD_ROTATION' and whose machine id contains '2'. Then show me their has timestamp.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/hasInputParameter",
-            "operator": "=",
-            "value": "https://tucid/cpmo/instance/HeadSpeed_2_852_HEAD_ROTATION"
-          },
-          {
-            "path": "https://tucid/cpmo/machineID",
-            "operator": "contains",
-            "value": "2"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/hasTimestamp"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm curious about the cmp process entries. Find all cmp processes whose machine id contains '2'. Then show me their has machine data, has timestamp.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/machineID",
-            "operator": "contains",
-            "value": "2"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/hasMachineData",
-          "https://tucid/cpmo/hasTimestamp"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I am currently checking the database for cmp process records and have a task for you. Find all cmp processes where the input parameter is 'https://tucid/cpmo/instance/PadLifetime_2_1213_USAGE_OF_POLISHING_TABLE'. Then show me their has machine data, machine id.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/hasInputParameter",
-            "operator": "=",
-            "value": "https://tucid/cpmo/instance/PadLifetime_2_1213_USAGE_OF_POLISHING_TABLE"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/hasMachineData",
-          "https://tucid/cpmo/machineID"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm curious about the cmp process entries. Find all cmp processes where the timestamp is '1985-04-06 19:33:06.333000'. Then show me their has machine data.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/hasTimestamp",
-            "operator": "=",
-            "value": "1985-04-06 19:33:06.333000"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/hasMachineData"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm curious about the cmp process entries. Find all cmp processes where the acts on is 'https://tucid/cpmo/instance/Wafer__4224160592' and where the input parameter's numeric value is '2667.0'. Then show me their has timestamp.",
+    "question": "I'm looking into the available information for cmp processes. Find all cmp processes where the acts on is 'https://tucid/cpmo/instance/Wafer__4222160424'. Then show me their has output parameter.",
     "trace": [
       {
         "tool": "query_builder",
@@ -173,16 +9,11 @@
           {
             "path": "https://tucid/cpmo/actsOn",
             "operator": "=",
-            "value": "https://tucid/cpmo/instance/Wafer__4224160592"
-          },
-          {
-            "path": "https://tucid/cpmo/hasInputParameter -> https://tucid/cpmo/hasNumericValue",
-            "operator": "=",
-            "value": "2667.0"
+            "value": "https://tucid/cpmo/instance/Wafer__4222160424"
           }
         ],
         "project": [
-          "https://tucid/cpmo/hasTimestamp"
+          "https://tucid/cpmo/hasOutputParameter"
         ],
         "required": true,
         "is_answer": true
@@ -194,7 +25,7 @@
     "hop_scope": null
   },
   {
-    "question": "I'm looking into the available information for cmp processes. Find all cmp processes where the input parameter's numeric value is '0.0'. Then show me their has timestamp, has machine data, machine id.",
+    "question": "I'm looking into the available information for cmp processes. Find all cmp processes where the input parameter's numeric value is '34.8837209302'. Then show me their has machine data, has timestamp, acts on.",
     "trace": [
       {
         "tool": "query_builder",
@@ -203,701 +34,13 @@
           {
             "path": "https://tucid/cpmo/hasInputParameter -> https://tucid/cpmo/hasNumericValue",
             "operator": "=",
-            "value": "0.0"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/hasTimestamp",
-          "https://tucid/cpmo/hasMachineData",
-          "https://tucid/cpmo/machineID"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm looking into the available information for cmp processes. Find all cmp processes where the timestamp is '1985-04-06 16:18:24.667000' and where the input parameter's numeric value is '0.0'. Then show me their machine id.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/hasTimestamp",
-            "operator": "=",
-            "value": "1985-04-06 16:18:24.667000"
-          },
-          {
-            "path": "https://tucid/cpmo/hasInputParameter -> https://tucid/cpmo/hasNumericValue",
-            "operator": "=",
-            "value": "0.0"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/machineID"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm looking into the available information for cmp processes. Find all cmp processes where the input parameter's numeric value is '65.9375'. Then show me their has timestamp, machine id.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/hasInputParameter -> https://tucid/cpmo/hasNumericValue",
-            "operator": "=",
-            "value": "65.9375"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/hasTimestamp",
-          "https://tucid/cpmo/machineID"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm looking into the available information for cmp processes. Find all cmp processes where the timestamp is '1985-04-06 16:22:56.667000'. Then show me their has machine data, machine id.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/hasTimestamp",
-            "operator": "=",
-            "value": "1985-04-06 16:22:56.667000"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/hasMachineData",
-          "https://tucid/cpmo/machineID"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm curious about the cmp process entries. Find all cmp processes where the input parameter's numeric value is '110.948616601' and whose machine data contains '1'. Then show me their machine id.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/hasInputParameter -> https://tucid/cpmo/hasNumericValue",
-            "operator": "=",
-            "value": "110.948616601"
-          },
-          {
-            "path": "https://tucid/cpmo/hasMachineData",
-            "operator": "contains",
-            "value": "1"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/machineID"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm curious about the cmp process entries. Find all cmp processes whose machine data contains '6' and where the timestamp is '1985-04-06 19:34:37.667000'. Then show me their has machine data.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/hasMachineData",
-            "operator": "contains",
-            "value": "6"
-          },
-          {
-            "path": "https://tucid/cpmo/hasTimestamp",
-            "operator": "=",
-            "value": "1985-04-06 19:34:37.667000"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/hasMachineData"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm curious about the cmp process entries. Find all cmp processes where the input parameter's numeric value is '0.0'. Then show me their machine id.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/hasInputParameter -> https://tucid/cpmo/hasNumericValue",
-            "operator": "=",
-            "value": "0.0"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/machineID"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I am currently checking the database for cmp process records and have a task for you. Find all cmp processes whose machine id contains '2'. Then show me their machine id.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/machineID",
-            "operator": "contains",
-            "value": "2"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/machineID"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm curious about the cmp process entries. Find all cmp processes where the timestamp is '1985-04-06 14:42:29.333000' and where the input parameter's numeric value is '2807.0'. Then show me their machine id, has machine data.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/hasTimestamp",
-            "operator": "=",
-            "value": "1985-04-06 14:42:29.333000"
-          },
-          {
-            "path": "https://tucid/cpmo/hasInputParameter -> https://tucid/cpmo/hasNumericValue",
-            "operator": "=",
-            "value": "2807.0"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/machineID",
-          "https://tucid/cpmo/hasMachineData"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm curious about the cmp process entries. Find all cmp processes where the input parameter's numeric value is '55.625'. Then show me their has machine data.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/hasInputParameter -> https://tucid/cpmo/hasNumericValue",
-            "operator": "=",
-            "value": "55.625"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/hasMachineData"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I am currently checking the database for cmp process records and have a task for you. Find all cmp processes whose machine id contains '2'. Then show me their machine id, has timestamp.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/machineID",
-            "operator": "contains",
-            "value": "2"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/machineID",
-          "https://tucid/cpmo/hasTimestamp"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm looking into the available information for cmp processes. Find all cmp processes where the input parameter is 'https://tucid/cpmo/instance/Pressure_2_137_PRESSURIZED_CHAMBER_PRESSURE'. Then show me their has machine data, machine id.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/hasInputParameter",
-            "operator": "=",
-            "value": "https://tucid/cpmo/instance/Pressure_2_137_PRESSURIZED_CHAMBER_PRESSURE"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/hasMachineData",
-          "https://tucid/cpmo/machineID"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm curious about the cmp process entries. Find all cmp processes where the input parameter's numeric value is '20.5555555556'. Then show me their machine id, has machine data.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/hasInputParameter -> https://tucid/cpmo/hasNumericValue",
-            "operator": "=",
-            "value": "20.5555555556"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/machineID",
-          "https://tucid/cpmo/hasMachineData"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I am currently checking the database for cmp process records and have a task for you. Find all cmp processes where the input parameter's numeric value is '0.0'. Then show me their has timestamp.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/hasInputParameter -> https://tucid/cpmo/hasNumericValue",
-            "operator": "=",
-            "value": "0.0"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/hasTimestamp"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm looking into the available information for cmp processes. Find all cmp processes whose machine data contains '5' and where the acts on is 'https://tucid/cpmo/instance/Wafer__4224160678'. Then show me their has timestamp.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/hasMachineData",
-            "operator": "contains",
-            "value": "5"
-          },
-          {
-            "path": "https://tucid/cpmo/actsOn",
-            "operator": "=",
-            "value": "https://tucid/cpmo/instance/Wafer__4224160678"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/hasTimestamp"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I am currently checking the database for cmp process records and have a task for you. Find all cmp processes where the input parameter is 'https://tucid/cpmo/instance/Parameter_2_190_USAGE_OF_PRESSURIZED_SHEET'. Then show me their has timestamp.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/hasInputParameter",
-            "operator": "=",
-            "value": "https://tucid/cpmo/instance/Parameter_2_190_USAGE_OF_PRESSURIZED_SHEET"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/hasTimestamp"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm curious about the cmp process entries. Find all cmp processes whose machine id contains '2' and where the input parameter's numeric value is '535.185185185'. Then show me their has machine data, has timestamp.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/machineID",
-            "operator": "contains",
-            "value": "2"
-          },
-          {
-            "path": "https://tucid/cpmo/hasInputParameter -> https://tucid/cpmo/hasNumericValue",
-            "operator": "=",
-            "value": "535.185185185"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/hasMachineData",
-          "https://tucid/cpmo/hasTimestamp"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm curious about the cmp process entries. Find all cmp processes where the timestamp is '1985-04-06 16:18:56.667000'. Then show me their machine id, has machine data, has timestamp.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/hasTimestamp",
-            "operator": "=",
-            "value": "1985-04-06 16:18:56.667000"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/machineID",
-          "https://tucid/cpmo/hasMachineData",
-          "https://tucid/cpmo/hasTimestamp"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm curious about the cmp process entries. Find all cmp processes where the input parameter is 'https://tucid/cpmo/instance/SlurryFlow_2_480_SLURRY_FLOW_LINE_B' and whose machine id contains '2'. Then show me their has timestamp, machine id.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/hasInputParameter",
-            "operator": "=",
-            "value": "https://tucid/cpmo/instance/SlurryFlow_2_480_SLURRY_FLOW_LINE_B"
-          },
-          {
-            "path": "https://tucid/cpmo/machineID",
-            "operator": "contains",
-            "value": "2"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/hasTimestamp",
-          "https://tucid/cpmo/machineID"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm looking into the available information for cmp processes. Find all cmp processes where the acts on is 'https://tucid/cpmo/instance/Wafer_373446766'. Then show me their machine id.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/actsOn",
-            "operator": "=",
-            "value": "https://tucid/cpmo/instance/Wafer_373446766"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/machineID"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm looking into the available information for cmp processes. Find all cmp processes where the input parameter's numeric value is '0.0'. Then show me their machine id.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/hasInputParameter -> https://tucid/cpmo/hasNumericValue",
-            "operator": "=",
-            "value": "0.0"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/machineID"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm curious about the cmp process entries. Find all cmp processes whose machine id contains '2'. Then show me their machine id.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/machineID",
-            "operator": "contains",
-            "value": "2"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/machineID"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm looking into the available information for cmp processes. Find all cmp processes where the timestamp is '1985-04-06 14:22:53.667000' and whose machine id contains '2'. Then show me their machine id.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/hasTimestamp",
-            "operator": "=",
-            "value": "1985-04-06 14:22:53.667000"
-          },
-          {
-            "path": "https://tucid/cpmo/machineID",
-            "operator": "contains",
-            "value": "2"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/machineID"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I am currently checking the database for cmp process records and have a task for you. Find all cmp processes whose machine data contains '6'. Then show me their has machine data.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/hasMachineData",
-            "operator": "contains",
-            "value": "6"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/hasMachineData"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm curious about the cmp process entries. Find all cmp processes whose machine data contains '4' and where the input parameter's numeric value is '445.2'. Then show me their has machine data, has timestamp.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/hasMachineData",
-            "operator": "contains",
-            "value": "4"
-          },
-          {
-            "path": "https://tucid/cpmo/hasInputParameter -> https://tucid/cpmo/hasNumericValue",
-            "operator": "=",
-            "value": "445.2"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/hasMachineData",
-          "https://tucid/cpmo/hasTimestamp"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm looking into the available information for cmp processes. Find all cmp processes where the input parameter's numeric value is '0.0' and where the acts on is 'https://tucid/cpmo/instance/Wafer_373446766'. Then show me their has machine data, has timestamp, machine id.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/hasInputParameter -> https://tucid/cpmo/hasNumericValue",
-            "operator": "=",
-            "value": "0.0"
-          },
-          {
-            "path": "https://tucid/cpmo/actsOn",
-            "operator": "=",
-            "value": "https://tucid/cpmo/instance/Wafer_373446766"
+            "value": "34.8837209302"
           }
         ],
         "project": [
           "https://tucid/cpmo/hasMachineData",
           "https://tucid/cpmo/hasTimestamp",
-          "https://tucid/cpmo/machineID"
+          "https://tucid/cpmo/actsOn"
         ],
         "required": true,
         "is_answer": true
@@ -909,318 +52,7 @@
     "hop_scope": null
   },
   {
-    "question": "I'm looking into the available information for cmp processes. Find all cmp processes whose machine id contains '2'. Then show me their machine id.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/machineID",
-            "operator": "contains",
-            "value": "2"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/machineID"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I am currently checking the database for cmp process records and have a task for you. Find all cmp processes where the timestamp is '1985-04-06 14:43:39.333000'. Then show me their machine id.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/hasTimestamp",
-            "operator": "=",
-            "value": "1985-04-06 14:43:39.333000"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/machineID"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I am currently checking the database for cmp process records and have a task for you. Find all cmp processes where the input parameter's numeric value is '65.9375'. Then show me their has machine data, machine id.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/hasInputParameter -> https://tucid/cpmo/hasNumericValue",
-            "operator": "=",
-            "value": "65.9375"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/hasMachineData",
-          "https://tucid/cpmo/machineID"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm curious about the cmp process entries. Find all cmp processes whose machine data contains '1' and where the acts on is 'https://tucid/cpmo/instance/Wafer_373446766'. Then show me their has timestamp, machine id.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/hasMachineData",
-            "operator": "contains",
-            "value": "1"
-          },
-          {
-            "path": "https://tucid/cpmo/actsOn",
-            "operator": "=",
-            "value": "https://tucid/cpmo/instance/Wafer_373446766"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/hasTimestamp",
-          "https://tucid/cpmo/machineID"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm curious about the cmp process entries. Find all cmp processes whose machine data contains '4' and where the acts on is 'https://tucid/cpmo/instance/Wafer__887170152'. Then show me their has timestamp, machine id.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/hasMachineData",
-            "operator": "contains",
-            "value": "4"
-          },
-          {
-            "path": "https://tucid/cpmo/actsOn",
-            "operator": "=",
-            "value": "https://tucid/cpmo/instance/Wafer__887170152"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/hasTimestamp",
-          "https://tucid/cpmo/machineID"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I am currently checking the database for cmp process records and have a task for you. Find all cmp processes where the timestamp is '1985-04-06 14:25:58.333000'. Then show me their machine id.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/hasTimestamp",
-            "operator": "=",
-            "value": "1985-04-06 14:25:58.333000"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/machineID"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm curious about the cmp process entries. Find all cmp processes whose machine id contains '2' and where the cmp tool component is 'https://tucid/cpmo/instance/Chamber_4_0'. Then show me their has timestamp.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/machineID",
-            "operator": "contains",
-            "value": "2"
-          },
-          {
-            "path": "https://tucid/cpmo/hasCMPToolComponent",
-            "operator": "=",
-            "value": "https://tucid/cpmo/instance/Chamber_4_0"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/hasTimestamp"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm curious about the cmp process entries. Find all cmp processes where the input parameter's numeric value is '1450.8' and where the cmp tool component is 'https://tucid/cpmo/instance/Chamber_6_0'. Then show me their has machine data, has timestamp.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/hasInputParameter -> https://tucid/cpmo/hasNumericValue",
-            "operator": "=",
-            "value": "1450.8"
-          },
-          {
-            "path": "https://tucid/cpmo/hasCMPToolComponent",
-            "operator": "=",
-            "value": "https://tucid/cpmo/instance/Chamber_6_0"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/hasMachineData",
-          "https://tucid/cpmo/hasTimestamp"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm curious about the cmp process entries. Find all cmp processes where the input parameter is 'https://tucid/cpmo/instance/Pressure_2_957_CENTER_AIR_BAG_PRESSURE' and where the acts on is 'https://tucid/cpmo/instance/Wafer__887170152'. Then show me their machine id, has machine data.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/hasInputParameter",
-            "operator": "=",
-            "value": "https://tucid/cpmo/instance/Pressure_2_957_CENTER_AIR_BAG_PRESSURE"
-          },
-          {
-            "path": "https://tucid/cpmo/actsOn",
-            "operator": "=",
-            "value": "https://tucid/cpmo/instance/Wafer__887170152"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/machineID",
-          "https://tucid/cpmo/hasMachineData"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm curious about the cmp process entries. Find all cmp processes where the acts on is 'https://tucid/cpmo/instance/Wafer_373446766' and where the timestamp is '1985-04-06 14:45:01'. Then show me their machine id.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/actsOn",
-            "operator": "=",
-            "value": "https://tucid/cpmo/instance/Wafer_373446766"
-          },
-          {
-            "path": "https://tucid/cpmo/hasTimestamp",
-            "operator": "=",
-            "value": "1985-04-06 14:45:01"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/machineID"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm looking into the available information for cmp processes. Find all cmp processes where the input parameter's numeric value is '0.0'. Then show me their has machine data, machine id.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/hasInputParameter -> https://tucid/cpmo/hasNumericValue",
-            "operator": "=",
-            "value": "0.0"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/hasMachineData",
-          "https://tucid/cpmo/machineID"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I am currently checking the database for cmp process records and have a task for you. Find all cmp processes where the input parameter's numeric value is '0.0' and where the acts on is 'https://tucid/cpmo/instance/Wafer__4224160678'. Then show me their has timestamp.",
+    "question": "I am currently checking the database for cmp process records and have a task for you. Find all cmp processes where the input parameter's numeric value is '0.0' and where the timestamp is '1985-04-06 14:22:17.333000'. Then show me their has cmp tool component.",
     "trace": [
       {
         "tool": "query_builder",
@@ -1232,44 +64,13 @@
             "value": "0.0"
           },
           {
-            "path": "https://tucid/cpmo/actsOn",
-            "operator": "=",
-            "value": "https://tucid/cpmo/instance/Wafer__4224160678"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/hasTimestamp"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm curious about the cmp process entries. Find all cmp processes where the timestamp is '1985-04-06 14:22:30.667000' and where the acts on is 'https://tucid/cpmo/instance/Wafer__4224160592'. Then show me their machine id, has machine data.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
             "path": "https://tucid/cpmo/hasTimestamp",
             "operator": "=",
-            "value": "1985-04-06 14:22:30.667000"
-          },
-          {
-            "path": "https://tucid/cpmo/actsOn",
-            "operator": "=",
-            "value": "https://tucid/cpmo/instance/Wafer__4224160592"
+            "value": "1985-04-06 14:22:17.333000"
           }
         ],
         "project": [
-          "https://tucid/cpmo/machineID",
-          "https://tucid/cpmo/hasMachineData"
+          "https://tucid/cpmo/hasCMPToolComponent"
         ],
         "required": true,
         "is_answer": true
@@ -1281,26 +82,20 @@
     "hop_scope": null
   },
   {
-    "question": "I'm looking into the available information for cmp processes. Find all cmp processes where the cmp tool component is 'https://tucid/cpmo/instance/Chamber_4_0' and where the input parameter is 'https://tucid/cpmo/instance/Conditioning_2_424_DRESSING_WATER_STATUS'. Then show me their machine id, has machine data.",
+    "question": "I'm curious about the cmp process entries. Find all cmp processes where the output parameter is 'https://tucid/cpmo/instance/WaferMaterialRemovalRate_CMP_test_removalrate_32_AVG_REMOVAL_RATE'. Then show me their has output parameter.",
     "trace": [
       {
         "tool": "query_builder",
         "type": "https://tucid/cpmo/CMPProcess",
         "filters": [
           {
-            "path": "https://tucid/cpmo/hasCMPToolComponent",
+            "path": "https://tucid/cpmo/hasOutputParameter",
             "operator": "=",
-            "value": "https://tucid/cpmo/instance/Chamber_4_0"
-          },
-          {
-            "path": "https://tucid/cpmo/hasInputParameter",
-            "operator": "=",
-            "value": "https://tucid/cpmo/instance/Conditioning_2_424_DRESSING_WATER_STATUS"
+            "value": "https://tucid/cpmo/instance/WaferMaterialRemovalRate_CMP_test_removalrate_32_AVG_REMOVAL_RATE"
           }
         ],
         "project": [
-          "https://tucid/cpmo/machineID",
-          "https://tucid/cpmo/hasMachineData"
+          "https://tucid/cpmo/hasOutputParameter"
         ],
         "required": true,
         "is_answer": true
@@ -1312,135 +107,17 @@
     "hop_scope": null
   },
   {
-    "question": "I'm looking into the available information for cmp processes. Find all cmp processes where the input parameter's numeric value is '65.9375' and where the input parameter is 'https://tucid/cpmo/instance/Conditioning_2_513_USAGE_OF_DRESSER'. Then show me their machine id, has machine data.",
+    "question": "I'm curious about the cmp process entries. Find all cmp processes where the input parameter's numeric value is '0.0' and whose machine id contains '2'. Then show me their has cmp tool component, acts on.",
     "trace": [
       {
         "tool": "query_builder",
         "type": "https://tucid/cpmo/CMPProcess",
         "filters": [
-          {
-            "path": "https://tucid/cpmo/hasInputParameter -> https://tucid/cpmo/hasNumericValue",
-            "operator": "=",
-            "value": "65.9375"
-          },
-          {
-            "path": "https://tucid/cpmo/hasInputParameter",
-            "operator": "=",
-            "value": "https://tucid/cpmo/instance/Conditioning_2_513_USAGE_OF_DRESSER"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/machineID",
-          "https://tucid/cpmo/hasMachineData"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm curious about the cmp process entries. Find all cmp processes whose machine id contains '2' and where the input parameter's numeric value is '0.0'. Then show me their has timestamp, has machine data.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/machineID",
-            "operator": "contains",
-            "value": "2"
-          },
           {
             "path": "https://tucid/cpmo/hasInputParameter -> https://tucid/cpmo/hasNumericValue",
             "operator": "=",
             "value": "0.0"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/hasTimestamp",
-          "https://tucid/cpmo/hasMachineData"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I am currently checking the database for cmp process records and have a task for you. Find all cmp processes where the cmp tool component is 'https://tucid/cpmo/instance/Chamber_6_0' and where the acts on is 'https://tucid/cpmo/instance/Wafer__4224160678'. Then show me their has timestamp, machine id.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/hasCMPToolComponent",
-            "operator": "=",
-            "value": "https://tucid/cpmo/instance/Chamber_6_0"
           },
-          {
-            "path": "https://tucid/cpmo/actsOn",
-            "operator": "=",
-            "value": "https://tucid/cpmo/instance/Wafer__4224160678"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/hasTimestamp",
-          "https://tucid/cpmo/machineID"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm looking into the available information for cmp processes. Find all cmp processes where the input parameter is 'https://tucid/cpmo/instance/Parameter_2_287_USAGE_OF_BACKING_FILM' and where the acts on is 'https://tucid/cpmo/instance/Wafer__4224160592'. Then show me their has timestamp.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/hasInputParameter",
-            "operator": "=",
-            "value": "https://tucid/cpmo/instance/Parameter_2_287_USAGE_OF_BACKING_FILM"
-          },
-          {
-            "path": "https://tucid/cpmo/actsOn",
-            "operator": "=",
-            "value": "https://tucid/cpmo/instance/Wafer__4224160592"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/hasTimestamp"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm curious about the cmp process entries. Find all cmp processes whose machine id contains '2'. Then show me their has machine data.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
           {
             "path": "https://tucid/cpmo/machineID",
             "operator": "contains",
@@ -1448,7 +125,8 @@
           }
         ],
         "project": [
-          "https://tucid/cpmo/hasMachineData"
+          "https://tucid/cpmo/hasCMPToolComponent",
+          "https://tucid/cpmo/actsOn"
         ],
         "required": true,
         "is_answer": true
@@ -1460,38 +138,7 @@
     "hop_scope": null
   },
   {
-    "question": "I am currently checking the database for cmp process records and have a task for you. Find all cmp processes where the input parameter's numeric value is '9356.66666667' and where the acts on is 'https://tucid/cpmo/instance/Wafer_373446766'. Then show me their machine id, has machine data.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/hasInputParameter -> https://tucid/cpmo/hasNumericValue",
-            "operator": "=",
-            "value": "9356.66666667"
-          },
-          {
-            "path": "https://tucid/cpmo/actsOn",
-            "operator": "=",
-            "value": "https://tucid/cpmo/instance/Wafer_373446766"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/machineID",
-          "https://tucid/cpmo/hasMachineData"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I am currently checking the database for cmp process records and have a task for you. Find all cmp processes where the timestamp is '1985-04-06 16:22:57.667000' and where the input parameter's numeric value is '262.631578947'. Then show me their has machine data.",
+    "question": "I'm curious about the cmp process entries. Find all cmp processes where the timestamp is '1985-04-06 19:33:13.333000'. Then show me their has timestamp.",
     "trace": [
       {
         "tool": "query_builder",
@@ -1500,205 +147,7 @@
           {
             "path": "https://tucid/cpmo/hasTimestamp",
             "operator": "=",
-            "value": "1985-04-06 16:22:57.667000"
-          },
-          {
-            "path": "https://tucid/cpmo/hasInputParameter -> https://tucid/cpmo/hasNumericValue",
-            "operator": "=",
-            "value": "262.631578947"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/hasMachineData"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm looking into the available information for cmp processes. Find all cmp processes whose machine data contains '4' and whose machine id contains '2'. Then show me their has machine data.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/hasMachineData",
-            "operator": "contains",
-            "value": "4"
-          },
-          {
-            "path": "https://tucid/cpmo/machineID",
-            "operator": "contains",
-            "value": "2"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/hasMachineData"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm looking into the available information for cmp processes. Find all cmp processes where the input parameter is 'https://tucid/cpmo/instance/Parameter_2_1200_USAGE_OF_MEMBRANE'. Then show me their machine id, has timestamp.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/hasInputParameter",
-            "operator": "=",
-            "value": "https://tucid/cpmo/instance/Parameter_2_1200_USAGE_OF_MEMBRANE"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/machineID",
-          "https://tucid/cpmo/hasTimestamp"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm curious about the cmp process entries. Find all cmp processes whose machine id contains '2'. Then show me their machine id.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/machineID",
-            "operator": "contains",
-            "value": "2"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/machineID"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm looking into the available information for cmp processes. Find all cmp processes where the acts on is 'https://tucid/cpmo/instance/Wafer__4224160678'. Then show me their has machine data, has timestamp.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/actsOn",
-            "operator": "=",
-            "value": "https://tucid/cpmo/instance/Wafer__4224160678"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/hasMachineData",
-          "https://tucid/cpmo/hasTimestamp"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm looking into the available information for cmp processes. Find all cmp processes where the input parameter is 'https://tucid/cpmo/instance/SlurryFlow_2_313_SLURRY_FLOW_LINE_B' and where the cmp tool component is 'https://tucid/cpmo/instance/Chamber_4_0'. Then show me their has machine data, machine id.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/hasInputParameter",
-            "operator": "=",
-            "value": "https://tucid/cpmo/instance/SlurryFlow_2_313_SLURRY_FLOW_LINE_B"
-          },
-          {
-            "path": "https://tucid/cpmo/hasCMPToolComponent",
-            "operator": "=",
-            "value": "https://tucid/cpmo/instance/Chamber_4_0"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/hasMachineData",
-          "https://tucid/cpmo/machineID"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm looking into the available information for cmp processes. Find all cmp processes whose machine id contains '2'. Then show me their machine id.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/machineID",
-            "operator": "contains",
-            "value": "2"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/machineID"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I am currently checking the database for cmp process records and have a task for you. Find all cmp processes where the input parameter is 'https://tucid/cpmo/instance/RetainingRingPressure_2_1048_RETAINER_RING_PRESSURE' and where the input parameter's numeric value is '75.5555555556'. Then show me their has timestamp.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/hasInputParameter",
-            "operator": "=",
-            "value": "https://tucid/cpmo/instance/RetainingRingPressure_2_1048_RETAINER_RING_PRESSURE"
-          },
-          {
-            "path": "https://tucid/cpmo/hasInputParameter -> https://tucid/cpmo/hasNumericValue",
-            "operator": "=",
-            "value": "75.5555555556"
+            "value": "1985-04-06 19:33:13.333000"
           }
         ],
         "project": [
@@ -1714,205 +163,11 @@
     "hop_scope": null
   },
   {
-    "question": "I'm curious about the cmp process entries. Find all cmp processes whose machine data contains '3' and where the cmp tool component is 'https://tucid/cpmo/instance/Chamber_3_0'. Then show me their has machine data, has timestamp.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/hasMachineData",
-            "operator": "contains",
-            "value": "3"
-          },
-          {
-            "path": "https://tucid/cpmo/hasCMPToolComponent",
-            "operator": "=",
-            "value": "https://tucid/cpmo/instance/Chamber_3_0"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/hasMachineData",
-          "https://tucid/cpmo/hasTimestamp"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm curious about the cmp process entries. Find all cmp processes where the input parameter is 'https://tucid/cpmo/instance/SlurryFlow_2_360_SLURRY_FLOW_LINE_B'. Then show me their has machine data, has timestamp.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/hasInputParameter",
-            "operator": "=",
-            "value": "https://tucid/cpmo/instance/SlurryFlow_2_360_SLURRY_FLOW_LINE_B"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/hasMachineData",
-          "https://tucid/cpmo/hasTimestamp"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I am currently checking the database for cmp process records and have a task for you. Find all cmp processes where the acts on is 'https://tucid/cpmo/instance/Wafer__4224160592' and where the cmp tool component is 'https://tucid/cpmo/instance/Chamber_4_0'. Then show me their machine id, has machine data.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/actsOn",
-            "operator": "=",
-            "value": "https://tucid/cpmo/instance/Wafer__4224160592"
-          },
-          {
-            "path": "https://tucid/cpmo/hasCMPToolComponent",
-            "operator": "=",
-            "value": "https://tucid/cpmo/instance/Chamber_4_0"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/machineID",
-          "https://tucid/cpmo/hasMachineData"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I am currently checking the database for cmp process records and have a task for you. Find all cmp processes where the input parameter is 'https://tucid/cpmo/instance/Parameter_2_1055_USAGE_OF_BACKING_FILM' and where the acts on is 'https://tucid/cpmo/instance/Wafer__4224160678'. Then show me their has machine data.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/hasInputParameter",
-            "operator": "=",
-            "value": "https://tucid/cpmo/instance/Parameter_2_1055_USAGE_OF_BACKING_FILM"
-          },
-          {
-            "path": "https://tucid/cpmo/actsOn",
-            "operator": "=",
-            "value": "https://tucid/cpmo/instance/Wafer__4224160678"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/hasMachineData"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm curious about the cmp process entries. Find all cmp processes whose machine id contains '2'. Then show me their machine id, has timestamp.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/machineID",
-            "operator": "contains",
-            "value": "2"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/machineID",
-          "https://tucid/cpmo/hasTimestamp"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm curious about the cmp process entries. Find all cmp processes where the input parameter's numeric value is '262.631578947'. Then show me their has machine data.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/hasInputParameter -> https://tucid/cpmo/hasNumericValue",
-            "operator": "=",
-            "value": "262.631578947"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/hasMachineData"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm looking into the available information for cmp processes. Find all cmp processes whose machine id contains '2'. Then show me their machine id.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/machineID",
-            "operator": "contains",
-            "value": "2"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/machineID"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm curious about 'CMP Process 2_52'. could you please identify its machine id?",
+    "question": "I'm curious about 'CMP Process 2_215'. could you please identify its machine id?",
     "trace": [
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_52",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_215",
         "predicate": "https://tucid/cpmo/machineID",
         "object": "2",
         "required": true,
@@ -1925,120 +180,11 @@
     "hop_scope": null
   },
   {
-    "question": "What can you tell me about 'CMP Process 2_732'? please find its machine id and its machine data.",
+    "question": "Can you find some information about 'CMP Process 2_28'? please find its timestamp and its machine data.",
     "trace": [
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_732",
-        "predicate": "https://tucid/cpmo/hasMachineData",
-        "object": "4",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_732",
-        "predicate": "https://tucid/cpmo/machineID",
-        "object": "2",
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "direct",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "What can you tell me about 'CMP Process 2_679'? I'd like to check its machine id and its timestamp.",
-    "trace": [
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_679",
-        "predicate": "https://tucid/cpmo/hasTimestamp",
-        "object": "1985-04-06T16:18:05",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_679",
-        "predicate": "https://tucid/cpmo/machineID",
-        "object": "2",
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "direct",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "Can you find some information about 'CMP Process 2_670'? what is its timestamp?",
-    "trace": [
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_670",
-        "predicate": "https://tucid/cpmo/hasTimestamp",
-        "object": "1985-04-06T16:17:54.667000",
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "direct",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "What can you tell me about 'CMP Process 2_787'? I'd like to check its timestamp and its machine data.",
-    "trace": [
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_787",
-        "predicate": "https://tucid/cpmo/hasMachineData",
-        "object": "4",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_787",
-        "predicate": "https://tucid/cpmo/hasTimestamp",
-        "object": "1985-04-06T16:19:51.667000",
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "direct",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm curious about 'CMP Process 2_82'. What info exists on its machine data?",
-    "trace": [
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_82",
-        "predicate": "https://tucid/cpmo/hasMachineData",
-        "object": "1",
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "direct",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'd like to know more about 'CMP Process 2_96'. I'd like to check its machine id and its machine data.",
-    "trace": [
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_96",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_28",
         "predicate": "https://tucid/cpmo/hasMachineData",
         "object": "1",
         "required": true,
@@ -2046,51 +192,9 @@
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_96",
-        "predicate": "https://tucid/cpmo/machineID",
-        "object": "2",
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "direct",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'd like to know more about 'CMP Process 2_1050'. I'd like to check its machine data and its machine id.",
-    "trace": [
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1050",
-        "predicate": "https://tucid/cpmo/machineID",
-        "object": "2",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1050",
-        "predicate": "https://tucid/cpmo/hasMachineData",
-        "object": "4",
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "direct",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm curious about 'CMP Process 2_34'. what is its timestamp?",
-    "trace": [
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_34",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_28",
         "predicate": "https://tucid/cpmo/hasTimestamp",
-        "object": "1985-04-06T14:41:02.333000",
+        "object": "1985-04-06T14:40:56.667000",
         "required": true,
         "is_answer": true
       }
@@ -2101,21 +205,13 @@
     "hop_scope": null
   },
   {
-    "question": "What can you tell me about 'CMP Process 2_843'? please find its machine data and its timestamp.",
+    "question": "What can you tell me about 'CMP Process 2_863'? what is its cmp tool component?",
     "trace": [
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_843",
-        "predicate": "https://tucid/cpmo/hasTimestamp",
-        "object": "1985-04-06T16:21:02.667000",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_843",
-        "predicate": "https://tucid/cpmo/hasMachineData",
-        "object": "5",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_863",
+        "predicate": "https://tucid/cpmo/hasCMPToolComponent",
+        "object": "https://tucid/cpmo/instance/Chamber_5_0",
         "required": true,
         "is_answer": true
       }
@@ -2126,171 +222,11 @@
     "hop_scope": null
   },
   {
-    "question": "I'd like to know more about 'CMP Process 2_1221'. could you please identify its machine data?",
+    "question": "What can you tell me about 'CMP Process 2_735'? Can you provide details on its timestamp and its machine data?",
     "trace": [
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1221",
-        "predicate": "https://tucid/cpmo/hasMachineData",
-        "object": "5",
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "direct",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "Can you find some information about 'CMP Process 2_117'? Can you provide details on its machine id and its machine data?",
-    "trace": [
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_117",
-        "predicate": "https://tucid/cpmo/hasMachineData",
-        "object": "1",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_117",
-        "predicate": "https://tucid/cpmo/machineID",
-        "object": "2",
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "direct",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm curious about 'CMP Process 2_617'. Can you provide details on its timestamp and its machine id?",
-    "trace": [
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_617",
-        "predicate": "https://tucid/cpmo/machineID",
-        "object": "2",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_617",
-        "predicate": "https://tucid/cpmo/hasTimestamp",
-        "object": "1985-04-06T14:26:07.333000",
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "direct",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'd like to know more about 'CMP Process 2_260'. what is its machine id?",
-    "trace": [
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_260",
-        "predicate": "https://tucid/cpmo/machineID",
-        "object": "2",
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "direct",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "Can you find some information about 'CMP Process 2_1217'? What info exists on its timestamp?",
-    "trace": [
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1217",
-        "predicate": "https://tucid/cpmo/hasTimestamp",
-        "object": "1985-04-06T19:33:35.667000",
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "direct",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm curious about 'CMP Process 2_797'. could you please identify its machine id?",
-    "trace": [
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_797",
-        "predicate": "https://tucid/cpmo/machineID",
-        "object": "2",
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "direct",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "Can you find some information about 'CMP Process 2_231'? could you please identify its timestamp?",
-    "trace": [
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_231",
-        "predicate": "https://tucid/cpmo/hasTimestamp",
-        "object": "1985-04-06T14:44:35.667000",
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "direct",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "Can you find some information about 'CMP Process 2_892'? please find its timestamp and its machine id.",
-    "trace": [
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_892",
-        "predicate": "https://tucid/cpmo/machineID",
-        "object": "2",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_892",
-        "predicate": "https://tucid/cpmo/hasTimestamp",
-        "object": "1985-04-06T16:21:51.667000",
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "direct",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm curious about 'CMP Process 2_1002'. please find its timestamp and its machine data.",
-    "trace": [
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1002",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_735",
         "predicate": "https://tucid/cpmo/hasMachineData",
         "object": "4",
         "required": true,
@@ -2298,9 +234,9 @@
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1002",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_735",
         "predicate": "https://tucid/cpmo/hasTimestamp",
-        "object": "1985-04-06T19:29:45.667000",
+        "object": "1985-04-06T16:18:59.667000",
         "required": true,
         "is_answer": true
       }
@@ -2311,205 +247,11 @@
     "hop_scope": null
   },
   {
-    "question": "Can you find some information about 'CMP Process 2_1232'? could you please identify its timestamp?",
+    "question": "What can you tell me about 'CMP Process 2_657'? please find its cmp tool component and its machine id.",
     "trace": [
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1232",
-        "predicate": "https://tucid/cpmo/hasTimestamp",
-        "object": "1985-04-06T19:33:50.667000",
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "direct",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "Can you find some information about 'CMP Process 2_120'? could you please identify its timestamp?",
-    "trace": [
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_120",
-        "predicate": "https://tucid/cpmo/hasTimestamp",
-        "object": "1985-04-06T14:42:28.667000",
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "direct",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm curious about 'CMP Process 2_421'. could you please identify its machine id?",
-    "trace": [
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_421",
-        "predicate": "https://tucid/cpmo/machineID",
-        "object": "2",
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "direct",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm curious about 'CMP Process 2_697'. What info exists on its timestamp?",
-    "trace": [
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_697",
-        "predicate": "https://tucid/cpmo/hasTimestamp",
-        "object": "1985-04-06T16:18:21.667000",
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "direct",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'd like to know more about 'CMP Process 2_892'. please find its timestamp and its machine data.",
-    "trace": [
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_892",
-        "predicate": "https://tucid/cpmo/hasMachineData",
-        "object": "5",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_892",
-        "predicate": "https://tucid/cpmo/hasTimestamp",
-        "object": "1985-04-06T16:21:51.667000",
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "direct",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm curious about 'CMP Process 2_830'. could you please identify its machine data?",
-    "trace": [
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_830",
-        "predicate": "https://tucid/cpmo/hasMachineData",
-        "object": "5",
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "direct",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm curious about 'CMP Process 2_413'. please find its timestamp and its machine data.",
-    "trace": [
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_413",
-        "predicate": "https://tucid/cpmo/hasMachineData",
-        "object": "4",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_413",
-        "predicate": "https://tucid/cpmo/hasTimestamp",
-        "object": "1985-04-06T14:22:25.667000",
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "direct",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "What can you tell me about 'CMP Process 2_443'? What info exists on its timestamp?",
-    "trace": [
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_443",
-        "predicate": "https://tucid/cpmo/hasTimestamp",
-        "object": "1985-04-06T14:22:55.333000",
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "direct",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'd like to know more about 'CMP Process 2_519'. please find its machine data and its timestamp.",
-    "trace": [
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_519",
-        "predicate": "https://tucid/cpmo/hasTimestamp",
-        "object": "1985-04-06T14:24:27.667000",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_519",
-        "predicate": "https://tucid/cpmo/hasMachineData",
-        "object": "5",
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "direct",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "What can you tell me about 'CMP Process 2_748'? what is its timestamp?",
-    "trace": [
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_748",
-        "predicate": "https://tucid/cpmo/hasTimestamp",
-        "object": "1985-04-06T16:19:12.667000",
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "direct",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm curious about 'CMP Process 2_67'. Can you provide details on its timestamp and its machine id?",
-    "trace": [
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_67",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_657",
         "predicate": "https://tucid/cpmo/machineID",
         "object": "2",
         "required": true,
@@ -2517,9 +259,9 @@
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_67",
-        "predicate": "https://tucid/cpmo/hasTimestamp",
-        "object": "1985-04-06T14:41:35.333000",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_657",
+        "predicate": "https://tucid/cpmo/hasCMPToolComponent",
+        "object": "https://tucid/cpmo/instance/Chamber_4_0",
         "required": true,
         "is_answer": true
       }
@@ -2530,835 +272,163 @@
     "hop_scope": null
   },
   {
-    "question": "Can you find some information about 'CMP Process 2_1102'? could you please identify its machine id?",
+    "question": "What can you tell me about 'CMP Process 2_203'? Now, please look into all its input parameter. Following that pad lifetime, what is its numeric value?",
     "trace": [
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1102",
-        "predicate": "https://tucid/cpmo/machineID",
-        "object": "2",
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "direct",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "What can you tell me about 'CMP Process 2_212'? what is its timestamp?",
-    "trace": [
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_212",
-        "predicate": "https://tucid/cpmo/hasTimestamp",
-        "object": "1985-04-06T14:44:16.333000",
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "direct",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "What can you tell me about 'CMP Process 2_95'? What info exists on its timestamp?",
-    "trace": [
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_95",
-        "predicate": "https://tucid/cpmo/hasTimestamp",
-        "object": "1985-04-06T14:42:03.333000",
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "direct",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'd like to know more about 'CMP Process 2_856'. I'd like to check its machine id and its machine data.",
-    "trace": [
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_856",
-        "predicate": "https://tucid/cpmo/hasMachineData",
-        "object": "5",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_856",
-        "predicate": "https://tucid/cpmo/machineID",
-        "object": "2",
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "direct",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "Can you find some information about 'CMP Process 2_1173'? what is its machine data?",
-    "trace": [
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1173",
-        "predicate": "https://tucid/cpmo/hasMachineData",
-        "object": "5",
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "direct",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'd like to know more about 'CMP Process 2_444'. what is its machine id?",
-    "trace": [
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_444",
-        "predicate": "https://tucid/cpmo/machineID",
-        "object": "2",
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "direct",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "What can you tell me about 'CMP Process 2_819'? I'd like to check its machine id and its timestamp.",
-    "trace": [
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_819",
-        "predicate": "https://tucid/cpmo/hasTimestamp",
-        "object": "1985-04-06T16:20:38.667000",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_819",
-        "predicate": "https://tucid/cpmo/machineID",
-        "object": "2",
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "direct",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'd like to know more about 'CMP Process 2_839'. Can you provide details on its machine data and its machine id?",
-    "trace": [
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_839",
-        "predicate": "https://tucid/cpmo/machineID",
-        "object": "2",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_839",
-        "predicate": "https://tucid/cpmo/hasMachineData",
-        "object": "5",
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "direct",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "What can you tell me about 'CMP Process 2_1178'? what is its machine data?",
-    "trace": [
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1178",
-        "predicate": "https://tucid/cpmo/hasMachineData",
-        "object": "5",
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "direct",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "Can you find some information about 'CMP Process 2_670'? I'd like to check its machine id and its timestamp.",
-    "trace": [
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_670",
-        "predicate": "https://tucid/cpmo/hasTimestamp",
-        "object": "1985-04-06T16:17:54.667000",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_670",
-        "predicate": "https://tucid/cpmo/machineID",
-        "object": "2",
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "direct",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'd like to know more about 'CMP Process 2_1081'. please find its machine data and its machine id.",
-    "trace": [
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1081",
-        "predicate": "https://tucid/cpmo/machineID",
-        "object": "2",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1081",
-        "predicate": "https://tucid/cpmo/hasMachineData",
-        "object": "4",
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "direct",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "Can you find some information about 'CMP Process 2_46'? Can you provide details on its machine id and its timestamp?",
-    "trace": [
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_46",
-        "predicate": "https://tucid/cpmo/hasTimestamp",
-        "object": "1985-04-06T14:41:14.333000",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_46",
-        "predicate": "https://tucid/cpmo/machineID",
-        "object": "2",
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "direct",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm curious about 'CMP Process 2_1029'. could you please identify its machine id?",
-    "trace": [
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1029",
-        "predicate": "https://tucid/cpmo/machineID",
-        "object": "2",
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "direct",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "What can you tell me about 'CMP Process 2_513'? What info exists on its machine id?",
-    "trace": [
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_513",
-        "predicate": "https://tucid/cpmo/machineID",
-        "object": "2",
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "direct",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'd like to know more about 'CMP Process 2_1323'. could you please identify its timestamp?",
-    "trace": [
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1323",
-        "predicate": "https://tucid/cpmo/hasTimestamp",
-        "object": "1985-04-06T19:35:24.667000",
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "direct",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "What can you tell me about 'CMP Process 2_158'? I'm also interested in all its input parameter. While we are looking at that pressure, could you please identify its numeric value?",
-    "trace": [
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_158",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_203",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Conditioning_2_158_USAGE_OF_DRESSER",
+        "object": "https://tucid/cpmo/instance/HeadSpeed_2_203_HEAD_ROTATION",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_158",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_203",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/SlurryFlow_2_158_SLURRY_FLOW_LINE_A",
+        "object": "https://tucid/cpmo/instance/Pressure_2_203_CENTER_AIR_BAG_PRESSURE",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_158",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_203",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Pressure_2_158_PRESSURIZED_CHAMBER_PRESSURE",
+        "object": "https://tucid/cpmo/instance/RetainingRingPressure_2_203_RETAINER_RING_PRESSURE",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_158",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_203",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Conditioning_2_158_DRESSING_WATER_STATUS",
+        "object": "https://tucid/cpmo/instance/Conditioning_2_203_USAGE_OF_DRESSER",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_158",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_203",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/SlurryFlow_2_158_SLURRY_FLOW_LINE_C",
+        "object": "https://tucid/cpmo/instance/PlatenSpeed_2_203_STAGE_ROTATION",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_158",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_203",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Parameter_2_158_USAGE_OF_MEMBRANE",
+        "object": "https://tucid/cpmo/instance/Parameter_2_203_USAGE_OF_BACKING_FILM",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_158",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_203",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/HeadSpeed_2_158_HEAD_ROTATION",
+        "object": "https://tucid/cpmo/instance/Conditioning_2_203_DRESSING_WATER_STATUS",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_158",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_203",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Pressure_2_158_EDGE_AIR_BAG_PRESSURE",
+        "object": "https://tucid/cpmo/instance/Pressure_2_203_EDGE_AIR_BAG_PRESSURE",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_158",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_203",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/PadLifetime_2_158_USAGE_OF_POLISHING_TABLE",
+        "object": "https://tucid/cpmo/instance/Parameter_2_203_USAGE_OF_PRESSURIZED_SHEET",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_158",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_203",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/PlatenSpeed_2_158_STAGE_ROTATION",
+        "object": "https://tucid/cpmo/instance/PadLifetime_2_203_USAGE_OF_POLISHING_TABLE",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_158",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_203",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/PadLifetime_2_158_USAGE_OF_DRESSER_TABLE",
+        "object": "https://tucid/cpmo/instance/Velocity_2_203_WAFER_ROTATION",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_158",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_203",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Parameter_2_158_USAGE_OF_BACKING_FILM",
+        "object": "https://tucid/cpmo/instance/Pressure_2_203_PRESSURIZED_CHAMBER_PRESSURE",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_158",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_203",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Velocity_2_158_WAFER_ROTATION",
+        "object": "https://tucid/cpmo/instance/SlurryFlow_2_203_SLURRY_FLOW_LINE_B",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_158",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_203",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Parameter_2_158_USAGE_OF_PRESSURIZED_SHEET",
+        "object": "https://tucid/cpmo/instance/Pressure_2_203_RIPPLE_AIR_BAG_PRESSURE",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_158",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_203",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Pressure_2_158_CENTER_AIR_BAG_PRESSURE",
+        "object": "https://tucid/cpmo/instance/SlurryFlow_2_203_SLURRY_FLOW_LINE_C",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_158",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_203",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/SlurryFlow_2_158_SLURRY_FLOW_LINE_B",
+        "object": "https://tucid/cpmo/instance/Parameter_2_203_USAGE_OF_MEMBRANE",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_158",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_203",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Pressure_2_158_MAIN_OUTER_AIR_BAG_PRESSURE",
+        "object": "https://tucid/cpmo/instance/Pressure_2_203_MAIN_OUTER_AIR_BAG_PRESSURE",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_158",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_203",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/RetainingRingPressure_2_158_RETAINER_RING_PRESSURE",
+        "object": "https://tucid/cpmo/instance/SlurryFlow_2_203_SLURRY_FLOW_LINE_A",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_158",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_203",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Pressure_2_158_RIPPLE_AIR_BAG_PRESSURE",
+        "object": "https://tucid/cpmo/instance/PadLifetime_2_203_USAGE_OF_DRESSER_TABLE",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Conditioning_2_158_USAGE_OF_DRESSER",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "536.296296296",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/SlurryFlow_2_158_SLURRY_FLOW_LINE_A",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "0.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Pressure_2_158_PRESSURIZED_CHAMBER_PRESSURE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "0.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Conditioning_2_158_DRESSING_WATER_STATUS",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "1.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/SlurryFlow_2_158_SLURRY_FLOW_LINE_C",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "0.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Parameter_2_158_USAGE_OF_MEMBRANE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "110.948616601",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/HeadSpeed_2_158_HEAD_ROTATION",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "156.8",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Pressure_2_158_EDGE_AIR_BAG_PRESSURE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "0.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/PadLifetime_2_158_USAGE_OF_POLISHING_TABLE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "341.481481481",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/PlatenSpeed_2_158_STAGE_ROTATION",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "0.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/PadLifetime_2_158_USAGE_OF_DRESSER_TABLE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "2667.75",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Parameter_2_158_USAGE_OF_BACKING_FILM",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "9356.66666667",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Velocity_2_158_WAFER_ROTATION",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "0.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Parameter_2_158_USAGE_OF_PRESSURIZED_SHEET",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "2807.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Pressure_2_158_CENTER_AIR_BAG_PRESSURE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "0.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/SlurryFlow_2_158_SLURRY_FLOW_LINE_B",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "0.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Pressure_2_158_MAIN_OUTER_AIR_BAG_PRESSURE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "0.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/RetainingRingPressure_2_158_RETAINER_RING_PRESSURE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "0.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Pressure_2_158_RIPPLE_AIR_BAG_PRESSURE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "0.0",
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "hop",
-    "hop_bridge_predicate_uri": "https://tucid/cpmo/hasInputParameter",
-    "hop_target_count": 19,
-    "hop_scope": "all"
-  },
-  {
-    "question": "What can you tell me about 'CMP Process 2_759'? I'm also interested in all its input parameter. While we are looking at that parameter, what is its numeric value?",
-    "trace": [
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_759",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Velocity_2_759_WAFER_ROTATION",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_759",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Pressure_2_759_CENTER_AIR_BAG_PRESSURE",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_759",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Pressure_2_759_RIPPLE_AIR_BAG_PRESSURE",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_759",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/PadLifetime_2_759_USAGE_OF_POLISHING_TABLE",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_759",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/PadLifetime_2_759_USAGE_OF_DRESSER_TABLE",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_759",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/SlurryFlow_2_759_SLURRY_FLOW_LINE_B",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_759",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Conditioning_2_759_USAGE_OF_DRESSER",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_759",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/HeadSpeed_2_759_HEAD_ROTATION",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_759",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/RetainingRingPressure_2_759_RETAINER_RING_PRESSURE",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_759",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Pressure_2_759_MAIN_OUTER_AIR_BAG_PRESSURE",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_759",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/PlatenSpeed_2_759_STAGE_ROTATION",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_759",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Parameter_2_759_USAGE_OF_BACKING_FILM",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_759",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/SlurryFlow_2_759_SLURRY_FLOW_LINE_A",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_759",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Pressure_2_759_PRESSURIZED_CHAMBER_PRESSURE",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_759",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Parameter_2_759_USAGE_OF_PRESSURIZED_SHEET",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_759",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Conditioning_2_759_DRESSING_WATER_STATUS",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_759",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/SlurryFlow_2_759_SLURRY_FLOW_LINE_C",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_759",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Pressure_2_759_EDGE_AIR_BAG_PRESSURE",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_759",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Parameter_2_759_USAGE_OF_MEMBRANE",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Velocity_2_759_WAFER_ROTATION",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "0.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Pressure_2_759_CENTER_AIR_BAG_PRESSURE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "65.9375",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Pressure_2_759_RIPPLE_AIR_BAG_PRESSURE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "10.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/PadLifetime_2_759_USAGE_OF_POLISHING_TABLE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "59.2592592593",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/PadLifetime_2_759_USAGE_OF_DRESSER_TABLE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "2671.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/SlurryFlow_2_759_SLURRY_FLOW_LINE_B",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "0.909090909091",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Conditioning_2_759_USAGE_OF_DRESSER",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "541.111111111",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/HeadSpeed_2_759_HEAD_ROTATION",
+        "subject": "https://tucid/cpmo/instance/HeadSpeed_2_203_HEAD_ROTATION",
         "predicate": "https://tucid/cpmo/hasNumericValue",
         "object": "160.0",
         "required": true,
@@ -3366,23 +436,7 @@
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/RetainingRingPressure_2_759_RETAINER_RING_PRESSURE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "1450.8",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Pressure_2_759_MAIN_OUTER_AIR_BAG_PRESSURE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "256.8",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/PlatenSpeed_2_759_STAGE_ROTATION",
+        "subject": "https://tucid/cpmo/instance/Pressure_2_203_CENTER_AIR_BAG_PRESSURE",
         "predicate": "https://tucid/cpmo/hasNumericValue",
         "object": "0.0",
         "required": true,
@@ -3390,39 +444,7 @@
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Parameter_2_759_USAGE_OF_BACKING_FILM",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "9423.33333333",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/SlurryFlow_2_759_SLURRY_FLOW_LINE_A",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "2.22222222222",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Pressure_2_759_PRESSURIZED_CHAMBER_PRESSURE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "73.8095238095",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Parameter_2_759_USAGE_OF_PRESSURIZED_SHEET",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "2827.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Conditioning_2_759_DRESSING_WATER_STATUS",
+        "subject": "https://tucid/cpmo/instance/RetainingRingPressure_2_203_RETAINER_RING_PRESSURE",
         "predicate": "https://tucid/cpmo/hasNumericValue",
         "object": "0.0",
         "required": true,
@@ -3430,618 +452,7 @@
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/SlurryFlow_2_759_SLURRY_FLOW_LINE_C",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "448.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Pressure_2_759_EDGE_AIR_BAG_PRESSURE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "43.9393939394",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Parameter_2_759_USAGE_OF_MEMBRANE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "111.739130435",
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "hop",
-    "hop_bridge_predicate_uri": "https://tucid/cpmo/hasInputParameter",
-    "hop_target_count": 19,
-    "hop_scope": "all"
-  },
-  {
-    "question": "What can you tell me about 'CMP Process 2_952'? I'm also interested in all its input parameter. What info exists on its numeric value?",
-    "trace": [
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_952",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Parameter_2_952_USAGE_OF_PRESSURIZED_SHEET",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_952",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Velocity_2_952_WAFER_ROTATION",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_952",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Parameter_2_952_USAGE_OF_BACKING_FILM",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_952",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/RetainingRingPressure_2_952_RETAINER_RING_PRESSURE",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_952",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/SlurryFlow_2_952_SLURRY_FLOW_LINE_B",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_952",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/HeadSpeed_2_952_HEAD_ROTATION",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_952",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Pressure_2_952_RIPPLE_AIR_BAG_PRESSURE",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_952",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/PadLifetime_2_952_USAGE_OF_DRESSER_TABLE",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_952",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Pressure_2_952_EDGE_AIR_BAG_PRESSURE",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_952",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/SlurryFlow_2_952_SLURRY_FLOW_LINE_A",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_952",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Parameter_2_952_USAGE_OF_MEMBRANE",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_952",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Pressure_2_952_PRESSURIZED_CHAMBER_PRESSURE",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_952",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Pressure_2_952_CENTER_AIR_BAG_PRESSURE",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_952",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/PlatenSpeed_2_952_STAGE_ROTATION",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_952",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/PadLifetime_2_952_USAGE_OF_POLISHING_TABLE",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_952",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Pressure_2_952_MAIN_OUTER_AIR_BAG_PRESSURE",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_952",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Conditioning_2_952_DRESSING_WATER_STATUS",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_952",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Conditioning_2_952_USAGE_OF_DRESSER",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_952",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/SlurryFlow_2_952_SLURRY_FLOW_LINE_C",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Parameter_2_952_USAGE_OF_PRESSURIZED_SHEET",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "2829.25",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Velocity_2_952_WAFER_ROTATION",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "0.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Parameter_2_952_USAGE_OF_BACKING_FILM",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "9430.83333333",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/RetainingRingPressure_2_952_RETAINER_RING_PRESSURE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "7062.9",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/SlurryFlow_2_952_SLURRY_FLOW_LINE_B",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "0.909090909091",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/HeadSpeed_2_952_HEAD_ROTATION",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "156.8",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Pressure_2_952_RIPPLE_AIR_BAG_PRESSURE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "0.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/PadLifetime_2_952_USAGE_OF_DRESSER_TABLE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "2671.25",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Pressure_2_952_EDGE_AIR_BAG_PRESSURE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "0.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/SlurryFlow_2_952_SLURRY_FLOW_LINE_A",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "5.13888888889",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Parameter_2_952_USAGE_OF_MEMBRANE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "111.828063241",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Pressure_2_952_PRESSURIZED_CHAMBER_PRESSURE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "22.380952381",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Pressure_2_952_CENTER_AIR_BAG_PRESSURE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "0.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/PlatenSpeed_2_952_STAGE_ROTATION",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "262.631578947",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/PadLifetime_2_952_USAGE_OF_POLISHING_TABLE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "65.9259259259",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Pressure_2_952_MAIN_OUTER_AIR_BAG_PRESSURE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "0.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Conditioning_2_952_DRESSING_WATER_STATUS",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "1.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Conditioning_2_952_USAGE_OF_DRESSER",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "541.481481481",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/SlurryFlow_2_952_SLURRY_FLOW_LINE_C",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "0.0",
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "hop",
-    "hop_bridge_predicate_uri": "https://tucid/cpmo/hasInputParameter",
-    "hop_target_count": 19,
-    "hop_scope": "all"
-  },
-  {
-    "question": "Can you find some information about 'CMP Process CMP_test_removalrate_52'? Then, tell me more about its output parameter. What info exists on its numeric value?",
-    "trace": [
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_CMP_test_removalrate_52",
-        "predicate": "https://tucid/cpmo/hasOutputParameter",
-        "object": "https://tucid/cpmo/instance/WaferMaterialRemovalRate_CMP_test_removalrate_52_AVG_REMOVAL_RATE",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/WaferMaterialRemovalRate_CMP_test_removalrate_52_AVG_REMOVAL_RATE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "78.6405",
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "hop",
-    "hop_bridge_predicate_uri": "https://tucid/cpmo/hasOutputParameter",
-    "hop_target_count": 1,
-    "hop_scope": "one"
-  },
-  {
-    "question": "I'd like to know more about 'CMP Process 2_261'. Could you give me all its input parameter? What info exists on its numeric value?",
-    "trace": [
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_261",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/PadLifetime_2_261_USAGE_OF_POLISHING_TABLE",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_261",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/RetainingRingPressure_2_261_RETAINER_RING_PRESSURE",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_261",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Parameter_2_261_USAGE_OF_MEMBRANE",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_261",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/SlurryFlow_2_261_SLURRY_FLOW_LINE_A",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_261",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Parameter_2_261_USAGE_OF_BACKING_FILM",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_261",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Pressure_2_261_MAIN_OUTER_AIR_BAG_PRESSURE",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_261",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/PlatenSpeed_2_261_STAGE_ROTATION",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_261",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/SlurryFlow_2_261_SLURRY_FLOW_LINE_C",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_261",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Pressure_2_261_RIPPLE_AIR_BAG_PRESSURE",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_261",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/HeadSpeed_2_261_HEAD_ROTATION",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_261",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Pressure_2_261_PRESSURIZED_CHAMBER_PRESSURE",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_261",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Conditioning_2_261_USAGE_OF_DRESSER",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_261",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Velocity_2_261_WAFER_ROTATION",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_261",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Parameter_2_261_USAGE_OF_PRESSURIZED_SHEET",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_261",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Conditioning_2_261_DRESSING_WATER_STATUS",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_261",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Pressure_2_261_CENTER_AIR_BAG_PRESSURE",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_261",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/SlurryFlow_2_261_SLURRY_FLOW_LINE_B",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_261",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/PadLifetime_2_261_USAGE_OF_DRESSER_TABLE",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_261",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Pressure_2_261_EDGE_AIR_BAG_PRESSURE",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/PadLifetime_2_261_USAGE_OF_POLISHING_TABLE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "341.481481481",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/RetainingRingPressure_2_261_RETAINER_RING_PRESSURE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "0.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Parameter_2_261_USAGE_OF_MEMBRANE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "110.948616601",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/SlurryFlow_2_261_SLURRY_FLOW_LINE_A",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "0.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Parameter_2_261_USAGE_OF_BACKING_FILM",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "9356.66666667",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Pressure_2_261_MAIN_OUTER_AIR_BAG_PRESSURE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "0.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/PlatenSpeed_2_261_STAGE_ROTATION",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "0.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/SlurryFlow_2_261_SLURRY_FLOW_LINE_C",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "0.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Pressure_2_261_RIPPLE_AIR_BAG_PRESSURE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "0.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/HeadSpeed_2_261_HEAD_ROTATION",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "156.8",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Pressure_2_261_PRESSURIZED_CHAMBER_PRESSURE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "0.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Conditioning_2_261_USAGE_OF_DRESSER",
+        "subject": "https://tucid/cpmo/instance/Conditioning_2_203_USAGE_OF_DRESSER",
         "predicate": "https://tucid/cpmo/hasNumericValue",
         "object": "536.296296296",
         "required": true,
@@ -4049,7 +460,7 @@
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Velocity_2_261_WAFER_ROTATION",
+        "subject": "https://tucid/cpmo/instance/PlatenSpeed_2_203_STAGE_ROTATION",
         "predicate": "https://tucid/cpmo/hasNumericValue",
         "object": "0.0",
         "required": true,
@@ -4057,7 +468,31 @@
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Parameter_2_261_USAGE_OF_PRESSURIZED_SHEET",
+        "subject": "https://tucid/cpmo/instance/Parameter_2_203_USAGE_OF_BACKING_FILM",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "9356.66666667",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Conditioning_2_203_DRESSING_WATER_STATUS",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "0.0",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Pressure_2_203_EDGE_AIR_BAG_PRESSURE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "0.0",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Parameter_2_203_USAGE_OF_PRESSURIZED_SHEET",
         "predicate": "https://tucid/cpmo/hasNumericValue",
         "object": "2807.0",
         "required": true,
@@ -4065,23 +500,15 @@
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Conditioning_2_261_DRESSING_WATER_STATUS",
+        "subject": "https://tucid/cpmo/instance/PadLifetime_2_203_USAGE_OF_POLISHING_TABLE",
         "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "1.0",
+        "object": "341.481481481",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Pressure_2_261_CENTER_AIR_BAG_PRESSURE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "0.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/SlurryFlow_2_261_SLURRY_FLOW_LINE_B",
+        "subject": "https://tucid/cpmo/instance/Velocity_2_203_WAFER_ROTATION",
         "predicate": "https://tucid/cpmo/hasNumericValue",
         "object": "0.0",
         "required": true,
@@ -4089,17 +516,65 @@
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/PadLifetime_2_261_USAGE_OF_DRESSER_TABLE",
+        "subject": "https://tucid/cpmo/instance/Pressure_2_203_PRESSURIZED_CHAMBER_PRESSURE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "0.0",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/SlurryFlow_2_203_SLURRY_FLOW_LINE_B",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "0.0",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Pressure_2_203_RIPPLE_AIR_BAG_PRESSURE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "0.0",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/SlurryFlow_2_203_SLURRY_FLOW_LINE_C",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "0.0",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Parameter_2_203_USAGE_OF_MEMBRANE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "110.948616601",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Pressure_2_203_MAIN_OUTER_AIR_BAG_PRESSURE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "0.0",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/SlurryFlow_2_203_SLURRY_FLOW_LINE_A",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "0.0",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/PadLifetime_2_203_USAGE_OF_DRESSER_TABLE",
         "predicate": "https://tucid/cpmo/hasNumericValue",
         "object": "2667.75",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Pressure_2_261_EDGE_AIR_BAG_PRESSURE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "0.0",
         "required": true,
         "is_answer": true
       }
@@ -4110,235 +585,179 @@
     "hop_scope": "all"
   },
   {
-    "question": "What can you tell me about 'CMP Process 2_1260'? I'm also interested in all its input parameter. Specifically for that slurry flow, what is its numeric value?",
+    "question": "I'd like to know more about 'CMP Process 2_490'. Could you give me all its input parameter? Regarding that pad lifetime, what is its numeric value?",
     "trace": [
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1260",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_490",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Pressure_2_1260_CENTER_AIR_BAG_PRESSURE",
+        "object": "https://tucid/cpmo/instance/Pressure_2_490_EDGE_AIR_BAG_PRESSURE",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1260",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_490",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/SlurryFlow_2_1260_SLURRY_FLOW_LINE_A",
+        "object": "https://tucid/cpmo/instance/Velocity_2_490_WAFER_ROTATION",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1260",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_490",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Pressure_2_1260_EDGE_AIR_BAG_PRESSURE",
+        "object": "https://tucid/cpmo/instance/SlurryFlow_2_490_SLURRY_FLOW_LINE_B",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1260",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_490",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Parameter_2_1260_USAGE_OF_PRESSURIZED_SHEET",
+        "object": "https://tucid/cpmo/instance/PlatenSpeed_2_490_STAGE_ROTATION",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1260",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_490",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/RetainingRingPressure_2_1260_RETAINER_RING_PRESSURE",
+        "object": "https://tucid/cpmo/instance/Parameter_2_490_USAGE_OF_MEMBRANE",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1260",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_490",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Pressure_2_1260_RIPPLE_AIR_BAG_PRESSURE",
+        "object": "https://tucid/cpmo/instance/HeadSpeed_2_490_HEAD_ROTATION",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1260",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_490",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/HeadSpeed_2_1260_HEAD_ROTATION",
+        "object": "https://tucid/cpmo/instance/Parameter_2_490_USAGE_OF_PRESSURIZED_SHEET",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1260",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_490",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/PadLifetime_2_1260_USAGE_OF_DRESSER_TABLE",
+        "object": "https://tucid/cpmo/instance/PadLifetime_2_490_USAGE_OF_DRESSER_TABLE",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1260",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_490",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/PadLifetime_2_1260_USAGE_OF_POLISHING_TABLE",
+        "object": "https://tucid/cpmo/instance/Conditioning_2_490_DRESSING_WATER_STATUS",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1260",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_490",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/SlurryFlow_2_1260_SLURRY_FLOW_LINE_B",
+        "object": "https://tucid/cpmo/instance/Conditioning_2_490_USAGE_OF_DRESSER",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1260",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_490",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Pressure_2_1260_PRESSURIZED_CHAMBER_PRESSURE",
+        "object": "https://tucid/cpmo/instance/Parameter_2_490_USAGE_OF_BACKING_FILM",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1260",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_490",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/PlatenSpeed_2_1260_STAGE_ROTATION",
+        "object": "https://tucid/cpmo/instance/RetainingRingPressure_2_490_RETAINER_RING_PRESSURE",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1260",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_490",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Pressure_2_1260_MAIN_OUTER_AIR_BAG_PRESSURE",
+        "object": "https://tucid/cpmo/instance/SlurryFlow_2_490_SLURRY_FLOW_LINE_A",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1260",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_490",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Conditioning_2_1260_DRESSING_WATER_STATUS",
+        "object": "https://tucid/cpmo/instance/Pressure_2_490_CENTER_AIR_BAG_PRESSURE",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1260",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_490",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Conditioning_2_1260_USAGE_OF_DRESSER",
+        "object": "https://tucid/cpmo/instance/SlurryFlow_2_490_SLURRY_FLOW_LINE_C",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1260",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_490",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Velocity_2_1260_WAFER_ROTATION",
+        "object": "https://tucid/cpmo/instance/Pressure_2_490_PRESSURIZED_CHAMBER_PRESSURE",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1260",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_490",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Parameter_2_1260_USAGE_OF_BACKING_FILM",
+        "object": "https://tucid/cpmo/instance/Pressure_2_490_MAIN_OUTER_AIR_BAG_PRESSURE",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1260",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_490",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Parameter_2_1260_USAGE_OF_MEMBRANE",
+        "object": "https://tucid/cpmo/instance/Pressure_2_490_RIPPLE_AIR_BAG_PRESSURE",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1260",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_490",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/SlurryFlow_2_1260_SLURRY_FLOW_LINE_C",
+        "object": "https://tucid/cpmo/instance/PadLifetime_2_490_USAGE_OF_POLISHING_TABLE",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Pressure_2_1260_CENTER_AIR_BAG_PRESSURE",
+        "subject": "https://tucid/cpmo/instance/Pressure_2_490_EDGE_AIR_BAG_PRESSURE",
         "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "69.0625",
+        "object": "44.2424242424",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/SlurryFlow_2_1260_SLURRY_FLOW_LINE_A",
+        "subject": "https://tucid/cpmo/instance/Velocity_2_490_WAFER_ROTATION",
         "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "2.22222222222",
+        "object": "34.8837209302",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Pressure_2_1260_EDGE_AIR_BAG_PRESSURE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "48.4848484848",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Parameter_2_1260_USAGE_OF_PRESSURIZED_SHEET",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "2859.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/RetainingRingPressure_2_1260_RETAINER_RING_PRESSURE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "1450.8",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Pressure_2_1260_RIPPLE_AIR_BAG_PRESSURE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "9.5",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/HeadSpeed_2_1260_HEAD_ROTATION",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "188.8",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/PadLifetime_2_1260_USAGE_OF_DRESSER_TABLE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "2675.5",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/PadLifetime_2_1260_USAGE_OF_POLISHING_TABLE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "82.2222222222",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/SlurryFlow_2_1260_SLURRY_FLOW_LINE_B",
+        "subject": "https://tucid/cpmo/instance/SlurryFlow_2_490_SLURRY_FLOW_LINE_B",
         "predicate": "https://tucid/cpmo/hasNumericValue",
         "object": "0.909090909091",
         "required": true,
@@ -4346,47 +765,7 @@
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Pressure_2_1260_PRESSURIZED_CHAMBER_PRESSURE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "76.1904761905",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/PlatenSpeed_2_1260_STAGE_ROTATION",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "65.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Pressure_2_1260_MAIN_OUTER_AIR_BAG_PRESSURE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "270.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Conditioning_2_1260_DRESSING_WATER_STATUS",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "1.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Conditioning_2_1260_USAGE_OF_DRESSER",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "547.777777778",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Velocity_2_1260_WAFER_ROTATION",
+        "subject": "https://tucid/cpmo/instance/PlatenSpeed_2_490_STAGE_ROTATION",
         "predicate": "https://tucid/cpmo/hasNumericValue",
         "object": "0.0",
         "required": true,
@@ -4394,25 +773,121 @@
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Parameter_2_1260_USAGE_OF_BACKING_FILM",
+        "subject": "https://tucid/cpmo/instance/Parameter_2_490_USAGE_OF_MEMBRANE",
         "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "9530.0",
+        "object": "110.671936759",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Parameter_2_1260_USAGE_OF_MEMBRANE",
+        "subject": "https://tucid/cpmo/instance/HeadSpeed_2_490_HEAD_ROTATION",
         "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "113.003952569",
+        "object": "160.0",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/SlurryFlow_2_1260_SLURRY_FLOW_LINE_C",
+        "subject": "https://tucid/cpmo/instance/Parameter_2_490_USAGE_OF_PRESSURIZED_SHEET",
         "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "442.4",
+        "object": "2800.0",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/PadLifetime_2_490_USAGE_OF_DRESSER_TABLE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "2667.0",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Conditioning_2_490_DRESSING_WATER_STATUS",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "0.0",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Conditioning_2_490_USAGE_OF_DRESSER",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "535.185185185",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Parameter_2_490_USAGE_OF_BACKING_FILM",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "9333.33333333",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/RetainingRingPressure_2_490_RETAINER_RING_PRESSURE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "1458.6",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/SlurryFlow_2_490_SLURRY_FLOW_LINE_A",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "2.22222222222",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Pressure_2_490_CENTER_AIR_BAG_PRESSURE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "65.9375",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/SlurryFlow_2_490_SLURRY_FLOW_LINE_C",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "428.4",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Pressure_2_490_PRESSURIZED_CHAMBER_PRESSURE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "73.8095238095",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Pressure_2_490_MAIN_OUTER_AIR_BAG_PRESSURE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "256.8",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Pressure_2_490_RIPPLE_AIR_BAG_PRESSURE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "10.0",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/PadLifetime_2_490_USAGE_OF_POLISHING_TABLE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "320.740740741",
         "required": true,
         "is_answer": true
       }
@@ -4423,21 +898,334 @@
     "hop_scope": "all"
   },
   {
-    "question": "Can you find some information about 'CMP Process CMP_test_removalrate_400'? Could you find the output parameter for me? And for that wafer material removal rate, could you please identify its numeric value?",
+    "question": "Can you find some information about 'CMP Process 2_1211'? Then, tell me more about all its input parameter. For that entry, could you please identify its numeric value?",
     "trace": [
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_CMP_test_removalrate_400",
-        "predicate": "https://tucid/cpmo/hasOutputParameter",
-        "object": "https://tucid/cpmo/instance/WaferMaterialRemovalRate_CMP_test_removalrate_400_AVG_REMOVAL_RATE",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1211",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/SlurryFlow_2_1211_SLURRY_FLOW_LINE_C",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/WaferMaterialRemovalRate_CMP_test_removalrate_400_AVG_REMOVAL_RATE",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1211",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/RetainingRingPressure_2_1211_RETAINER_RING_PRESSURE",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1211",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/Parameter_2_1211_USAGE_OF_PRESSURIZED_SHEET",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1211",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/PlatenSpeed_2_1211_STAGE_ROTATION",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1211",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/HeadSpeed_2_1211_HEAD_ROTATION",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1211",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/SlurryFlow_2_1211_SLURRY_FLOW_LINE_A",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1211",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/Parameter_2_1211_USAGE_OF_MEMBRANE",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1211",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/Pressure_2_1211_EDGE_AIR_BAG_PRESSURE",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1211",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/Pressure_2_1211_RIPPLE_AIR_BAG_PRESSURE",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1211",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/Velocity_2_1211_WAFER_ROTATION",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1211",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/Parameter_2_1211_USAGE_OF_BACKING_FILM",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1211",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/SlurryFlow_2_1211_SLURRY_FLOW_LINE_B",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1211",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/Pressure_2_1211_MAIN_OUTER_AIR_BAG_PRESSURE",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1211",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/Pressure_2_1211_CENTER_AIR_BAG_PRESSURE",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1211",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/PadLifetime_2_1211_USAGE_OF_POLISHING_TABLE",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1211",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/PadLifetime_2_1211_USAGE_OF_DRESSER_TABLE",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1211",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/Pressure_2_1211_PRESSURIZED_CHAMBER_PRESSURE",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1211",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/Conditioning_2_1211_USAGE_OF_DRESSER",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1211",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/Conditioning_2_1211_DRESSING_WATER_STATUS",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/SlurryFlow_2_1211_SLURRY_FLOW_LINE_C",
         "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "77.4405",
+        "object": "439.6",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/RetainingRingPressure_2_1211_RETAINER_RING_PRESSURE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "1450.8",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Parameter_2_1211_USAGE_OF_PRESSURIZED_SHEET",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "2858.5",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/PlatenSpeed_2_1211_STAGE_ROTATION",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "0.0",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/HeadSpeed_2_1211_HEAD_ROTATION",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "156.8",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/SlurryFlow_2_1211_SLURRY_FLOW_LINE_A",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "2.22222222222",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Parameter_2_1211_USAGE_OF_MEMBRANE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "112.984189723",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Pressure_2_1211_EDGE_AIR_BAG_PRESSURE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "48.7878787879",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Pressure_2_1211_RIPPLE_AIR_BAG_PRESSURE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "9.5",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Velocity_2_1211_WAFER_ROTATION",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "34.6511627907",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Parameter_2_1211_USAGE_OF_BACKING_FILM",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "9528.33333333",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/SlurryFlow_2_1211_SLURRY_FLOW_LINE_B",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "0.909090909091",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Pressure_2_1211_MAIN_OUTER_AIR_BAG_PRESSURE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "270.0",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Pressure_2_1211_CENTER_AIR_BAG_PRESSURE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "69.0625",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/PadLifetime_2_1211_USAGE_OF_POLISHING_TABLE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "80.7407407407",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/PadLifetime_2_1211_USAGE_OF_DRESSER_TABLE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "2675.5",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Pressure_2_1211_PRESSURIZED_CHAMBER_PRESSURE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "76.6666666667",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Conditioning_2_1211_USAGE_OF_DRESSER",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "547.777777778",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Conditioning_2_1211_DRESSING_WATER_STATUS",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "1.0",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "hop",
+    "hop_bridge_predicate_uri": "https://tucid/cpmo/hasInputParameter",
+    "hop_target_count": 19,
+    "hop_scope": "all"
+  },
+  {
+    "question": "I'm curious about 'CMP Process CMP_test_removalrate_155'. Now, please look into its output parameter. For that entry, what is its numeric value?",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_CMP_test_removalrate_155",
+        "predicate": "https://tucid/cpmo/hasOutputParameter",
+        "object": "https://tucid/cpmo/instance/WaferMaterialRemovalRate_CMP_test_removalrate_155_AVG_REMOVAL_RATE",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/WaferMaterialRemovalRate_CMP_test_removalrate_155_AVG_REMOVAL_RATE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "81.8343",
         "required": true,
         "is_answer": true
       }
@@ -4448,21 +1236,21 @@
     "hop_scope": "one"
   },
   {
-    "question": "I'd like to know more about 'CMP Process CMP_test_removalrate_191'. Could you find the output parameter for me? What info exists on its numeric value?",
+    "question": "I'd like to know more about 'CMP Process CMP_test_removalrate_146'. Then, tell me more about its output parameter. For that entry, could you please identify its numeric value?",
     "trace": [
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_CMP_test_removalrate_191",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_CMP_test_removalrate_146",
         "predicate": "https://tucid/cpmo/hasOutputParameter",
-        "object": "https://tucid/cpmo/instance/WaferMaterialRemovalRate_CMP_test_removalrate_191_AVG_REMOVAL_RATE",
+        "object": "https://tucid/cpmo/instance/WaferMaterialRemovalRate_CMP_test_removalrate_146_AVG_REMOVAL_RATE",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/WaferMaterialRemovalRate_CMP_test_removalrate_191_AVG_REMOVAL_RATE",
+        "subject": "https://tucid/cpmo/instance/WaferMaterialRemovalRate_CMP_test_removalrate_146_AVG_REMOVAL_RATE",
         "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "81.61995",
+        "object": "71.688",
         "required": true,
         "is_answer": true
       }
@@ -4473,7 +1261,7 @@
     "hop_scope": "one"
   },
   {
-    "question": "I'm curious about 'CMP Process 2_678'. what is its uses cleaning recipe?",
+    "question": "Can you find some information about 'Wafer 1478254090'? What info exists on its unit?",
     "trace": [],
     "qtype": "impossible",
     "hop_bridge_predicate_uri": null,
@@ -4481,7 +1269,7 @@
     "hop_scope": null
   },
   {
-    "question": "I'd like to know more about 'CMP Process 2_27'. Regarding that, where it was located?",
+    "question": "Can you find some information about 'CMP Process CMP_test_removalrate_319'? What info exists on its lifetime?",
     "trace": [],
     "qtype": "impossible",
     "hop_bridge_predicate_uri": null,
@@ -4489,7 +1277,7 @@
     "hop_scope": null
   },
   {
-    "question": "What can you tell me about 'CMP Process CMP_test_removalrate_348'? could you please identify its role?",
+    "question": "I'd like to know more about 'Wafer _1720100456'. what is its polishing pad?",
     "trace": [],
     "qtype": "impossible",
     "hop_bridge_predicate_uri": null,
@@ -4497,215 +1285,7 @@
     "hop_scope": null
   },
   {
-    "question": "I'd like to know more about 'Wafer 1318253810'. What info exists on its machine data?",
-    "trace": [],
-    "qtype": "impossible",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'd like to know more about 'CMP Process CMP_test_removalrate_145'. What info exists on its velocity?",
-    "trace": [],
-    "qtype": "impossible",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'd like to know more about 'CMP Process CMP_test_removalrate_64'. could you please identify its temperature?",
-    "trace": [],
-    "qtype": "impossible",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm curious about 'CMP Process CMP_test_removalrate_342'. what is its uses cleaning recipe?",
-    "trace": [],
-    "qtype": "impossible",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "What can you tell me about 'CMP Process 2_750'? what is its velocity?",
-    "trace": [],
-    "qtype": "impossible",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'd like to know more about 'CMP Process 2_785'. What info exists on its part?",
-    "trace": [],
-    "qtype": "impossible",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "What can you tell me about 'Wafer _1183530600'? What info exists on its cmp tool component?",
-    "trace": [],
-    "qtype": "impossible",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'd like to know more about 'CMP Process 2_17'. could you please identify its function?",
-    "trace": [],
-    "qtype": "impossible",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm curious about 'Wafer _1183530650'. what is its cmp tool component?",
-    "trace": [],
-    "qtype": "impossible",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "What can you tell me about 'CMP Process 2_648'? could you please identify its transports slurry?",
-    "trace": [],
-    "qtype": "impossible",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "What can you tell me about 'Wafer _4220160674'? what is its lifetime?",
-    "trace": [],
-    "qtype": "impossible",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "Can you find some information about 'CMP Process 2_359'? what is its documents?",
-    "trace": [],
-    "qtype": "impossible",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'd like to know more about 'CMP Process 2_233'. what is its temperature?",
-    "trace": [],
-    "qtype": "impossible",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'd like to know more about 'CMP Process 2_1107'. could you please identify its polishing pad?",
-    "trace": [],
-    "qtype": "impossible",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "What can you tell me about 'Wafer 3623681094'? What info exists on its thickness value?",
-    "trace": [],
-    "qtype": "impossible",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "Can you find some information about 'Wafer 343446952'? Regarding that, where it was acts?",
-    "trace": [],
-    "qtype": "impossible",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "Can you find some information about 'Wafer Material'? What info exists on its role?",
-    "trace": [],
-    "qtype": "impossible",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "What can you tell me about 'CMP Process 2_282'? could you please identify its layout?",
-    "trace": [],
-    "qtype": "impossible",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "Can you find some information about 'CMP Process CMP_test_removalrate_256'? could you please identify its uses control wafer?",
-    "trace": [],
-    "qtype": "impossible",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "Can you find some information about 'CMP Process CMP_test_removalrate_258'? What info exists on its uses cleaning recipe?",
-    "trace": [],
-    "qtype": "impossible",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'd like to know more about 'CMP Process CMP_test_removalrate_255'. what is its lifetime?",
-    "trace": [],
-    "qtype": "impossible",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm curious about 'CMP Process 2_949'. could you please identify its lifetime?",
-    "trace": [],
-    "qtype": "impossible",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'd like to know more about 'Wafer 1330253600'. What info exists on its velocity?",
-    "trace": [],
-    "qtype": "impossible",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "Can you find some information about 'CMP Process CMP_test_removalrate_328'? what is its role?",
-    "trace": [],
-    "qtype": "impossible",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'd like to know more about 'Wafer 2985014384'. could you please identify its conditioner pad?",
-    "trace": [],
-    "qtype": "impossible",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'd like to know more about 'Wafer _4035511804'. What info exists on its charge number?",
-    "trace": [],
-    "qtype": "impossible",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'd like to know more about 'CMP Process CMP_test_removalrate_164'. What info exists on its diameter value?",
+    "question": "I'd like to know more about 'CMP Process CMP_test_removalrate_300'. what is its diameter value?",
     "trace": [],
     "qtype": "impossible",
     "hop_bridge_predicate_uri": null,

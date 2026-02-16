@@ -166,7 +166,7 @@ def gen_random_facts(min_facts: int = 1, max_facts: int = 3):
 
         candidates_by_entity: list[list[PropertyNode]] = []
         for ent in entities:
-            all_props = s.get_entity_data_properties(ent.uri)
+            all_props = s.get_entity_properties(ent.uri)
             candidates = [p for p in all_props if p.uri not in ent.seen_properties]
             if not candidates:
                 # continue
@@ -434,7 +434,7 @@ def qb_filter_generator(prob_deep: Optional[float] = None):
                 if not candidate_p1.values: continue
                 target_uri = random.choice(candidate_p1.values)
                 target_uri_selected = target_uri
-                target_props = s.get_entity_data_properties(target_uri)
+                target_props = s.get_entity_properties(target_uri)
                 
                 # Check for unique second hop
                 for candidate_p2 in target_props:
@@ -503,7 +503,7 @@ def qb_projection_generator():
         
         s = get_sampler()
         # Randomly select a data property of the root type to project
-        all_props = s.get_entity_data_properties(qb.anchor_entity.uri)
+        all_props = s.get_entity_properties(qb.anchor_entity.uri)
         if not all_props: 
             raise RetrySignal(f"Anchor {qb.anchor_entity.label} has no data properties to project")
         
