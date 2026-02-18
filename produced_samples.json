@@ -1,19 +1,20 @@
 [
   {
-    "question": "I'm looking into the available information for cmp processes. Find all cmp processes where the acts on is 'https://tucid/cpmo/instance/Wafer__4222160424'. Then show me their has output parameter.",
+    "question": "Which CMP processes where the input parameter is 'https://tucid/cpmo/instance/Conditioning_2_596_USAGE_OF_DRESSER', and what is their machine data and machine IDs?",
     "trace": [
       {
         "tool": "query_builder",
         "type": "https://tucid/cpmo/CMPProcess",
         "filters": [
           {
-            "path": "https://tucid/cpmo/actsOn",
+            "path": "https://tucid/cpmo/hasInputParameter",
             "operator": "=",
-            "value": "https://tucid/cpmo/instance/Wafer__4222160424"
+            "value": "https://tucid/cpmo/instance/Conditioning_2_596_USAGE_OF_DRESSER"
           }
         ],
         "project": [
-          "https://tucid/cpmo/hasOutputParameter"
+          "https://tucid/cpmo/hasMachineData",
+          "https://tucid/cpmo/machineID"
         ],
         "required": true,
         "is_answer": true
@@ -25,21 +26,26 @@
     "hop_scope": null
   },
   {
-    "question": "I'm looking into the available information for cmp processes. Find all cmp processes where the input parameter's numeric value is '34.8837209302'. Then show me their has machine data, has timestamp, acts on.",
+    "question": "Which CMP processes where the CMP tool component is 'https://tucid/cpmo/instance/Chamber_4_0' and where the input parameter is 'https://tucid/cpmo/instance/SlurryFlow_2_712_SLURRY_FLOW_LINE_C', and what are their input parameters, machine IDs and entities they act on?",
     "trace": [
       {
         "tool": "query_builder",
         "type": "https://tucid/cpmo/CMPProcess",
         "filters": [
           {
-            "path": "https://tucid/cpmo/hasInputParameter -> https://tucid/cpmo/hasNumericValue",
+            "path": "https://tucid/cpmo/hasCMPToolComponent",
             "operator": "=",
-            "value": "34.8837209302"
+            "value": "https://tucid/cpmo/instance/Chamber_4_0"
+          },
+          {
+            "path": "https://tucid/cpmo/hasInputParameter",
+            "operator": "=",
+            "value": "https://tucid/cpmo/instance/SlurryFlow_2_712_SLURRY_FLOW_LINE_C"
           }
         ],
         "project": [
-          "https://tucid/cpmo/hasMachineData",
-          "https://tucid/cpmo/hasTimestamp",
+          "https://tucid/cpmo/hasInputParameter",
+          "https://tucid/cpmo/machineID",
           "https://tucid/cpmo/actsOn"
         ],
         "required": true,
@@ -52,25 +58,25 @@
     "hop_scope": null
   },
   {
-    "question": "I am currently checking the database for cmp process records and have a task for you. Find all cmp processes where the input parameter's numeric value is '0.0' and where the timestamp is '1985-04-06 14:22:17.333000'. Then show me their has cmp tool component.",
+    "question": "Which CMP processes where the input parameter is 'https://tucid/cpmo/instance/HeadSpeed_2_1278_HEAD_ROTATION' and whose machine ID contains '2', and what are their machine IDs?",
     "trace": [
       {
         "tool": "query_builder",
         "type": "https://tucid/cpmo/CMPProcess",
         "filters": [
           {
-            "path": "https://tucid/cpmo/hasInputParameter -> https://tucid/cpmo/hasNumericValue",
+            "path": "https://tucid/cpmo/hasInputParameter",
             "operator": "=",
-            "value": "0.0"
+            "value": "https://tucid/cpmo/instance/HeadSpeed_2_1278_HEAD_ROTATION"
           },
           {
-            "path": "https://tucid/cpmo/hasTimestamp",
-            "operator": "=",
-            "value": "1985-04-06 14:22:17.333000"
+            "path": "https://tucid/cpmo/machineID",
+            "operator": "contains",
+            "value": "2"
           }
         ],
         "project": [
-          "https://tucid/cpmo/hasCMPToolComponent"
+          "https://tucid/cpmo/machineID"
         ],
         "required": true,
         "is_answer": true
@@ -82,16 +88,21 @@
     "hop_scope": null
   },
   {
-    "question": "I'm curious about the cmp process entries. Find all cmp processes where the output parameter is 'https://tucid/cpmo/instance/WaferMaterialRemovalRate_CMP_test_removalrate_32_AVG_REMOVAL_RATE'. Then show me their has output parameter.",
+    "question": "Which CMP processes act on the entity 'https://tucid/cpmo/instance/Wafer_1838206778' and where the output parameter is 'https://tucid/cpmo/instance/WaferMaterialRemovalRate_CMP_test_removalrate_181_AVG_REMOVAL_RATE', and what are their output parameters?",
     "trace": [
       {
         "tool": "query_builder",
         "type": "https://tucid/cpmo/CMPProcess",
         "filters": [
           {
+            "path": "https://tucid/cpmo/actsOn",
+            "operator": "=",
+            "value": "https://tucid/cpmo/instance/Wafer_1838206778"
+          },
+          {
             "path": "https://tucid/cpmo/hasOutputParameter",
             "operator": "=",
-            "value": "https://tucid/cpmo/instance/WaferMaterialRemovalRate_CMP_test_removalrate_32_AVG_REMOVAL_RATE"
+            "value": "https://tucid/cpmo/instance/WaferMaterialRemovalRate_CMP_test_removalrate_181_AVG_REMOVAL_RATE"
           }
         ],
         "project": [
@@ -107,17 +118,37 @@
     "hop_scope": null
   },
   {
-    "question": "I'm curious about the cmp process entries. Find all cmp processes where the input parameter's numeric value is '0.0' and whose machine id contains '2'. Then show me their has cmp tool component, acts on.",
+    "question": "Which CMP processes where the output parameter's numeric value is '76.9257', and what are their output parameters?",
     "trace": [
       {
         "tool": "query_builder",
         "type": "https://tucid/cpmo/CMPProcess",
         "filters": [
           {
-            "path": "https://tucid/cpmo/hasInputParameter -> https://tucid/cpmo/hasNumericValue",
+            "path": "https://tucid/cpmo/hasOutputParameter -> https://tucid/cpmo/hasNumericValue",
             "operator": "=",
-            "value": "0.0"
-          },
+            "value": "76.9257"
+          }
+        ],
+        "project": [
+          "https://tucid/cpmo/hasOutputParameter"
+        ],
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "query_builder",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "Which CMP processes whose machine ID contains '2', and what are their CMP tool components and entities they act on?",
+    "trace": [
+      {
+        "tool": "query_builder",
+        "type": "https://tucid/cpmo/CMPProcess",
+        "filters": [
           {
             "path": "https://tucid/cpmo/machineID",
             "operator": "contains",
@@ -138,63 +169,13 @@
     "hop_scope": null
   },
   {
-    "question": "I'm curious about the cmp process entries. Find all cmp processes where the timestamp is '1985-04-06 19:33:13.333000'. Then show me their has timestamp.",
-    "trace": [
-      {
-        "tool": "query_builder",
-        "type": "https://tucid/cpmo/CMPProcess",
-        "filters": [
-          {
-            "path": "https://tucid/cpmo/hasTimestamp",
-            "operator": "=",
-            "value": "1985-04-06 19:33:13.333000"
-          }
-        ],
-        "project": [
-          "https://tucid/cpmo/hasTimestamp"
-        ],
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "query_builder",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "I'm curious about 'CMP Process 2_215'. could you please identify its machine id?",
+    "question": "I'm curious about 'CMP Process 2_545'. What is its timestamp?",
     "trace": [
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_215",
-        "predicate": "https://tucid/cpmo/machineID",
-        "object": "2",
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "direct",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "Can you find some information about 'CMP Process 2_28'? please find its timestamp and its machine data.",
-    "trace": [
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_28",
-        "predicate": "https://tucid/cpmo/hasMachineData",
-        "object": "1",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_28",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_545",
         "predicate": "https://tucid/cpmo/hasTimestamp",
-        "object": "1985-04-06T14:40:56.667000",
+        "object": "1985-04-06T14:24:53.333000",
         "required": true,
         "is_answer": true
       }
@@ -205,38 +186,13 @@
     "hop_scope": null
   },
   {
-    "question": "What can you tell me about 'CMP Process 2_863'? what is its cmp tool component?",
+    "question": "Can you find some information about 'CMP Process 2_274'? What is its machine data?",
     "trace": [
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_863",
-        "predicate": "https://tucid/cpmo/hasCMPToolComponent",
-        "object": "https://tucid/cpmo/instance/Chamber_5_0",
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "direct",
-    "hop_bridge_predicate_uri": null,
-    "hop_target_count": null,
-    "hop_scope": null
-  },
-  {
-    "question": "What can you tell me about 'CMP Process 2_735'? Can you provide details on its timestamp and its machine data?",
-    "trace": [
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_735",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_274",
         "predicate": "https://tucid/cpmo/hasMachineData",
-        "object": "4",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_735",
-        "predicate": "https://tucid/cpmo/hasTimestamp",
-        "object": "1985-04-06T16:18:59.667000",
+        "object": "3",
         "required": true,
         "is_answer": true
       }
@@ -247,21 +203,13 @@
     "hop_scope": null
   },
   {
-    "question": "What can you tell me about 'CMP Process 2_657'? please find its cmp tool component and its machine id.",
+    "question": "I'd like to know more about 'CMP Process 2_1110'. What is the entity it acts on?",
     "trace": [
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_657",
-        "predicate": "https://tucid/cpmo/machineID",
-        "object": "2",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_657",
-        "predicate": "https://tucid/cpmo/hasCMPToolComponent",
-        "object": "https://tucid/cpmo/instance/Chamber_4_0",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1110",
+        "predicate": "https://tucid/cpmo/actsOn",
+        "object": "https://tucid/cpmo/instance/Wafer__4224160678",
         "required": true,
         "is_answer": true
       }
@@ -272,612 +220,213 @@
     "hop_scope": null
   },
   {
-    "question": "What can you tell me about 'CMP Process 2_203'? Now, please look into all its input parameter. Following that pad lifetime, what is its numeric value?",
+    "question": "What can you tell me about 'CMP Process CMP_test_removalrate_157'? Can you provide details on the entity it acts on and its output parameter?",
     "trace": [
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_203",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/HeadSpeed_2_203_HEAD_ROTATION",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_CMP_test_removalrate_157",
+        "predicate": "https://tucid/cpmo/hasOutputParameter",
+        "object": "https://tucid/cpmo/instance/WaferMaterialRemovalRate_CMP_test_removalrate_157_AVG_REMOVAL_RATE",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_203",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Pressure_2_203_CENTER_AIR_BAG_PRESSURE",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_203",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/RetainingRingPressure_2_203_RETAINER_RING_PRESSURE",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_203",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Conditioning_2_203_USAGE_OF_DRESSER",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_203",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/PlatenSpeed_2_203_STAGE_ROTATION",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_203",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Parameter_2_203_USAGE_OF_BACKING_FILM",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_203",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Conditioning_2_203_DRESSING_WATER_STATUS",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_203",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Pressure_2_203_EDGE_AIR_BAG_PRESSURE",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_203",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Parameter_2_203_USAGE_OF_PRESSURIZED_SHEET",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_203",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/PadLifetime_2_203_USAGE_OF_POLISHING_TABLE",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_203",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Velocity_2_203_WAFER_ROTATION",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_203",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Pressure_2_203_PRESSURIZED_CHAMBER_PRESSURE",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_203",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/SlurryFlow_2_203_SLURRY_FLOW_LINE_B",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_203",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Pressure_2_203_RIPPLE_AIR_BAG_PRESSURE",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_203",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/SlurryFlow_2_203_SLURRY_FLOW_LINE_C",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_203",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Parameter_2_203_USAGE_OF_MEMBRANE",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_203",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Pressure_2_203_MAIN_OUTER_AIR_BAG_PRESSURE",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_203",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/SlurryFlow_2_203_SLURRY_FLOW_LINE_A",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_203",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/PadLifetime_2_203_USAGE_OF_DRESSER_TABLE",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/HeadSpeed_2_203_HEAD_ROTATION",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "160.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Pressure_2_203_CENTER_AIR_BAG_PRESSURE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "0.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/RetainingRingPressure_2_203_RETAINER_RING_PRESSURE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "0.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Conditioning_2_203_USAGE_OF_DRESSER",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "536.296296296",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/PlatenSpeed_2_203_STAGE_ROTATION",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "0.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Parameter_2_203_USAGE_OF_BACKING_FILM",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "9356.66666667",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Conditioning_2_203_DRESSING_WATER_STATUS",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "0.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Pressure_2_203_EDGE_AIR_BAG_PRESSURE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "0.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Parameter_2_203_USAGE_OF_PRESSURIZED_SHEET",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "2807.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/PadLifetime_2_203_USAGE_OF_POLISHING_TABLE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "341.481481481",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Velocity_2_203_WAFER_ROTATION",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "0.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Pressure_2_203_PRESSURIZED_CHAMBER_PRESSURE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "0.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/SlurryFlow_2_203_SLURRY_FLOW_LINE_B",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "0.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Pressure_2_203_RIPPLE_AIR_BAG_PRESSURE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "0.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/SlurryFlow_2_203_SLURRY_FLOW_LINE_C",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "0.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Parameter_2_203_USAGE_OF_MEMBRANE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "110.948616601",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Pressure_2_203_MAIN_OUTER_AIR_BAG_PRESSURE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "0.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/SlurryFlow_2_203_SLURRY_FLOW_LINE_A",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "0.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/PadLifetime_2_203_USAGE_OF_DRESSER_TABLE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "2667.75",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_CMP_test_removalrate_157",
+        "predicate": "https://tucid/cpmo/actsOn",
+        "object": "https://tucid/cpmo/instance/Wafer_4167773550",
         "required": true,
         "is_answer": true
       }
     ],
-    "qtype": "hop",
-    "hop_bridge_predicate_uri": "https://tucid/cpmo/hasInputParameter",
-    "hop_target_count": 19,
-    "hop_scope": "all"
+    "qtype": "direct",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
   },
   {
-    "question": "I'd like to know more about 'CMP Process 2_490'. Could you give me all its input parameter? Regarding that pad lifetime, what is its numeric value?",
+    "question": "I'm curious about 'CMP Process 2_629'. What is its input parameter?",
     "trace": [
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_490",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_629",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Pressure_2_490_EDGE_AIR_BAG_PRESSURE",
+        "object": "https://tucid/cpmo/instance/PadLifetime_2_629_USAGE_OF_DRESSER_TABLE",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "direct",
+    "hop_bridge_predicate_uri": null,
+    "hop_target_count": null,
+    "hop_scope": null
+  },
+  {
+    "question": "I'm curious about 'CMP Process 2_728'. Then, tell me more about all its input parameter. Conditioning, provide its numeric value.",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_728",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/Parameter_2_728_USAGE_OF_BACKING_FILM",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_490",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_728",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Velocity_2_490_WAFER_ROTATION",
+        "object": "https://tucid/cpmo/instance/Pressure_2_728_RIPPLE_AIR_BAG_PRESSURE",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_490",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_728",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/SlurryFlow_2_490_SLURRY_FLOW_LINE_B",
+        "object": "https://tucid/cpmo/instance/Pressure_2_728_MAIN_OUTER_AIR_BAG_PRESSURE",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_490",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_728",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/PlatenSpeed_2_490_STAGE_ROTATION",
+        "object": "https://tucid/cpmo/instance/Parameter_2_728_USAGE_OF_PRESSURIZED_SHEET",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_490",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_728",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Parameter_2_490_USAGE_OF_MEMBRANE",
+        "object": "https://tucid/cpmo/instance/SlurryFlow_2_728_SLURRY_FLOW_LINE_B",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_490",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_728",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/HeadSpeed_2_490_HEAD_ROTATION",
+        "object": "https://tucid/cpmo/instance/Parameter_2_728_USAGE_OF_MEMBRANE",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_490",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_728",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Parameter_2_490_USAGE_OF_PRESSURIZED_SHEET",
+        "object": "https://tucid/cpmo/instance/SlurryFlow_2_728_SLURRY_FLOW_LINE_A",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_490",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_728",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/PadLifetime_2_490_USAGE_OF_DRESSER_TABLE",
+        "object": "https://tucid/cpmo/instance/Pressure_2_728_CENTER_AIR_BAG_PRESSURE",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_490",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_728",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Conditioning_2_490_DRESSING_WATER_STATUS",
+        "object": "https://tucid/cpmo/instance/Conditioning_2_728_DRESSING_WATER_STATUS",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_490",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_728",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Conditioning_2_490_USAGE_OF_DRESSER",
+        "object": "https://tucid/cpmo/instance/Pressure_2_728_PRESSURIZED_CHAMBER_PRESSURE",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_490",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_728",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Parameter_2_490_USAGE_OF_BACKING_FILM",
+        "object": "https://tucid/cpmo/instance/Velocity_2_728_WAFER_ROTATION",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_490",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_728",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/RetainingRingPressure_2_490_RETAINER_RING_PRESSURE",
+        "object": "https://tucid/cpmo/instance/RetainingRingPressure_2_728_RETAINER_RING_PRESSURE",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_490",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_728",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/SlurryFlow_2_490_SLURRY_FLOW_LINE_A",
+        "object": "https://tucid/cpmo/instance/PadLifetime_2_728_USAGE_OF_POLISHING_TABLE",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_490",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_728",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Pressure_2_490_CENTER_AIR_BAG_PRESSURE",
+        "object": "https://tucid/cpmo/instance/PadLifetime_2_728_USAGE_OF_DRESSER_TABLE",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_490",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_728",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/SlurryFlow_2_490_SLURRY_FLOW_LINE_C",
+        "object": "https://tucid/cpmo/instance/HeadSpeed_2_728_HEAD_ROTATION",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_490",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_728",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Pressure_2_490_PRESSURIZED_CHAMBER_PRESSURE",
+        "object": "https://tucid/cpmo/instance/SlurryFlow_2_728_SLURRY_FLOW_LINE_C",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_490",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_728",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Pressure_2_490_MAIN_OUTER_AIR_BAG_PRESSURE",
+        "object": "https://tucid/cpmo/instance/PlatenSpeed_2_728_STAGE_ROTATION",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_490",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_728",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Pressure_2_490_RIPPLE_AIR_BAG_PRESSURE",
+        "object": "https://tucid/cpmo/instance/Pressure_2_728_EDGE_AIR_BAG_PRESSURE",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_490",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_728",
         "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/PadLifetime_2_490_USAGE_OF_POLISHING_TABLE",
+        "object": "https://tucid/cpmo/instance/Conditioning_2_728_USAGE_OF_DRESSER",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Pressure_2_490_EDGE_AIR_BAG_PRESSURE",
+        "subject": "https://tucid/cpmo/instance/Parameter_2_728_USAGE_OF_BACKING_FILM",
         "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "44.2424242424",
+        "object": "9422.5",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Velocity_2_490_WAFER_ROTATION",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "34.8837209302",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/SlurryFlow_2_490_SLURRY_FLOW_LINE_B",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "0.909090909091",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/PlatenSpeed_2_490_STAGE_ROTATION",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "0.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Parameter_2_490_USAGE_OF_MEMBRANE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "110.671936759",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/HeadSpeed_2_490_HEAD_ROTATION",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "160.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Parameter_2_490_USAGE_OF_PRESSURIZED_SHEET",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "2800.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/PadLifetime_2_490_USAGE_OF_DRESSER_TABLE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "2667.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Conditioning_2_490_DRESSING_WATER_STATUS",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "0.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Conditioning_2_490_USAGE_OF_DRESSER",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "535.185185185",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Parameter_2_490_USAGE_OF_BACKING_FILM",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "9333.33333333",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/RetainingRingPressure_2_490_RETAINER_RING_PRESSURE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "1458.6",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/SlurryFlow_2_490_SLURRY_FLOW_LINE_A",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "2.22222222222",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Pressure_2_490_CENTER_AIR_BAG_PRESSURE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "65.9375",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/SlurryFlow_2_490_SLURRY_FLOW_LINE_C",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "428.4",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Pressure_2_490_PRESSURIZED_CHAMBER_PRESSURE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "73.8095238095",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Pressure_2_490_MAIN_OUTER_AIR_BAG_PRESSURE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "256.8",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Pressure_2_490_RIPPLE_AIR_BAG_PRESSURE",
+        "subject": "https://tucid/cpmo/instance/Pressure_2_728_RIPPLE_AIR_BAG_PRESSURE",
         "predicate": "https://tucid/cpmo/hasNumericValue",
         "object": "10.0",
         "required": true,
@@ -885,264 +434,23 @@
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/PadLifetime_2_490_USAGE_OF_POLISHING_TABLE",
+        "subject": "https://tucid/cpmo/instance/Pressure_2_728_MAIN_OUTER_AIR_BAG_PRESSURE",
         "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "320.740740741",
-        "required": true,
-        "is_answer": true
-      }
-    ],
-    "qtype": "hop",
-    "hop_bridge_predicate_uri": "https://tucid/cpmo/hasInputParameter",
-    "hop_target_count": 19,
-    "hop_scope": "all"
-  },
-  {
-    "question": "Can you find some information about 'CMP Process 2_1211'? Then, tell me more about all its input parameter. For that entry, could you please identify its numeric value?",
-    "trace": [
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1211",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/SlurryFlow_2_1211_SLURRY_FLOW_LINE_C",
+        "object": "256.8",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1211",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/RetainingRingPressure_2_1211_RETAINER_RING_PRESSURE",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1211",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Parameter_2_1211_USAGE_OF_PRESSURIZED_SHEET",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1211",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/PlatenSpeed_2_1211_STAGE_ROTATION",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1211",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/HeadSpeed_2_1211_HEAD_ROTATION",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1211",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/SlurryFlow_2_1211_SLURRY_FLOW_LINE_A",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1211",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Parameter_2_1211_USAGE_OF_MEMBRANE",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1211",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Pressure_2_1211_EDGE_AIR_BAG_PRESSURE",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1211",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Pressure_2_1211_RIPPLE_AIR_BAG_PRESSURE",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1211",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Velocity_2_1211_WAFER_ROTATION",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1211",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Parameter_2_1211_USAGE_OF_BACKING_FILM",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1211",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/SlurryFlow_2_1211_SLURRY_FLOW_LINE_B",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1211",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Pressure_2_1211_MAIN_OUTER_AIR_BAG_PRESSURE",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1211",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Pressure_2_1211_CENTER_AIR_BAG_PRESSURE",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1211",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/PadLifetime_2_1211_USAGE_OF_POLISHING_TABLE",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1211",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/PadLifetime_2_1211_USAGE_OF_DRESSER_TABLE",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1211",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Pressure_2_1211_PRESSURIZED_CHAMBER_PRESSURE",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1211",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Conditioning_2_1211_USAGE_OF_DRESSER",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1211",
-        "predicate": "https://tucid/cpmo/hasInputParameter",
-        "object": "https://tucid/cpmo/instance/Conditioning_2_1211_DRESSING_WATER_STATUS",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/SlurryFlow_2_1211_SLURRY_FLOW_LINE_C",
+        "subject": "https://tucid/cpmo/instance/Parameter_2_728_USAGE_OF_PRESSURIZED_SHEET",
         "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "439.6",
+        "object": "2826.75",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/RetainingRingPressure_2_1211_RETAINER_RING_PRESSURE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "1450.8",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Parameter_2_1211_USAGE_OF_PRESSURIZED_SHEET",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "2858.5",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/PlatenSpeed_2_1211_STAGE_ROTATION",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "0.0",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/HeadSpeed_2_1211_HEAD_ROTATION",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "156.8",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/SlurryFlow_2_1211_SLURRY_FLOW_LINE_A",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "2.22222222222",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Parameter_2_1211_USAGE_OF_MEMBRANE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "112.984189723",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Pressure_2_1211_EDGE_AIR_BAG_PRESSURE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "48.7878787879",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Pressure_2_1211_RIPPLE_AIR_BAG_PRESSURE",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "9.5",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Velocity_2_1211_WAFER_ROTATION",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "34.6511627907",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Parameter_2_1211_USAGE_OF_BACKING_FILM",
-        "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "9528.33333333",
-        "required": true,
-        "is_answer": true
-      },
-      {
-        "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/SlurryFlow_2_1211_SLURRY_FLOW_LINE_B",
+        "subject": "https://tucid/cpmo/instance/SlurryFlow_2_728_SLURRY_FLOW_LINE_B",
         "predicate": "https://tucid/cpmo/hasNumericValue",
         "object": "0.909090909091",
         "required": true,
@@ -1150,57 +458,113 @@
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Pressure_2_1211_MAIN_OUTER_AIR_BAG_PRESSURE",
+        "subject": "https://tucid/cpmo/instance/Parameter_2_728_USAGE_OF_MEMBRANE",
         "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "270.0",
+        "object": "111.729249012",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Pressure_2_1211_CENTER_AIR_BAG_PRESSURE",
+        "subject": "https://tucid/cpmo/instance/SlurryFlow_2_728_SLURRY_FLOW_LINE_A",
         "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "69.0625",
+        "object": "2.22222222222",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/PadLifetime_2_1211_USAGE_OF_POLISHING_TABLE",
+        "subject": "https://tucid/cpmo/instance/Pressure_2_728_CENTER_AIR_BAG_PRESSURE",
         "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "80.7407407407",
+        "object": "65.9375",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/PadLifetime_2_1211_USAGE_OF_DRESSER_TABLE",
+        "subject": "https://tucid/cpmo/instance/Conditioning_2_728_DRESSING_WATER_STATUS",
         "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "2675.5",
+        "object": "0.0",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Pressure_2_1211_PRESSURIZED_CHAMBER_PRESSURE",
+        "subject": "https://tucid/cpmo/instance/Pressure_2_728_PRESSURIZED_CHAMBER_PRESSURE",
         "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "76.6666666667",
+        "object": "73.8095238095",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Conditioning_2_1211_USAGE_OF_DRESSER",
+        "subject": "https://tucid/cpmo/instance/Velocity_2_728_WAFER_ROTATION",
         "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "547.777777778",
+        "object": "0.0",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/Conditioning_2_1211_DRESSING_WATER_STATUS",
+        "subject": "https://tucid/cpmo/instance/RetainingRingPressure_2_728_RETAINER_RING_PRESSURE",
         "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "1.0",
+        "object": "1454.7",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/PadLifetime_2_728_USAGE_OF_POLISHING_TABLE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "58.5185185185",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/PadLifetime_2_728_USAGE_OF_DRESSER_TABLE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "2671.0",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/HeadSpeed_2_728_HEAD_ROTATION",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "160.0",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/SlurryFlow_2_728_SLURRY_FLOW_LINE_C",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "448.0",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/PlatenSpeed_2_728_STAGE_ROTATION",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "0.0",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Pressure_2_728_EDGE_AIR_BAG_PRESSURE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "43.9393939394",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Conditioning_2_728_USAGE_OF_DRESSER",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "541.111111111",
         "required": true,
         "is_answer": true
       }
@@ -1211,21 +575,647 @@
     "hop_scope": "all"
   },
   {
-    "question": "I'm curious about 'CMP Process CMP_test_removalrate_155'. Now, please look into its output parameter. For that entry, what is its numeric value?",
+    "question": "I'd like to know more about 'CMP Process 2_1020'. I'm also interested in all its input parameter. Pressure, provide its numeric value.",
     "trace": [
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_CMP_test_removalrate_155",
-        "predicate": "https://tucid/cpmo/hasOutputParameter",
-        "object": "https://tucid/cpmo/instance/WaferMaterialRemovalRate_CMP_test_removalrate_155_AVG_REMOVAL_RATE",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1020",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/SlurryFlow_2_1020_SLURRY_FLOW_LINE_C",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/WaferMaterialRemovalRate_CMP_test_removalrate_155_AVG_REMOVAL_RATE",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1020",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/Pressure_2_1020_PRESSURIZED_CHAMBER_PRESSURE",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1020",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/Parameter_2_1020_USAGE_OF_BACKING_FILM",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1020",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/Pressure_2_1020_RIPPLE_AIR_BAG_PRESSURE",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1020",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/HeadSpeed_2_1020_HEAD_ROTATION",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1020",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/Velocity_2_1020_WAFER_ROTATION",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1020",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/PlatenSpeed_2_1020_STAGE_ROTATION",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1020",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/SlurryFlow_2_1020_SLURRY_FLOW_LINE_A",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1020",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/SlurryFlow_2_1020_SLURRY_FLOW_LINE_B",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1020",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/Parameter_2_1020_USAGE_OF_PRESSURIZED_SHEET",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1020",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/Conditioning_2_1020_USAGE_OF_DRESSER",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1020",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/Pressure_2_1020_CENTER_AIR_BAG_PRESSURE",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1020",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/Pressure_2_1020_MAIN_OUTER_AIR_BAG_PRESSURE",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1020",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/Conditioning_2_1020_DRESSING_WATER_STATUS",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1020",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/PadLifetime_2_1020_USAGE_OF_DRESSER_TABLE",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1020",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/PadLifetime_2_1020_USAGE_OF_POLISHING_TABLE",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1020",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/RetainingRingPressure_2_1020_RETAINER_RING_PRESSURE",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1020",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/Parameter_2_1020_USAGE_OF_MEMBRANE",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_1020",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/Pressure_2_1020_EDGE_AIR_BAG_PRESSURE",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/SlurryFlow_2_1020_SLURRY_FLOW_LINE_C",
         "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "81.8343",
+        "object": "436.8",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Pressure_2_1020_PRESSURIZED_CHAMBER_PRESSURE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "74.2857142857",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Parameter_2_1020_USAGE_OF_BACKING_FILM",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "9521.66666667",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Pressure_2_1020_RIPPLE_AIR_BAG_PRESSURE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "10.0",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/HeadSpeed_2_1020_HEAD_ROTATION",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "156.8",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Velocity_2_1020_WAFER_ROTATION",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "34.6511627907",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/PlatenSpeed_2_1020_STAGE_ROTATION",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "0.0",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/SlurryFlow_2_1020_SLURRY_FLOW_LINE_A",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "2.22222222222",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/SlurryFlow_2_1020_SLURRY_FLOW_LINE_B",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "0.909090909091",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Parameter_2_1020_USAGE_OF_PRESSURIZED_SHEET",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "2856.5",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Conditioning_2_1020_USAGE_OF_DRESSER",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "547.777777778",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Pressure_2_1020_CENTER_AIR_BAG_PRESSURE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "65.9375",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Pressure_2_1020_MAIN_OUTER_AIR_BAG_PRESSURE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "258.0",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Conditioning_2_1020_DRESSING_WATER_STATUS",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "0.0",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/PadLifetime_2_1020_USAGE_OF_DRESSER_TABLE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "2675.5",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/PadLifetime_2_1020_USAGE_OF_POLISHING_TABLE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "74.0740740741",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/RetainingRingPressure_2_1020_RETAINER_RING_PRESSURE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "1450.8",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Parameter_2_1020_USAGE_OF_MEMBRANE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "112.90513834",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Pressure_2_1020_EDGE_AIR_BAG_PRESSURE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "43.9393939394",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "hop",
+    "hop_bridge_predicate_uri": "https://tucid/cpmo/hasInputParameter",
+    "hop_target_count": 19,
+    "hop_scope": "all"
+  },
+  {
+    "question": "I'd like to know more about 'CMP Process 2_907'. Now, please look into all its input parameter. Entry, provide its numeric value.",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_907",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/Parameter_2_907_USAGE_OF_PRESSURIZED_SHEET",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_907",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/RetainingRingPressure_2_907_RETAINER_RING_PRESSURE",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_907",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/Parameter_2_907_USAGE_OF_BACKING_FILM",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_907",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/Pressure_2_907_PRESSURIZED_CHAMBER_PRESSURE",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_907",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/PadLifetime_2_907_USAGE_OF_POLISHING_TABLE",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_907",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/Conditioning_2_907_DRESSING_WATER_STATUS",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_907",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/Velocity_2_907_WAFER_ROTATION",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_907",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/HeadSpeed_2_907_HEAD_ROTATION",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_907",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/SlurryFlow_2_907_SLURRY_FLOW_LINE_B",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_907",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/PadLifetime_2_907_USAGE_OF_DRESSER_TABLE",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_907",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/Parameter_2_907_USAGE_OF_MEMBRANE",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_907",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/SlurryFlow_2_907_SLURRY_FLOW_LINE_A",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_907",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/PlatenSpeed_2_907_STAGE_ROTATION",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_907",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/Pressure_2_907_CENTER_AIR_BAG_PRESSURE",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_907",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/Conditioning_2_907_USAGE_OF_DRESSER",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_907",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/Pressure_2_907_EDGE_AIR_BAG_PRESSURE",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_907",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/Pressure_2_907_RIPPLE_AIR_BAG_PRESSURE",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_907",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/SlurryFlow_2_907_SLURRY_FLOW_LINE_C",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_907",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/Pressure_2_907_MAIN_OUTER_AIR_BAG_PRESSURE",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Parameter_2_907_USAGE_OF_PRESSURIZED_SHEET",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "2828.75",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/RetainingRingPressure_2_907_RETAINER_RING_PRESSURE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "1930.5",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Parameter_2_907_USAGE_OF_BACKING_FILM",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "9429.16666667",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Pressure_2_907_PRESSURIZED_CHAMBER_PRESSURE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "146.19047619",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/PadLifetime_2_907_USAGE_OF_POLISHING_TABLE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "64.4444444444",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Conditioning_2_907_DRESSING_WATER_STATUS",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "0.0",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Velocity_2_907_WAFER_ROTATION",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "0.0",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/HeadSpeed_2_907_HEAD_ROTATION",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "192.0",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/SlurryFlow_2_907_SLURRY_FLOW_LINE_B",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "0.909090909091",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/PadLifetime_2_907_USAGE_OF_DRESSER_TABLE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "2671.25",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Parameter_2_907_USAGE_OF_MEMBRANE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "111.808300395",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/SlurryFlow_2_907_SLURRY_FLOW_LINE_A",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "2.22222222222",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/PlatenSpeed_2_907_STAGE_ROTATION",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "66.0526315789",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Pressure_2_907_CENTER_AIR_BAG_PRESSURE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "109.6875",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Conditioning_2_907_USAGE_OF_DRESSER",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "541.481481481",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Pressure_2_907_EDGE_AIR_BAG_PRESSURE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "69.696969697",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Pressure_2_907_RIPPLE_AIR_BAG_PRESSURE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "17.3181818182",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/SlurryFlow_2_907_SLURRY_FLOW_LINE_C",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "448.0",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Pressure_2_907_MAIN_OUTER_AIR_BAG_PRESSURE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "498.0",
+        "required": true,
+        "is_answer": true
+      }
+    ],
+    "qtype": "hop",
+    "hop_bridge_predicate_uri": "https://tucid/cpmo/hasInputParameter",
+    "hop_target_count": 19,
+    "hop_scope": "all"
+  },
+  {
+    "question": "Can you find some information about 'CMP Process CMP_test_removalrate_113'? I'm also interested in its output parameter. While we are looking at that wafer material removal rate, provide its numeric value.",
+    "trace": [
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_CMP_test_removalrate_113",
+        "predicate": "https://tucid/cpmo/hasOutputParameter",
+        "object": "https://tucid/cpmo/instance/WaferMaterialRemovalRate_CMP_test_removalrate_113_AVG_REMOVAL_RATE",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/WaferMaterialRemovalRate_CMP_test_removalrate_113_AVG_REMOVAL_RATE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "70.7943",
         "required": true,
         "is_answer": true
       }
@@ -1236,32 +1226,320 @@
     "hop_scope": "one"
   },
   {
-    "question": "I'd like to know more about 'CMP Process CMP_test_removalrate_146'. Then, tell me more about its output parameter. For that entry, could you please identify its numeric value?",
+    "question": "I'd like to know more about 'CMP Process 2_35'. Now, please look into all its input parameter. Specifically for that conditioning, provide its numeric value.",
     "trace": [
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/CMPProcess_CMP_test_removalrate_146",
-        "predicate": "https://tucid/cpmo/hasOutputParameter",
-        "object": "https://tucid/cpmo/instance/WaferMaterialRemovalRate_CMP_test_removalrate_146_AVG_REMOVAL_RATE",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_35",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/Parameter_2_35_USAGE_OF_MEMBRANE",
         "required": true,
         "is_answer": true
       },
       {
         "tool": "fact",
-        "subject": "https://tucid/cpmo/instance/WaferMaterialRemovalRate_CMP_test_removalrate_146_AVG_REMOVAL_RATE",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_35",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/Pressure_2_35_PRESSURIZED_CHAMBER_PRESSURE",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_35",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/SlurryFlow_2_35_SLURRY_FLOW_LINE_A",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_35",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/PadLifetime_2_35_USAGE_OF_POLISHING_TABLE",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_35",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/PlatenSpeed_2_35_STAGE_ROTATION",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_35",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/Pressure_2_35_MAIN_OUTER_AIR_BAG_PRESSURE",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_35",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/Pressure_2_35_RIPPLE_AIR_BAG_PRESSURE",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_35",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/PadLifetime_2_35_USAGE_OF_DRESSER_TABLE",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_35",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/Velocity_2_35_WAFER_ROTATION",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_35",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/Pressure_2_35_CENTER_AIR_BAG_PRESSURE",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_35",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/RetainingRingPressure_2_35_RETAINER_RING_PRESSURE",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_35",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/Conditioning_2_35_USAGE_OF_DRESSER",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_35",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/Parameter_2_35_USAGE_OF_BACKING_FILM",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_35",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/Parameter_2_35_USAGE_OF_PRESSURIZED_SHEET",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_35",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/HeadSpeed_2_35_HEAD_ROTATION",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_35",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/SlurryFlow_2_35_SLURRY_FLOW_LINE_B",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_35",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/SlurryFlow_2_35_SLURRY_FLOW_LINE_C",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_35",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/Pressure_2_35_EDGE_AIR_BAG_PRESSURE",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/CMPProcess_2_35",
+        "predicate": "https://tucid/cpmo/hasInputParameter",
+        "object": "https://tucid/cpmo/instance/Conditioning_2_35_DRESSING_WATER_STATUS",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Parameter_2_35_USAGE_OF_MEMBRANE",
         "predicate": "https://tucid/cpmo/hasNumericValue",
-        "object": "71.688",
+        "object": "110.948616601",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Pressure_2_35_PRESSURIZED_CHAMBER_PRESSURE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "0.0",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/SlurryFlow_2_35_SLURRY_FLOW_LINE_A",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "0.0",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/PadLifetime_2_35_USAGE_OF_POLISHING_TABLE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "341.481481481",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/PlatenSpeed_2_35_STAGE_ROTATION",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "0.0",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Pressure_2_35_MAIN_OUTER_AIR_BAG_PRESSURE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "0.0",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Pressure_2_35_RIPPLE_AIR_BAG_PRESSURE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "0.0",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/PadLifetime_2_35_USAGE_OF_DRESSER_TABLE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "2667.75",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Velocity_2_35_WAFER_ROTATION",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "0.0",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Pressure_2_35_CENTER_AIR_BAG_PRESSURE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "0.0",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/RetainingRingPressure_2_35_RETAINER_RING_PRESSURE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "0.0",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Conditioning_2_35_USAGE_OF_DRESSER",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "536.296296296",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Parameter_2_35_USAGE_OF_BACKING_FILM",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "9356.66666667",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Parameter_2_35_USAGE_OF_PRESSURIZED_SHEET",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "2807.0",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/HeadSpeed_2_35_HEAD_ROTATION",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "160.0",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/SlurryFlow_2_35_SLURRY_FLOW_LINE_B",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "0.0",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/SlurryFlow_2_35_SLURRY_FLOW_LINE_C",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "0.0",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Pressure_2_35_EDGE_AIR_BAG_PRESSURE",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "0.0",
+        "required": true,
+        "is_answer": true
+      },
+      {
+        "tool": "fact",
+        "subject": "https://tucid/cpmo/instance/Conditioning_2_35_DRESSING_WATER_STATUS",
+        "predicate": "https://tucid/cpmo/hasNumericValue",
+        "object": "0.0",
         "required": true,
         "is_answer": true
       }
     ],
     "qtype": "hop",
-    "hop_bridge_predicate_uri": "https://tucid/cpmo/hasOutputParameter",
-    "hop_target_count": 1,
-    "hop_scope": "one"
+    "hop_bridge_predicate_uri": "https://tucid/cpmo/hasInputParameter",
+    "hop_target_count": 19,
+    "hop_scope": "all"
   },
   {
-    "question": "Can you find some information about 'Wafer 1478254090'? What info exists on its unit?",
+    "question": "I'm curious about 'CMP Process 2_46'. What info exists on its diameter value?",
     "trace": [],
     "qtype": "impossible",
     "hop_bridge_predicate_uri": null,
@@ -1269,7 +1547,7 @@
     "hop_scope": null
   },
   {
-    "question": "Can you find some information about 'CMP Process CMP_test_removalrate_319'? What info exists on its lifetime?",
+    "question": "Can you find some information about 'CMP Process 2_944'? What is its function?",
     "trace": [],
     "qtype": "impossible",
     "hop_bridge_predicate_uri": null,
@@ -1277,7 +1555,7 @@
     "hop_scope": null
   },
   {
-    "question": "I'd like to know more about 'Wafer _1720100456'. what is its polishing pad?",
+    "question": "I'm curious about 'Wafer 2981014422'. What info exists on its uses consumable?",
     "trace": [],
     "qtype": "impossible",
     "hop_bridge_predicate_uri": null,
@@ -1285,7 +1563,7 @@
     "hop_scope": null
   },
   {
-    "question": "I'd like to know more about 'CMP Process CMP_test_removalrate_300'. what is its diameter value?",
+    "question": "I'm curious about 'CMP Process 2_791'. Could you please identify its influences?",
     "trace": [],
     "qtype": "impossible",
     "hop_bridge_predicate_uri": null,

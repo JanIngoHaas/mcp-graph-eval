@@ -43,12 +43,11 @@ def classify_property(label: str) -> str:
 def pluralize(label: str) -> str:
     """Pluralizes a noun label based on simple English rules."""
     label = label.strip()
-    if not label:
-        return "items"
-    if label.endswith(('s', 'x', 'z', 'ch', 'sh')):
-        return f"{label}es"
-    if label.endswith('y') and not label.endswith(('ay', 'ey', 'iy', 'oy', 'uy')):
-        return f"{label[:-1]}ies"
+    if not label: return "items"
+    l_low = label.lower()
+    if l_low.endswith("data") or l_low == "acts on": return label
+    if label.endswith(('s', 'x', 'z', 'ch', 'sh')): return f"{label}es"
+    if label.endswith('y') and not label.endswith(('ay', 'ey', 'iy', 'oy', 'uy')): return f"{label[:-1]}ies"
     return f"{label}s"
 
 def humanize_label(s: str) -> str:
@@ -156,8 +155,9 @@ def format_property_as_noun_phrase(label: str) -> str:
         verb = p_label.replace(" by", "").strip()
         return f"who {verb}"
         
-    elif p_class == "passive_article":
+    if p_class == "passive_article":
         # "published in" -> "where it was published" (heuristic) or "what it was published in"
+        if p_label.lower() == "acts on": return "the entity it acts on"
         if p_label.endswith((" in", " at", " on")):
              return f"where it was {p_label.rsplit(' ', 1)[0]}"
         return f"what it was {p_label}"
@@ -179,6 +179,13 @@ def get_search_phrases(label: str) -> list[str]:
         f"What can you tell me about '{label}'? "
     ]
 
+def join_words(words: list[str], conjunction: str = "and") -> str:
+    """Joins a list of words with commas and a conjunction."""
+    if not words: return ""
+    if len(words) == 1: return words[0]
+    if len(words) == 2: return f"{words[0]} {conjunction} {words[1]}"
+    return ", ".join(words[:-1]) + f", {conjunction} " + words[-1]
+
 def compose_question(property_labels: list[str], prefix: str, article: str) -> str:
     """Assembles the final natural language question from gathered facts."""
     is_plural = len(property_labels) > 1
@@ -194,37 +201,35 @@ def compose_question(property_labels: list[str], prefix: str, article: str) -> s
         if is_question_phrase:
             formatted_phrases.append((phrase, True))
         else:
-            # It's a noun (e.g., "number of creators", "doi")
+            # It's a noun (e.g., "number of creators")
+            # Minimal fix for its/the duplication
+            if article in ("its", "their") and phrase.lower().startswith("the "):
+                phrase = phrase[4:]
             formatted_phrases.append((f"{article} {phrase}", False))
 
     if not is_plural:
         phrase, is_q = formatted_phrases[0]
         if is_q:
-            # "who authored it" -> "Can you tell me [who authored it]?"
             questions = [
                 f"{prefix}can you tell me {phrase}?",
                 f"{prefix}I'm trying to find out {phrase}.",
                 f"Regarding that, {phrase}?"
             ]
         else:
-            # "its doi" -> "What is [its doi]?"
+            if "numeric value" in phrase.lower():
+                return f"{prefix}provide its numeric value."
+            verb = "are" if (phrase.lower().endswith("s") and not phrase.lower().endswith("ss")) else "is"
             questions = [
-                f"{prefix}what is {phrase}?",
+                f"{prefix}what {verb} {phrase}?",
                 f"{prefix}could you please identify {phrase}?",
                 f"What info exists on {phrase}?"
             ]
     else:
-        # Mixed bag logic.
-        # If all are questions: "Can you tell me X and Y?"
-        # If all are nouns: "What are X and Y?"
-        # If mixed: "Can you tell me X and what is Y?"
-        
-        # We'll just join them and pick a generic "find out" prefix
-        joined_str = " and ".join([p[0] for p in formatted_phrases])
+        joined_str = join_words([p[0] for p in formatted_phrases])
         questions = [
             f"{prefix}I'd like to check {joined_str}.",
             f"Can you provide details on {joined_str}?",
-            f"{prefix}please find {joined_str}."
+            f"Specifically, {prefix}identify {joined_str}."
         ]
     
     return random.choice(questions)
@@ -236,41 +241,66 @@ def compose_qb_question(
     existing_nl: list[str]
 ) -> str:
     """Assembles the complex natural language question for a Query Builder tool call."""
-    def _clean_label(label: str) -> str:
-        human = humanize_label(label)
-        if human.lower().startswith("has "):
-            return human[4:].strip()
-        return human
-
     nl_filters = []
     for f in filters:
-        # Better path humanization for deep filters: "hasProcedureStep.stepOrder" -> "procedure step's step order"
         parts = f["path_display"].split("->")
-        if len(parts) > 1:
-            p_label = f"{_clean_label(parts[0])}'s {_clean_label(parts[1])}"
-        else:
-            p_label = _clean_label(parts[0])
-            
+        p_label = f"{format_property_as_noun_phrase(parts[0])}'s {format_property_as_noun_phrase(parts[1])}" if len(parts) > 1 else format_property_as_noun_phrase(parts[0])
         val = f["value"]
         op = f["operator"]
-        
-        display_val = val
-        
         h_op = humanize_operator(op)
         
-        if op == "contains":
-            nl_filters.append(f"whose {p_label} {h_op} '{display_val}'")
+        if op == "=" and p_label.lower() == "the entity it acts on":
+            nl_filters.append(f"act on the entity '{val}'")
         else:
-            nl_filters.append(f"where the {p_label} {h_op} '{display_val}'")
+            pre = "whose " if op == "contains" else "where the "
+            nl_filters.append(f"{pre}{p_label} {h_op} '{val}'")
             
-    filter_str = " and ".join(nl_filters)
-    proj_str = ", ".join(proj_labels)
+    filter_str = join_words(nl_filters)
+    # Pluralize projection labels except for data
+    c_proj = []
+    for l in proj_labels:
+        ph = format_property_as_noun_phrase(l)
+        if ph.lower() == "the entity it acts on": ph = "the entities they act on"
+        elif not ph.lower().endswith("data"): ph = pluralize(ph)
+        if ph.lower().startswith("the "): ph = ph[4:]
+        c_proj.append(ph)
+    proj_str = join_words(c_proj)
     
-    question = f"find all {root_plural} {filter_str}. Then show me their {proj_str}."
-    
-    # Capitalize surgicaly (only the first character) to avoid lowercasing everything else
-    if not existing_nl or existing_nl[-1].endswith((". ", "? ", "! ")):
-        if question:
-            question = question[0].upper() + question[1:]
-    
-    return question
+    return f"Which {root_plural} {filter_str}, and what are their {proj_str}?"
+
+def clean_question(text: str) -> str:
+    """Surgical cleanup of natural language questions."""
+    if not text: return ""
+    # 1. Norm & Terminologies & Fillers
+    text = re.sub(r'\s+', ' ', text).replace("??", "?").replace("?.", "?").replace("? ,", "?").replace("?,", "?")
+    text = re.sub(r"(?i)\b(cmp|machine id)(s?)\b", lambda m: ("CMP" if m.group(1).lower()=="cmp" else "machine ID") + m.group(2), text)
+    text = re.sub(r"(?i)^(I'm |I am |Checking |Curious |Regarding ).*?(records|data|entries|processes|available).*?(\. |, )", "", text)
+
+    # 2. Phrasing (acts on)
+    text = re.sub(r"\btheir (?:the )?entity it acts on\b", "the entities they act on", text)
+    text = re.sub(r"\bits (?:the )?entity it acts on\b", "the entity it acts on", text)
+    text = re.sub(r"(?<!the )(?<!they )\bentity it acts on\b", "the entity it acts on", text)
+    text = re.sub(r'(?i)\bwhat are (their|its) machine data\b', r'what is \1 machine data', text)
+
+    # 3. Fragments & logic fixes
+    text = re.sub(r', and (.*), and', r', and \1 and', text)
+    text = re.sub(r'(?i)(?:list|check|identify) .*?parameters[.?]\s*(?:(?:Regarding|Specifically|Next|Following|While|And|For|About) (?:that|this|the|those)\b.*?[,: ]\s*)?(?:What are the details|Find details|what is|provide|Identify|Tell me) its numeric value[\?\.]',
+                  "list all its input parameters and provide their numeric values.", text)
+    text = re.sub(r'(?i)(?:identify|find|look at) .*?parameter[.?]\s*(?:(?:Regarding|Specifically|Next|Following|While|And|For|About) (?:that|this|the|those)\b.*?[,: ]\s*)?(?:identify|what is|provide|Tell me) its numeric value[\?\.]', 
+                  "identify its output parameter and provide its numeric value.", text)
+    text = re.sub(r"(?i)^(Identify|What are the details of) '([^']+)'[.?]", r"Provide details for '\2'.", text)
+    text = re.sub(r'[?.]\s*(Regarding|Specifically|Next|Following|While|And|For|About) (?:that|this|the|those)\b.*?[,: ]', '. ', text)
+
+    # 4. Punctuation
+    res = []
+    for s in re.split(r'(?<=[.!?])\s+', text):
+        s = s.strip()
+        if not s: continue
+        low = s.lower()
+        is_q = any(low.startswith(x) for x in ("what", "which", "how", "where", "who", "whom")) or "what is" in low or "what are" in low
+        is_imp = any(low.startswith(x) for x in ("find", "list", "show", "provide", "locate", "identify", "determine"))
+        if s[-1] not in ".?!": s += "?" if is_q else "."
+        elif s[-1] == "?" and is_imp and not is_q: s = s[:-1] + "."
+        elif s[-1] == "." and is_q and not is_imp: s = s[:-1] + "?"
+        res.append(s[0].upper() + s[1:])
+    return " ".join(res)
