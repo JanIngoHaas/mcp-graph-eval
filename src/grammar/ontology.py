@@ -287,8 +287,7 @@ class OntologySampler:
             random.shuffle(hoppable_object_properties)
             for prop in hoppable_object_properties:
                 for val in prop.values:
-                    # Relaxed to >= 1 to ensure compatibility with nodes that only have 1 fact (like Parameter values)
-                    if len(self.get_entity_data_properties(val)) >= 1:
+                    if len(self.get_entity_properties(val)) >= 1:
                         return node
             
 

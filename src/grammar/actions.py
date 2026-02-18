@@ -7,7 +7,7 @@ from src.grammar.language_utils import (
     classify_property, get_hop_phrases,
     format_property_as_noun_phrase, humanize_label,
     get_search_phrases, compose_question, compose_qb_question,
-    pluralize
+    pluralize, _pluralize_noun_phrase,
 )
 from src.vm.core import RetrySignal
 
@@ -115,7 +115,7 @@ def _peek(data: dict) -> WorkingEntity:
     return stack[-1]
 
 
-def _sample_unique_entity(require_hoppable: bool = False) -> EntityNode:
+def _sample_unique_entity(require_hoppable: bool = False, type_uri: Optional[URIRef] = None) -> EntityNode:
     """Sample an entity whose (label,type) pair is unique."""
     s = get_sampler()
     last_reason = "unknown"
@@ -123,9 +123,9 @@ def _sample_unique_entity(require_hoppable: bool = False) -> EntityNode:
     for _ in range(UNIQUE_ANCHOR_MAX_ATTEMPTS):
         try:
             if require_hoppable:
-                node = s.get_random_hoppable_entity(max_attempts=HOPPABLE_SAMPLER_MAX_ATTEMPTS)
+                node = s.get_random_hoppable_entity(type_uri=type_uri, max_attempts=HOPPABLE_SAMPLER_MAX_ATTEMPTS)
             else:
-                node = s.get_random_entity()
+                node = s.get_random_entity(type_uri=type_uri)
         except RetrySignal as exc:
             last_reason = str(exc)
             continue
@@ -145,6 +145,18 @@ def _sample_unique_entity(require_hoppable: bool = False) -> EntityNode:
 def sel_random_entity(data: dict):
     """Samples a random entity and pushes it onto the focal stack."""
     node = _sample_unique_entity(require_hoppable=False)
+    data["s_entities"].append(WorkingEntity.from_node(node))
+
+def sel_stratified_entity(data: dict):
+    """Samples an entity by first picking a random type, then an entity of that type.
+
+    This ensures type diversity across generated samples instead of always
+    landing on the most numerous type.  Uniqueness is NOT required because
+    the query builder never references the anchor entity by label.
+    """
+    s = get_sampler()
+    type_node = s.get_random_type()
+    node = s.get_random_entity(type_uri=type_node.uri)
     data["s_entities"].append(WorkingEntity.from_node(node))
 
 def sel_hoppable_entity(data: dict):
@@ -346,46 +358,46 @@ def make_question(data: dict):
     s_facts = data["s_facts"]
     nl = data["nl"]
     ent = _peek(data)
-    
+
     # Consolidate facts (lifo)
     facts = [item for item in reversed(s_facts) if isinstance(item, tuple)]
-    
-    if facts:
-        # Determine if we are "deep" in a hop to add connective particles
-        stack_depth = len(data.get("s_entities", []))
-        prefix = ""
-        if stack_depth > 1:
-            type_label = get_sampler().get_label(ent.type_uri)
-            # Avoid 'thing' for a more natural persona
-            if type_label.lower() in ["thing", "entity"]:
-                type_label = random.choice(["entry", "record", "item"])
-                
-            prefix = random.choice([
-                f"And for that {type_label}, ",
-                f"Specifically for that {type_label}, ",
-                f"Following that {type_label}, ",
-                f"Regarding that {type_label}, ",
-                f"While we are looking at that {type_label}, ",
-                "For that entry, "
-            ])
-            article = "its"
+
+    if not facts:
+        nl.append(f"Could you provide more context for '{ent.label}'?")
+        return
+
+    # Consolidate unique property labels while keeping first-seen order.
+    prop_labels: list[str] = []
+    seen_labels: set[str] = set()
+    for p, _ in facts:
+        if p.label not in seen_labels:
+            seen_labels.add(p.label)
+            prop_labels.append(p.label)
+
+    stack_depth = len(data.get("s_entities", []))
+    is_hop = stack_depth > 1
+    hop_scope = data.get("hop_scope", "one")
+
+    if is_hop:
+        # For hop questions the NL already contains "... look into all their
+        # input parameters." We only need to append the property question
+        # about the *target* entities, connected with a proper sentence.
+        if hop_scope == "all":
+            article = "their"
+            prefix = "For each of those, "
         else:
             article = "its"
-
-        # Consolidate phrases while keeping first-seen order.
-        prop_labels = []
-        seen_labels = set()
-        for p, _ in facts:
-            label = p.label
-            if label in seen_labels:
-                continue
-            seen_labels.add(label)
-            prop_labels.append(label)
-        
-        question = compose_question(prop_labels, prefix, article)
-        nl.append(question)
+            prefix = random.choice([
+                "And for that, ",
+                "Then, ",
+                "Regarding that, ",
+            ])
     else:
-        nl.append(f"Could you provide more context for '{ent.label}'?")
+        article = "its"
+        prefix = ""
+
+    question = compose_question(prop_labels, prefix, article)
+    nl.append(question)
 
 
 # --- Query Builder Actions ---
@@ -415,7 +427,7 @@ def qb_filter_generator(prob_deep: Optional[float] = None):
         # Decide on filter depth (direct vs 1-hop)
         is_deep = random.random() < p_deep
         existing_paths = {f["path_uri"] for f in qb.filters}
-        print(f"Existing paths: {existing_paths}")
+
 
         if is_deep:
             # 1-Hop Filter: ent -> p1 -> ent2 -> p2 -> val
@@ -457,11 +469,20 @@ def qb_filter_generator(prob_deep: Optional[float] = None):
                 except Exception:
                     target_type_uri = None
 
+            # Resolve display value for NL (label instead of URI)
+            display_val = val_str
+            if isinstance(val_term, URIRef):
+                try:
+                    display_val = s.get_label(val_term)
+                except Exception:
+                    display_val = val_str
+
             qb.filters.append({
                 "path_uri": f"{p1.uri} -> {p2.uri}",
                 "path_display": f"{p1.label}->{p2.label}",
                 "operator": op,
                 "value": val_str,
+                "display_value": display_val,
                 "type": "deep",
                 "path_segments": [str(p1.uri), str(p2.uri)],
                 "target_type_uri": target_type_uri,
@@ -477,7 +498,7 @@ def qb_filter_generator(prob_deep: Optional[float] = None):
             if not candidates:
                  raise RetrySignal(f"No unique properties left for filter on {ent.label}")
 
-            print(candidates)
+
             p1 = random.choice(candidates)
             if not p1.values: 
                 raise RetrySignal(f"Property {p1.label} on {ent.label} has no values")
@@ -485,11 +506,20 @@ def qb_filter_generator(prob_deep: Optional[float] = None):
             val_term = random.choice(p1.values)
             op, val_str = resolve_operator_and_value(val_term)
             
+            # Resolve display value for NL (label instead of URI)
+            display_val = val_str
+            if isinstance(val_term, URIRef):
+                try:
+                    display_val = s.get_label(val_term)
+                except Exception:
+                    display_val = val_str
+
             qb.filters.append({
                 "path_uri": p1.uri,
                 "path_display": p1.label,
                 "operator": op,
                 "value": val_str,
+                "display_value": display_val,
                 "type": "direct",
                 "path_segments": [str(p1.uri)],
             })
@@ -507,12 +537,30 @@ def qb_projection_generator():
         if not all_props: 
             raise RetrySignal(f"Anchor {qb.anchor_entity.label} has no data properties to project")
         
+        # TODO: Re-enable once ontology types have 2+ properties each.
+        # Collect property URIs already used in filters (direct path or
+        # first segment of deep paths) so we don't project the same thing.
+        # filter_uris = set()
+        # for f in qb.filters:
+        #     for seg in f.get("path_segments", []):
+        #         filter_uris.add(URIRef(seg))
+        #
+        # # Exclude already-projected AND already-filtered properties
+        # candidates = [p for p in all_props
+        #               if p.uri not in qb.projects and p.uri not in filter_uris]
+        # if not candidates:
+        #     raise RetrySignal(
+        #         f"No eligible projection properties left on {qb.anchor_entity.label} "
+        #         f"(all are already filtered or projected)"
+        #     )
+        # p = random.choice(candidates)
+
         p = random.choice(all_props)
-        
+
         # Avoid projecting the same thing twice
         if p.uri in qb.projects:
             return
-            
+
         qb.projects.append(p.uri)
     return _qb_add_projection_logic
 

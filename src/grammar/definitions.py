@@ -14,7 +14,7 @@ _DEFAULT_QTYPE_WEIGHTS: Tuple[Tuple[str, float], ...] = (
 )
 
 _QB_PROJECTION_MIN = 1
-_QB_PROJECTION_MAX = 3sa
+_QB_PROJECTION_MAX = 3
 
 
 # Inlined reset keys (lists + scalar state)
@@ -45,15 +45,20 @@ def compute_qtype_targets(total_amount: int, weights: Iterable[Tuple[str, float]
 
     return targets
 
-from src.grammar.language_utils import clean_question
+import re as _re
 
 def collect_sample(data: dict):
     if data.get("samples") is None:
         data["samples"] = []
-    # Join with space to ensure boundaries if they were missing, although clean_question handles extra spaces
-    question = " ".join(data.get("nl") or [])
+    # Join NL fragments and normalise whitespace / punctuation
+    raw = " ".join(data.get("nl") or [])
+    question = _re.sub(r'\s+', ' ', raw).strip()
+    question = question.replace("??", "?").replace("?.", "?").replace("..", ".")
+    # Capitalise the first letter
+    if question:
+        question = question[0].upper() + question[1:]
     data["samples"].append({
-        "question": clean_question(question),
+        "question": question,
         "trace": data.get("trace") or [],
         "qtype": data.get("qtype"),
         "hop_bridge_predicate_uri": data.get("hop_bridge_predicate_uri"),
@@ -102,7 +107,7 @@ def Rule_impossible():
 def Rule_query_builder(preamble=None):
     """Generates a complex structured query. 'preamble' establishes the anchor entity."""
     if preamble is None:
-        preamble = APPLY(ops.sel_random_entity, access=["s_entities"])
+        preamble = APPLY(ops.sel_stratified_entity, access=["s_entities"])
 
     return Retry(Rule(
         preamble,
