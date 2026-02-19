@@ -19,6 +19,7 @@ load_dotenv()
 LLM_API_KEY = os.getenv("EVAL_LLM_API_KEY", "ollama")
 LLM_BASE_URL = os.getenv("EVAL_LLM_BASE_URL", "http://localhost:11434/v1")
 MCP_SERVER_URL = os.getenv("MCP_SERVER_URL", "http://localhost:3000/mcp")
+EVAL_RECURSION_LIMIT = int(os.getenv("EVAL_RECURSION_LIMIT", "150"))
 
 def _parse_bool(value: str | None, default: bool = True) -> bool:
     if value is None:
@@ -161,7 +162,7 @@ class LangChainAdapter(AgentAdapter):
                 token_handler = TokenUsageCallback()
                 result = await agent.ainvoke(
                     {"messages": [HumanMessage(content=question)]},
-                    config={"recursion_limit": 50, "callbacks": [token_handler]},
+                    config={"recursion_limit": EVAL_RECURSION_LIMIT, "callbacks": [token_handler]},
                 )
 
                 # 4. Extract answer

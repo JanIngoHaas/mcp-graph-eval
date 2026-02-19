@@ -17,7 +17,11 @@ except Exception:  # pragma: no cover
 from src.eval.ground_truth import (
     execute_trace_ground_truth,
 )
-from src.eval.langchain_adapter import LangChainAdapter, LLM_IS_DETERMINISTIC
+from src.eval.langchain_adapter import (
+    EVAL_RECURSION_LIMIT,
+    LangChainAdapter,
+    LLM_IS_DETERMINISTIC,
+)
 from src.eval.prompts import get_agent_system_prompt
 from src.scoring.io_utils import dump_data, infer_format, load_data
 
@@ -32,15 +36,15 @@ EVAL_MODELS = [
     # "nemotron-3-nano:30b",
     # "glm-4.7-flash:q8_0",
     # "gpt-oss:120b",
-    # "devstral-2:123b"
-    "gemini-3-flash-preview:cloud",
-    "kimi-k2.5:cloud",
-    "glm-4.7:cloud",
-    "devstral-2:123b-cloud",
-    "gpt-oss:120b-cloud",
-    "nemotron-3-nano:30b-cloud",
-    "qwen3-coder-next:cloud",
-    "qwen3.5:cloud",
+    # "devstral-2:123b",
+    # "gemini-3-flash-preview:cloud",  # previously active
+    # "kimi-k2.5:cloud",  # previously active
+    # "glm-4.7:cloud",  # previously active
+    # "devstral-2:123b-cloud",  # previously active
+    # "gpt-oss:120b-cloud",  # previously active
+    "nemotron-3-nano:30b-cloud",  # previously active
+    # "qwen3-coder-next:cloud",  # previously active
+    # "qwen3.5:cloud",  # previously active
 ]
 
 
@@ -305,9 +309,11 @@ async def main():
     print(f"\n{'=' * 60}")
     print("MCP Graph Evaluation Runner")
     print(f"{'=' * 60}")
+    print("DISCLAIMER: Experimental test run. Only the models listed below are evaluated.")
     print(f"  Samples file: {args.samples}")
     print(f"  Total samples: {len(all_data)}")
     print(f"  Limit per model: {limit}")
+    print(f"  Agent recursion_limit: {EVAL_RECURSION_LIMIT}")
     print(f"  Models to evaluate: {len(EVAL_MODELS)}")
     for m in EVAL_MODELS:
         print(f"    - {m}")
