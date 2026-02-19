@@ -120,7 +120,7 @@ def _sample_unique_entity(require_hoppable: bool = False, type_uri: Optional[URI
     s = get_sampler()
     last_reason = "unknown"
 
-    for _ in range(UNIQUE_ANCHOR_MAX_ATTEMPTS):
+    for i in range(UNIQUE_ANCHOR_MAX_ATTEMPTS):
         try:
             if require_hoppable:
                 node = s.get_random_hoppable_entity(type_uri=type_uri, max_attempts=HOPPABLE_SAMPLER_MAX_ATTEMPTS)
@@ -136,31 +136,44 @@ def _sample_unique_entity(require_hoppable: bool = False, type_uri: Optional[URI
             if primary_type != node.type_uri:
                 node = EntityNode(node.uri, node.label, primary_type)
             return node
+        
+        if i % 20 == 0:
+            print(f"  [Sampler] Finding unique anchor for {type_uri or 'any'}... attempt {i}, non-unique label '{node.label}' ({count} matches)")
         last_reason = f"label='{node.label}', type='{primary_type}', count={count}"
 
+    print(f"  [Sampler] FAILED to find unique anchor for {type_uri} after {UNIQUE_ANCHOR_MAX_ATTEMPTS} attempts")
     raise RetrySignal(f"Failed to find unique anchor after {UNIQUE_ANCHOR_MAX_ATTEMPTS} attempts ({last_reason})")
 
 # --- Oracle Functions ---
-
 def sel_random_entity(data: dict):
-    """Samples a random entity and pushes it onto the focal stack."""
+    """Samples a random entity using stratified sampling. Retries different types if unique anchors aren't found."""
+    s = get_sampler()
+    for _ in range(5):
+        try:
+            type_node = s.get_random_type()
+            node = _sample_unique_entity(require_hoppable=False, type_uri=type_node.uri)
+            data["s_entities"].append(WorkingEntity.from_node(node))
+            return
+        except RetrySignal:
+            continue
     node = _sample_unique_entity(require_hoppable=False)
     data["s_entities"].append(WorkingEntity.from_node(node))
 
 def sel_stratified_entity(data: dict):
-    """Samples an entity by first picking a random type, then an entity of that type.
-
-    This ensures type diversity across generated samples instead of always
-    landing on the most numerous type.  Uniqueness is NOT required because
-    the query builder never references the anchor entity by label.
-    """
-    s = get_sampler()
-    type_node = s.get_random_type()
-    node = s.get_random_entity(type_uri=type_node.uri)
-    data["s_entities"].append(WorkingEntity.from_node(node))
+    """Backwards compatibility or specific stratified use-case."""
+    sel_random_entity(data)
 
 def sel_hoppable_entity(data: dict):
-    """Samples a random entity that has at least one outgoing object property."""
+    """Samples a random hoppable entity using stratified sampling."""
+    s = get_sampler()
+    for _ in range(5):
+        try:
+            type_node = s.get_random_type()
+            node = _sample_unique_entity(require_hoppable=True, type_uri=type_node.uri)
+            data["s_entities"].append(WorkingEntity.from_node(node))
+            return
+        except RetrySignal:
+            continue
     node = _sample_unique_entity(require_hoppable=True)
     data["s_entities"].append(WorkingEntity.from_node(node))
 
