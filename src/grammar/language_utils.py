@@ -258,13 +258,13 @@ def get_hop_phrases(
         if scope == "all":
             return [
                 f"Now, I'd like to know {display}{target_info}. ",
-                f"I'm also interested in {display}{target_info}. ",
+                f"I am only interested in {display}{target_info}. ",
                 f"Then, tell me more about {display}{target_info}. ",
                 f"Could you tell me {display}{target_info}? ",
             ]
         return [
             f"Now, I'm curious about {display}{target_info}. ",
-            f"I'm also interested in {display}{target_info}. ",
+            f"I am only interested in {display}{target_info}. ",
             f"Then, tell me more about {display}{target_info}. ",
             f"Could you tell me {display}{target_info}? ",
         ]
@@ -287,15 +287,15 @@ def get_hop_phrases(
     if scope == "all":
         return [
             f"Now, please look into all their {display}{target_info}. ",
-            f"I'm also interested in all their {display}{target_info}. ",
+            f"I am only interested in all their {display}{target_info}. ",
             f"Then, tell me more about all their {display}{target_info}. ",
             f"Could you give me all their {display}{target_info}? ",
         ]
     return [
-        f"Now, please look into its {display}{target_info}. ",
-        f"I'm also interested in its {display}{target_info}. ",
-        f"Then, tell me more about its {display}{target_info}. ",
-        f"Could you find the {display}{target_info} for me? ",
+        f"Now, please look into the {display}{target_info}. ",
+        f"I am only interested in the {display}{target_info}. ",
+        f"Then, tell me more about the {display}{target_info}. ",
+        f"Could you find the {display}{target_info}? ",
     ]
 
 
@@ -320,6 +320,39 @@ def join_words(words: list[str], conjunction: str = "and") -> str:
     if len(words) == 2:
         return f"{words[0]} {conjunction} {words[1]}"
     return ", ".join(words[:-1]) + f", {conjunction} " + words[-1]
+
+
+def _is_numeric_text(value: str) -> bool:
+    raw = str(value).strip()
+    if not raw:
+        return False
+    try:
+        float(raw)
+        return True
+    except ValueError:
+        return False
+
+
+def _format_filter_value(value: str, operator: str) -> str:
+    raw = str(value).strip()
+    if operator == "contains":
+        return f"\"{raw}\""
+    if _is_numeric_text(raw):
+        return raw
+    if raw.lower() in {"true", "false"}:
+        return raw.lower()
+    return f"\"{raw}\""
+
+
+def _format_filter_property(label: str) -> str:
+    text = label.strip().lower()
+    if not text:
+        return "value"
+    # Avoid over-transforming labels such as "mass used in experiment"
+    # into odd phrases like "publication experiment".
+    if classify_property(text) == "compound_passive":
+        return text
+    return format_property_as_noun_phrase(text)
 
 
 # ── Question composition (direct / hop) ───────────────────────────────
@@ -386,14 +419,14 @@ def compose_question(property_labels: list[str], prefix: str, article: str) -> s
             return random.choice([
                 f"{prefix}what {verb} {phrase}?",
                 f"{prefix}could you please identify {phrase}?",
-                f"What info exists on {phrase}?",
+                f"{prefix}what can you tell me about {phrase}?",
             ])
     else:
         joined_str = join_words([p for p, _, _ in formatted_phrases])
         return random.choice([
             f"{prefix}I'd like to check {joined_str}.",
             f"Can you provide details on {joined_str}?",
-            f"Specifically, {prefix}identify {joined_str}.",
+            f"Specifically, identify {joined_str}.",
         ])
 
 
@@ -416,17 +449,30 @@ def compose_qb_question(
     for f in filters:
         path_parts = f["path_display"].split("->")
         if len(path_parts) > 1:
-            p_label = (
-                f"{format_property_as_noun_phrase(path_parts[0].strip())}'s "
-                f"{format_property_as_noun_phrase(path_parts[1].strip())}"
-            )
+            owner_raw = path_parts[0].strip().lower()
+            child = _format_filter_property(path_parts[1].strip())
+
+            # Crude but readable deep-path owner rule:
+            # "involved in project -> project code" -> "project's code"
+            if " in " in owner_raw:
+                owner = owner_raw.split(" in ", 1)[1].strip()
+            else:
+                owner = _format_filter_property(path_parts[0].strip())
+
+            if child.startswith("the "):
+                child = child[4:]
+            if owner and child.startswith(owner + " "):
+                child = child[len(owner) + 1 :].strip()
+
+            p_label = f"{owner}'s {child}" if owner else child
         else:
-            p_label = format_property_as_noun_phrase(path_parts[0].strip())
+            p_label = _format_filter_property(path_parts[0].strip())
 
         # Prefer display_value (the label) over the raw URI when available
         display_val = f.get("display_value") or f["value"]
         op = f["operator"]
         h_op = humanize_operator(op)
+        rendered_value = _format_filter_value(display_val, op)
 
         p_class = classify_property(path_parts[0].strip())
         if p_class == "verb_prep":
@@ -434,10 +480,9 @@ def compose_qb_question(
             vp_words = verb_phrase.split()
             if vp_words and vp_words[0].endswith("s"):
                 vp_words[0] = vp_words[0][:-1]
-            nl_filters.append(f"{' '.join(vp_words)} \"{display_val}\"")
+            nl_filters.append(f"they {' '.join(vp_words)} {rendered_value}")
         else:
-            pre = "whose " if op == "contains" else "where the "
-            nl_filters.append(f"{pre}{p_label} {h_op} \"{display_val}\"")
+            nl_filters.append(f"the {p_label} {h_op} {rendered_value}")
 
     # ── Build projection fragments ─────────────────────────────────────
     noun_projs: list[str] = []
@@ -457,16 +502,19 @@ def compose_qb_question(
             noun_projs.append(ph)
 
     # ── Compose the question in split sentences ────────────────────────
-    # Sentence 1: "Which <type> exist, <filter1>, <filter2>?"
-    #   Filters are connected with commas rather than repeated "and".
+    # Sentence 1: "Which <type> match ...?"
     if len(nl_filters) == 1:
         filter_str = nl_filters[0]
     else:
-        # Join with commas; the second filter gets "and" only before
-        # the last one (Oxford comma style).
         filter_str = join_words(nl_filters)
 
-    first_sentence = f"Which {root_plural} exist, {filter_str}?"
+    first_sentence = random.choice([
+        f"Can you find {root_plural} where {filter_str}?",
+        f"Please list {root_plural} where {filter_str}.",
+        f"Show me {root_plural} where {filter_str}.",
+        f"I'm looking for {root_plural} where {filter_str}.",
+        f"What {root_plural} can you find where {filter_str}?",
+    ])
 
     # Sentence 2: projection question
     proj_parts: list[str] = []

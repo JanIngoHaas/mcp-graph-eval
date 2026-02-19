@@ -1,5 +1,6 @@
 from dataclasses import dataclass, field
 import random
+import re
 from typing import Optional, List, Any, Set
 from rdflib import URIRef, Literal
 from src.grammar.ontology import OntologySampler, TypeNode, EntityNode, PropertyNode, PropertyRange
@@ -87,18 +88,57 @@ def resolve_operator_and_value(term: Any) -> tuple[str, str]:
         
         # 2. String Logic
         if isinstance(py_val, str):
-            # Shorten long strings for 'contains' to look like a search snippet
+            # Shorten long strings for 'contains' to look like a meaningful snippet.
             if len(val_str) > 20:
-                words = val_str.split()
-                if len(words) > 4:
-                    # Pick a window of 2-4 words
-                    window_size = random.randint(2, 4)
-                    start = random.randint(0, len(words) - window_size)
-                    val_str = " ".join(words[start : start + window_size])
+                val_str = _extract_informative_contains_snippet(val_str)
             return "contains", val_str
              
     # 3. Object Logic (URIRef)
     return random.choice(["="]), val_str
+
+
+_SNIPPET_STOPWORDS = {
+    "a", "an", "and", "are", "as", "at", "be", "by", "for", "from", "in",
+    "into", "is", "it", "of", "on", "or", "that", "the", "their", "this",
+    "to", "was", "were", "with",
+}
+
+
+def _extract_informative_contains_snippet(text: str) -> str:
+    words = text.split()
+    if len(words) <= 4:
+        return text.strip()
+
+    best_window: list[str] | None = None
+    best_score = -1
+    max_attempts = min(24, len(words) * 2)
+
+    for _ in range(max_attempts):
+        size = random.randint(2, 4)
+        if len(words) < size:
+            continue
+        start = random.randint(0, len(words) - size)
+        window = words[start : start + size]
+
+        cleaned = [
+            re.sub(r"^[^0-9A-Za-z]+|[^0-9A-Za-z]+$", "", w).lower()
+            for w in window
+        ]
+        informative = sum(
+            1
+            for token in cleaned
+            if token and token not in _SNIPPET_STOPWORDS and len(token) >= 4
+        )
+
+        if informative > best_score:
+            best_score = informative
+            best_window = window
+            if best_score >= 2:
+                break
+
+    if best_window:
+        return " ".join(best_window).strip(" ,;:.")
+    return text.strip()
 
 @dataclass
 class QueryBuilderState:
@@ -107,6 +147,41 @@ class QueryBuilderState:
     filters: List[dict] = field(default_factory=list)
     projects: List[URIRef] = field(default_factory=list)
     anchor_entity: Optional[WorkingEntity] = None
+
+
+def _resolve_qb_display_value(s: OntologySampler, val_term: Any, fallback: str) -> str:
+    if isinstance(val_term, URIRef):
+        try:
+            return s.get_label(val_term)
+        except Exception:
+            return fallback
+    return fallback
+
+
+def _append_qb_filter(
+    qb: QueryBuilderState,
+    *,
+    path_uri: str | URIRef,
+    path_display: str,
+    operator: str,
+    value: str,
+    display_value: str,
+    filter_type: str,
+    path_segments: list[str],
+    target_type_uri: Optional[str] = None,
+) -> None:
+    entry = {
+        "path_uri": path_uri,
+        "path_display": path_display,
+        "operator": operator,
+        "value": value,
+        "display_value": display_value,
+        "type": filter_type,
+        "path_segments": path_segments,
+    }
+    if target_type_uri is not None:
+        entry["target_type_uri"] = target_type_uri
+    qb.filters.append(entry)
 
 
 def _peek(data: dict) -> WorkingEntity:
@@ -386,7 +461,7 @@ def make_question(data: dict):
             article = "their"
             prefix = "For each of those, "
         else:
-            article = "its"
+            article = "the"
             prefix = random.choice([
                 "And for that, ",
                 "Then, ",
@@ -426,7 +501,7 @@ def qb_filter_generator(prob_deep: Optional[float] = None):
         
         # Decide on filter depth (direct vs 1-hop)
         is_deep = random.random() < p_deep
-        existing_paths = {f["path_uri"] for f in qb.filters}
+        existing_paths = {str(f["path_uri"]) for f in qb.filters}
 
 
         if is_deep:
@@ -451,7 +526,7 @@ def qb_filter_generator(prob_deep: Optional[float] = None):
                 # Check for unique second hop
                 for candidate_p2 in target_props:
                     path_uri = f"{candidate_p1.uri} -> {candidate_p2.uri}"
-                    if path_uri not in existing_paths:
+                    if str(path_uri) not in existing_paths:
                         p1, p2 = candidate_p1, candidate_p2
                         val_term = random.choice(p2.values)
                         break
@@ -469,24 +544,21 @@ def qb_filter_generator(prob_deep: Optional[float] = None):
                 except Exception:
                     target_type_uri = None
 
-            # Resolve display value for NL (label instead of URI)
-            display_val = val_str
-            if isinstance(val_term, URIRef):
-                try:
-                    display_val = s.get_label(val_term)
-                except Exception:
-                    display_val = val_str
+            display_val = _resolve_qb_display_value(s, val_term, val_str)
 
-            qb.filters.append({
-                "path_uri": f"{p1.uri} -> {p2.uri}",
-                "path_display": f"{p1.label}->{p2.label}",
-                "operator": op,
-                "value": val_str,
-                "display_value": display_val,
-                "type": "deep",
-                "path_segments": [str(p1.uri), str(p2.uri)],
-                "target_type_uri": target_type_uri,
-            })
+            path_display = f"{p1.label}->{p2.label}"
+            path_uri = f"{p1.uri} -> {p2.uri}"
+            _append_qb_filter(
+                qb,
+                path_uri=path_uri,
+                path_display=path_display,
+                operator=op,
+                value=val_str,
+                display_value=display_val,
+                filter_type="deep",
+                path_segments=[str(p1.uri), str(p2.uri)],
+                target_type_uri=target_type_uri,
+            )
             
         else:
             # Direct Filter: ent -> p1 -> val
@@ -494,7 +566,7 @@ def qb_filter_generator(prob_deep: Optional[float] = None):
             if not all_props: 
                 raise RetrySignal(f"Anchor {ent.label} has no properties for filter")
             
-            candidates = [p for p in all_props if p.uri not in existing_paths]
+            candidates = [p for p in all_props if str(p.uri) not in existing_paths]
             if not candidates:
                  raise RetrySignal(f"No unique properties left for filter on {ent.label}")
 
@@ -506,23 +578,19 @@ def qb_filter_generator(prob_deep: Optional[float] = None):
             val_term = random.choice(p1.values)
             op, val_str = resolve_operator_and_value(val_term)
             
-            # Resolve display value for NL (label instead of URI)
-            display_val = val_str
-            if isinstance(val_term, URIRef):
-                try:
-                    display_val = s.get_label(val_term)
-                except Exception:
-                    display_val = val_str
+            display_val = _resolve_qb_display_value(s, val_term, val_str)
 
-            qb.filters.append({
-                "path_uri": p1.uri,
-                "path_display": p1.label,
-                "operator": op,
-                "value": val_str,
-                "display_value": display_val,
-                "type": "direct",
-                "path_segments": [str(p1.uri)],
-            })
+            path_display = p1.label
+            _append_qb_filter(
+                qb,
+                path_uri=p1.uri,
+                path_display=path_display,
+                operator=op,
+                value=val_str,
+                display_value=display_val,
+                filter_type="direct",
+                path_segments=[str(p1.uri)],
+            )
     return _qb_add_filter_logic
 
 def qb_projection_generator():
@@ -537,29 +605,21 @@ def qb_projection_generator():
         if not all_props: 
             raise RetrySignal(f"Anchor {qb.anchor_entity.label} has no data properties to project")
         
-        # TODO: Re-enable once ontology types have 2+ properties each.
-        # Collect property URIs already used in filters (direct path or
-        # first segment of deep paths) so we don't project the same thing.
-        # filter_uris = set()
-        # for f in qb.filters:
-        #     for seg in f.get("path_segments", []):
-        #         filter_uris.add(URIRef(seg))
-        #
-        # # Exclude already-projected AND already-filtered properties
-        # candidates = [p for p in all_props
-        #               if p.uri not in qb.projects and p.uri not in filter_uris]
-        # if not candidates:
-        #     raise RetrySignal(
-        #         f"No eligible projection properties left on {qb.anchor_entity.label} "
-        #         f"(all are already filtered or projected)"
-        #     )
-        # p = random.choice(candidates)
+        filter_uris = set()
+        for f in qb.filters:
+            for seg in f.get("path_segments", []):
+                filter_uris.add(URIRef(seg))
 
-        p = random.choice(all_props)
-
-        # Avoid projecting the same thing twice
-        if p.uri in qb.projects:
-            return
+        preferred_candidates = [
+            p for p in all_props
+            if p.uri not in qb.projects and p.uri not in filter_uris
+        ]
+        if not preferred_candidates:
+            raise RetrySignal(
+                f"No eligible projection properties left on {qb.anchor_entity.label} "
+                f"(all non-projected properties are already used as filters)"
+            )
+        p = random.choice(preferred_candidates)
 
         qb.projects.append(p.uri)
     return _qb_add_projection_logic
