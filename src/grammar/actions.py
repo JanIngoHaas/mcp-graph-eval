@@ -31,8 +31,8 @@ def _append_trace(data: dict, step: dict, required: bool = False, is_answer: boo
     data["trace"].append(entry)
 
 # --- Configuration ---
-PROB_QB_DEEP_FILTER = 0.30
-UNIQUE_ANCHOR_MAX_ATTEMPTS = 120
+PROB_QB_DEEP_FILTER = 0.05
+UNIQUE_ANCHOR_MAX_ATTEMPTS = 10
 HOPPABLE_SAMPLER_MAX_ATTEMPTS = 20
 
 # --- State Objects ---

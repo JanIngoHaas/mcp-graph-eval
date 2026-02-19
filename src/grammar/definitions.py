@@ -14,7 +14,7 @@ _DEFAULT_QTYPE_WEIGHTS: Tuple[Tuple[str, float], ...] = (
 )
 
 _QB_PROJECTION_MIN = 1
-_QB_PROJECTION_MAX = 3
+_QB_PROJECTION_MAX = 2
 
 
 # Inlined reset keys (lists + scalar state)
