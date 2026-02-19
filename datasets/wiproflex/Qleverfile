@@ -1,10 +1,10 @@
 [data]
 NAME         = wiproflex
-GET_DATA_CMD = cat ./ontology.ttl ./instances.ttl
+GET_DATA_CMD = cat ./ontology_v2.ttl ./instances_v2.ttl
 DESCRIPTION  = "Wiproflex Synthetic CMP Graph"
 
 [index]
-INPUT_FILES     = ./ontology.ttl ./instances.ttl
+INPUT_FILES     = ./ontology_v2.ttl ./instances_v2.ttl
 CAT_INPUT_FILES = cat ${INPUT_FILES}
 
 [server]
