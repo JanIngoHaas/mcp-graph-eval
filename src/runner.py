@@ -18,6 +18,10 @@ def generate_samples(num_samples: int):
         "hop_bridge_predicate_uri": None,
         "hop_target_count": None,
         "hop_scope": None,
+        "global_seen_hop": set(), # Track (anchor_uri, bridge_predicate_uri)
+        "global_seen_direct": set(), # Track (anchor_uri, prop_uri_list)
+        "global_seen_impossible": set(), # Track (anchor_uri, prop_uri)
+        "global_seen_qb": set(), # Track (root_type, frozenset(filter_props), frozenset(project_props))
     })
     root_node = rules.root(num_samples)
 

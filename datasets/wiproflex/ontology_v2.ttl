@@ -51,11 +51,11 @@ cmpo:StructuredWafer rdfs:subClassOf cmpo:Wafer ;
 ### Wafer Related Classes
 #################################################################
 
-cmpo:WaferDiameter   a rdfs:Class ;
+cmpo:WaferDiameter   rdfs:subClassOf BFO:0000019 ;
     rdfs:label "Wafer Diameter"@en ;
     rdfs:comment "Standard wafer diameter class. Instances: 150mm, 200mm, 300mm."@en .
 
-cmpo:WaferMaterial   a rdfs:Class ;
+cmpo:WaferMaterial   rdfs:subClassOf BFO:0000019 ;
     rdfs:label "Wafer Material"@en ;
     rdfs:comment "Material type of a wafer surface layer, e.g. Silicon Oxide, Copper, Tungsten."@en .
 
@@ -189,9 +189,9 @@ cmpo:waferCount      a owl:DatatypeProperty ;
     rdfs:range xsd:integer ;
     rdfs:comment "Actual number of wafers in the lot."@en .
 
-cmpo:Project         a rdfs:Class ;
+cmpo:Project         rdfs:subClassOf BFO:0000030 ;
     rdfs:label "Project"@en ;
-    rdfs:comment "A manufacturing project to which lots belong."@en .
+    rdfs:comment "A research or production project."@en .
 
 
 #################################################################

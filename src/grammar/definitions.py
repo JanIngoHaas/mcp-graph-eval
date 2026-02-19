@@ -99,7 +99,7 @@ def Rule_impossible():
         APPLY(ops.sel_random_entity, access=["s_entities"]),
         APPLY(ops.gen_search, access=["s_entities", "trace", "nl"]),
         APPLY(ops.gen_inspect, access=["s_entities", "trace", "nl"]),
-        APPLY(ops.gen_impossible_fact, access=["s_entities", "trace", "s_facts"]),
+        APPLY(ops.gen_impossible_fact, access=["s_entities", "trace", "s_facts", "global_seen_impossible"]),
         Rule_fact_finale(),
         APPLY(ops.add_type_to_question("impossible"), access=["qtype"]),
     ), n=25)
@@ -121,7 +121,7 @@ def Rule_query_builder(preamble=None):
             min_count=_QB_PROJECTION_MIN,
             max_count=_QB_PROJECTION_MAX
         ),
-        APPLY(ops.qb_finalize_question, access=["qb", "trace", "nl"]),
+        APPLY(ops.qb_finalize_question, access=["qb", "trace", "nl", "global_seen_qb"]),
         APPLY(ops.add_type_to_question("query_builder"), access=["qtype"]),
     ), n=25)
 
@@ -149,7 +149,7 @@ def Rule_forward_hop():
 
 def Rule_sample_facts(max_facts: int = 2):
     """Samples properties and values for the current focal entity."""
-    return APPLY(ops.gen_random_facts(max_facts=max_facts), access=["s_entities", "trace", "s_facts", "answer_triples"])
+    return APPLY(ops.gen_random_facts(max_facts=max_facts), access=["s_entities", "trace", "s_facts", "answer_triples", "global_seen_direct"])
 
 def Rule_search():
     """Initial discovery step."""
@@ -173,7 +173,7 @@ def Rule_hop():
     """Transitions from the current entity to a related one."""
     return APPLY(
         ops.sel_hop_target,
-        access=["s_entities", "trace", "nl", "hop_bridge_predicate_uri", "hop_target_count", "hop_scope"],
+        access=["s_entities", "trace", "nl", "hop_bridge_predicate_uri", "hop_target_count", "hop_scope", "global_seen_hop"],
     )
 
 def Rule_fact_finale():

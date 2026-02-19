@@ -264,13 +264,21 @@ def gen_random_facts(min_facts: int = 1, max_facts: int = 3):
         # In multi-target hops we sample answer facts for all targets.
         entities: list[WorkingEntity] = stack[1:] if len(stack) > 1 else [stack[-1]]
 
+        global_seen = data.get("global_seen_direct")
         candidates_by_entity: list[list[PropertyNode]] = []
         for ent in entities:
             all_props = s.get_entity_properties(ent.uri)
-            candidates = [p for p in all_props if p.uri not in ent.seen_properties]
+            # Filter by local seen properties AND global seen properties (for this specific entity)
+            candidates = []
+            for p in all_props:
+                if p.uri in ent.seen_properties:
+                    continue
+                if global_seen is not None and (ent.uri, p.uri) in global_seen:
+                    continue
+                candidates.append(p)
+
             if not candidates:
-                # continue
-                raise RetrySignal(f"Entity {ent.label} has no unused properties")
+                raise RetrySignal(f"Entity {ent.label} has no new/unseen properties")
             candidates_by_entity.append(candidates)
 
         sampled_by_entity: list[list[PropertyNode]] = []
@@ -319,6 +327,8 @@ def gen_random_facts(min_facts: int = 1, max_facts: int = 3):
 
                 data["s_facts"].append((prop, val))
                 ent.seen_properties.add(prop.uri)
+                if global_seen is not None:
+                    global_seen.add((ent.uri, prop.uri))
         return
     return _gen_facts_logic
 
@@ -331,12 +341,26 @@ def gen_impossible_fact(data: dict):
     if not ent: raise RetrySignal("No focal entity to sample impossible fact from")
 
     s = get_sampler()
-    # 1. Get all properties ACTUALY present on the entity
-    actual_props = s.get_entity_properties(ent.uri)
-    actual_uris = {p.uri for p in actual_props}
+    # Collect properties already present to forbid them
+    own_props = s.get_entity_properties(ent.uri)
+    forbidden = {p.uri for p in own_props}
     
-    # 2. Pick a random property from the UNIVERSE that is NOT in actual_uris
-    impossible_prop = s.get_random_property_excluding(actual_uris)
+    global_seen = data.get("global_seen_impossible")
+
+    # Retry a few times if the sampled impossible property was already used for this entity
+    prop = None
+    for _ in range(5):
+        p = s.get_neighbor_property_excluding(ent.type_uri, forbidden)
+        if global_seen is not None and (ent.uri, p.uri) in global_seen:
+             continue
+        prop = p
+        break
+    
+    if prop is None:
+        raise RetrySignal("Failed to find unique impossible property")
+
+    if global_seen is not None:
+        global_seen.add((ent.uri, prop.uri))
     
     # 3. Record trace - the agent effectively "checks" this property
     _append_trace(
@@ -344,7 +368,7 @@ def gen_impossible_fact(data: dict):
         {
             "tool": "fact",
             "subject": str(ent.uri),
-            "predicate": str(impossible_prop.uri),
+            "predicate": str(prop.uri),
             "object": "_",
         },
         required=True,
@@ -352,7 +376,7 @@ def gen_impossible_fact(data: dict):
     )
     
     # 4. Add to s_facts for question generation -> (prop, None) implies no value found
-    data["s_facts"].append((impossible_prop, None))
+    data["s_facts"].append((prop, None))
     
     # 5. NO answer_triples (or maybe an explicit "I don't know" marker if needed later)
     # The evaluator should see empty answer triples and "I don't know" in the model response
@@ -368,10 +392,18 @@ def sel_hop_target(data: dict) -> Any:
     obj_props = s.get_entity_object_properties(ent.uri)
     random.shuffle(obj_props)
 
+    global_seen = data.get("global_seen_hop")
+    
     for prop in obj_props:
+        if global_seen is not None and (ent.uri, prop.uri) in global_seen:
+            continue
+            
         target_candidates = [uri for uri in dict.fromkeys(prop.values) if isinstance(uri, URIRef)]
         if not target_candidates:
             continue
+            
+        if global_seen is not None:
+            global_seen.add((ent.uri, prop.uri))
         random.shuffle(target_candidates)
         hop_target_count = len(target_candidates)
         hop_scope = "one" if hop_target_count == 1 else "all"
@@ -709,6 +741,18 @@ def qb_finalize_question(data: dict):
         "filters": tool_filters,
         "project": [str(p) for p in qb.projects]
     }
+
+    # Check for duplicate QB query globally
+    global_seen = data.get("global_seen_qb")
+    if global_seen is not None:
+        qb_key = (
+            str(qb.root_type),
+            frozenset(f["path"] for f in tool_filters),
+            frozenset(tool_call["project"])
+        )
+        if qb_key in global_seen:
+            raise RetrySignal("Duplicate query_builder question sampled")
+        global_seen.add(qb_key)
     
     _append_trace(
         data,

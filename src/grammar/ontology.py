@@ -193,6 +193,98 @@ class OntologySampler:
             
         return random.choice(candidates)
 
+    def get_neighbor_property_excluding(
+        self, entity_type_uri: URIRef, forbidden_uris: set[URIRef]
+    ) -> PropertyNode:
+        """
+        Returns a property from a *sibling or cousin* class in the hierarchy.
+        Matches plausible mismatches by querying actual instance properties.
+        """
+        HARD_EXCLUSIONS = {
+            "severity", "locatedIn", "facilityLocation", "bayNumber",
+            "mohsHardness", "signalType", "cleanroomArea", "hasStatus",
+            "label", "comment"
+        }
+
+        # BFO Roots where we MUST stop walking up
+        BFO_ROOTS = {
+            URIRef("http://purl.obolibrary.org/obo/BFO_0000030"), # Object
+            URIRef("http://purl.obolibrary.org/obo/BFO_0000015"), # Process
+            URIRef("http://purl.obolibrary.org/obo/BFO_0000019"), # Quality
+        }
+
+        def _get_nearby_candidates(ancestor_uri: URIRef) -> list[URIRef]:
+            # Step 1: Find properties used by instances of sibling/cousin classes
+            # that are NOT present on the focal entity type.
+            sparql = f"""
+            SELECT DISTINCT ?p WHERE {{
+                ?sibling rdfs:subClassOf* <{ancestor_uri}> .
+                FILTER(?sibling != <{entity_type_uri}>)
+                FILTER NOT EXISTS {{ <{entity_type_uri}> rdfs:subClassOf* ?sibling }}
+                
+                ?instance a ?sibling .
+                ?instance ?p ?val .
+                FILTER(isIRI(?p) && ?p != rdf:type)
+            }}
+            """
+            rows = self._query(sparql, use_cache=True)
+            candidates = [cast(URIRef, r[0]) for r in rows]
+            
+            # Step 3: Hard exclusion list filtering
+            filtered = []
+            for c in candidates:
+                c_str = str(c).lower()
+                if any(term.lower() in c_str for term in HARD_EXCLUSIONS):
+                    continue
+                if c in forbidden_uris:
+                    continue
+                filtered.append(c)
+            return filtered
+
+        # Step 2: Fallback Ladder
+        # Iterate up through parents and grandparents
+        current_types = [entity_type_uri]
+        visited_ancestors = {entity_type_uri}
+        
+        # We walk up until we find candidates or hit a BFO root/Thing
+        for level in range(4):
+            all_candidates = []
+            next_types = []
+            
+            for t in current_types:
+                # 1. Get parents of current level
+                parent_sparql = f"SELECT ?p WHERE {{ <{t}> rdfs:subClassOf ?p . FILTER(isIRI(?p)) }}"
+                parents = [cast(URIRef, r[0]) for r in self._query(parent_sparql, use_cache=True)]
+                
+                for p in parents:
+                    if p in visited_ancestors:
+                        continue
+                    visited_ancestors.add(p)
+                    
+                    # 2. Collect candidates from this ancestor's branches
+                    all_candidates.extend(_get_nearby_candidates(p))
+                    
+                    # 3. Decide if we can continue walking up from here
+                    p_str = str(p).lower()
+                    if p in BFO_ROOTS or any(term in p_str for term in ["owl#thing", "rdf-schema#resource"]):
+                        # We reached a root, do not add to next_types to prevent walking higher
+                        continue
+                    
+                    next_types.append(p)
+
+            # If we found any valid candidates at this level, pick one and return
+            if all_candidates:
+                chosen_p = random.choice(list(set(all_candidates)))
+                label = self.get_label(chosen_p)
+                return PropertyNode(chosen_p, label, PropertyRange.OBJECT, values=[])
+
+            if not next_types: 
+                break
+            current_types = next_types
+
+        # Last resort fallback if hierarchy search fails completely
+        return self.get_random_property_excluding(forbidden_uris)
+
     def get_entity_properties(self, entity_uri: URIRef) -> List[PropertyNode]:
         """Returns all properties (data and object) outgoing from this entity."""
         l1 = self.get_entity_data_properties(entity_uri)

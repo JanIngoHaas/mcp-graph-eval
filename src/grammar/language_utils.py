@@ -272,9 +272,11 @@ def get_hop_phrases(
     # Question-word phrases (who, what, where, how)
     if phrase.lower().startswith(("who", "what", "where", "how")):
         if scope == "all":
+            # Avoid stuttering like "where where"
+            lead_in = "all cases" if display.lower().startswith(("where", "how")) else "all cases where"
             return [
-                f"Now, I'd like to find all cases where {display}{target_info}. ",
-                f"Regarding that, can you check every case where {display}{target_info}? ",
+                f"Now, I'd like to find {lead_in} {display}{target_info}. ",
+                f"Regarding that, can you check {lead_in} {display}{target_info}? ",
                 f"And I'd also like to see all relevant details for {display}{target_info}. ",
             ]
         return [
