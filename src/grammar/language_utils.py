@@ -2,12 +2,69 @@ import re
 import random
 from typing import Optional
 
+import inflect
+from lemminflect import getLemma
+
 
 # ── Uncountable / mass nouns that should NOT be pluralized ──────────────
 _MASS_NOUNS = frozenset({
     "data", "information", "equipment", "feedback", "software",
     "hardware", "evidence", "research", "knowledge", "status",
 })
+
+_PREPOSITIONS = frozenset({"in", "at", "on", "from", "to", "for", "with", "into", "as", "of"})
+_QUESTION_WORDS = frozenset({"who", "what", "where", "how", "when", "why", "which"})
+
+# Common relation verbs used in ontology predicates (e.g., containsWafer).
+_RELATION_VERBS = frozenset({
+    "runs",
+    "belongs",
+    "contains",
+    "includes",
+    "uses",
+    "measures",
+    "produces",
+    "creates",
+    "owns",
+    "stores",
+    "tracks",
+    "references",
+    "requires",
+    "supports",
+})
+
+_INFLECT = inflect.engine()
+
+
+def _looks_plural(word: str) -> bool:
+    w = word.strip().lower()
+    if not w or w in _MASS_NOUNS:
+        return False
+    # singular_noun returns the singular form when input is plural.
+    return bool(_INFLECT.singular_noun(w))
+
+
+def _pluralize_word(word: str) -> str:
+    w = word.strip()
+    low = w.lower()
+    if not w:
+        return "items"
+    if any(low.endswith(m) for m in _MASS_NOUNS):
+        return w
+    if _looks_plural(w):
+        return w
+    plural = _INFLECT.plural_noun(w)
+    # inflect may return False for nouns it chooses not to inflect.
+    return str(plural) if plural else w
+
+
+def _deconjugate_3ps(verb: str) -> str:
+    """Convert simple third-person singular forms to base form."""
+    w = verb.strip().lower()
+    if not w:
+        return w
+    lemmas = getLemma(w, upos="VERB")
+    return str(lemmas[0]).lower() if lemmas else w
 
 
 def classify_property(label: str) -> str:
@@ -50,23 +107,21 @@ def classify_property(label: str) -> str:
     if first == "is" and len(words) > 1:
         return "is_prefix"
 
-    prepositions = {"in", "at", "on", "from", "to", "for", "with", "into", "as", "of"}
-
     # 4. verb + preposition  ("acts on", "depends on", "runs in")
     #    Heuristic: first word looks like present-tense verb (ends in "s")
     #    and second word is a preposition, and total length ≤ 3 words.
     if (
         len(words) >= 2
-        and words[1] in prepositions
+        and words[1] in _PREPOSITIONS
         and first.endswith("s")
-        and first not in prepositions
+        and first not in _PREPOSITIONS
         and len(words) <= 3
     ):
         return "verb_prep"
 
     # 5. passive with preposition
-    if any(w in prepositions for w in words[1:]):
-        if len(words) <= 3 and words[-1] in prepositions:
+    if any(w in _PREPOSITIONS for w in words[1:]):
+        if len(words) <= 3 and words[-1] in _PREPOSITIONS:
             return "passive_prep"
         return "compound_passive"
 
@@ -79,14 +134,14 @@ def pluralize(label: str) -> str:
     label = label.strip()
     if not label:
         return "items"
-    low = label.lower()
-    if any(low.endswith(m) for m in _MASS_NOUNS):
-        return label
-    if label.endswith(("s", "x", "z", "ch", "sh")):
-        return f"{label}es"
-    if label.endswith("y") and not label.endswith(("ay", "ey", "iy", "oy", "uy")):
-        return f"{label[:-1]}ies"
-    return f"{label}s"
+    words = label.split()
+    # Type names often end with a variant marker ("... A", "... 2").
+    # Rendering those as "... as"/"... 2s" is awkward; use a neutral set noun.
+    if len(words) > 1 and re.fullmatch(r"[a-z0-9]", words[-1].lower()):
+        return f"{label} records"
+    if len(words) > 1:
+        return " ".join(words[:-1] + [_pluralize_word(words[-1])])
+    return _pluralize_word(label)
 
 
 def _pluralize_noun_phrase(phrase: str) -> str:
@@ -121,20 +176,27 @@ def _pluralize_noun_phrase(phrase: str) -> str:
             new_tail = re.sub(r'\bits\b', 'their', new_tail)
             new_tail = re.sub(r'\bis\b', 'are', new_tail)
             new_tail = re.sub(r'\bwas\b', 'were', new_tail)
-            # De-conjugate 3rd-person-s verbs
-            new_tail = re.sub(r'\bacts\b', 'act', new_tail)
-            new_tail = re.sub(r'\bdepends\b', 'depend', new_tail)
-            new_tail = re.sub(r'\bruns\b', 'run', new_tail)
-            new_tail = re.sub(r'\buses\b', 'use', new_tail)
+            # De-conjugate the first verb after plural pronoun.
+            # Keep auxiliary forms ("are", "were") intact.
+            new_tail = re.sub(
+                r'\bthey\s+([a-z]+)\b',
+                lambda m: (
+                    f"they {m.group(1)}"
+                    if m.group(1).lower() in {"am", "is", "are", "was", "were", "be", "been", "being", "have", "has", "had", "do", "does", "did"}
+                    else f"they {_deconjugate_3ps(m.group(1))}"
+                ),
+                new_tail,
+                count=1,
+            )
 
             # Don't pluralize question-word heads ("what", "where", ...)
-            if words[0].lower() in ("who", "what", "where", "how", "when", "why"):
+            if words[0].lower() in _QUESTION_WORDS:
                 return f"{head} {new_tail}"
             return f"{pluralize(head)} {new_tail}"
 
     # ── 2. Simple phrases without relative clauses
     # Question-word phrases: leave unchanged
-    if words[0].lower() in ("who", "what", "where", "how", "when", "why"):
+    if words[0].lower() in _QUESTION_WORDS:
         return phrase
 
     # Quantity phrases ("number of X"): already well-formed
@@ -147,7 +209,7 @@ def _pluralize_noun_phrase(phrase: str) -> str:
     if any(low.endswith(m) for m in _MASS_NOUNS):
         return phrase
     # Don't double-pluralize
-    if low.endswith("s") and not low.endswith("ss"):
+    if _looks_plural(low):
         return phrase
     return " ".join(words[:-1] + [pluralize(last)])
 
@@ -189,6 +251,15 @@ def format_property_as_noun_phrase(label: str) -> str:
         p_label = label[4:].strip()
 
     p_class = classify_property(label)
+    words = p_label.lower().split()
+
+    # Relation verb + object noun ("contains wafer" -> "wafer it contains")
+    if (
+        len(words) >= 2
+        and words[0] in _RELATION_VERBS
+        and words[1] not in _PREPOSITIONS
+    ):
+        return f"{' '.join(words[1:])} it {words[0]}"
 
     if p_class == "quantity":
         return p_label                              # "number of creators"
@@ -200,8 +271,7 @@ def format_property_as_noun_phrase(label: str) -> str:
         rest = p_label
         if rest.lower().startswith("is "):
             rest = rest[3:].strip()
-        prepositions = {"in", "at", "on", "from", "to", "for", "with", "into", "as", "of"}
-        if any(w in prepositions for w in rest.split()):
+        if any(w in _PREPOSITIONS for w in rest.split()):
             return f"what it is {rest}"             # "is part of" → "what it is part of"
         return f"what {rest} it is"                 # "is version" → "what version it is"
 
@@ -210,7 +280,13 @@ def format_property_as_noun_phrase(label: str) -> str:
         return f"who {verb}"                        # "authored by" → "who authored"
 
     if p_class == "verb_prep":
-        # "acts on" → "what it acts on"
+        # "acts on" -> "what it acts on"
+        # "belongs to lot" -> "which lot it belongs to"
+        if len(words) >= 3:
+            verb = words[0]
+            prep = words[1]
+            obj = " ".join(words[2:])
+            return f"which {obj} it {verb} {prep}"
         return f"what it {p_label}"
 
     if p_class == "passive_prep":
@@ -270,34 +346,40 @@ def get_hop_phrases(
         ]
 
     # Question-word phrases (who, what, where, how)
-    if phrase.lower().startswith(("who", "what", "where", "how")):
+    if phrase.lower().startswith(("who", "what", "where", "how", "which")):
         if scope == "all":
-            # Avoid stuttering like "where where"
-            lead_in = "all cases" if display.lower().startswith(("where", "how")) else "all cases where"
             return [
-                f"Now, I'd like to find {lead_in} {display}{target_info}. ",
-                f"Regarding that, can you check {lead_in} {display}{target_info}? ",
-                f"And I'd also like to see all relevant details for {display}{target_info}. ",
+                f"Now, please list all related items and tell me {display}{target_info}. ",
+                f"Regarding that, can you check all related items and tell me {display}{target_info}? ",
+                f"And I'd also like to see all relevant details and know {display}{target_info}. ",
             ]
         return [
-            f"Now, I'm curious {display}{target_info}. ",
-            f"Regarding that, can you check {display}{target_info}? ",
-            f"And I'd also like to see more details for the {display.split()[-1]}{target_info}. ",
+            f"Now, can you check {display}{target_info}? ",
+            f"Regarding that, I'd like to know {display}{target_info}. ",
+            f"And I'd also like to see more details and know {display}{target_info}. ",
         ]
 
     # Regular noun phrases
     if scope == "all":
         return [
-            f"Now, please look into all their {display}{target_info}. ",
-            f"I am only interested in all their {display}{target_info}. ",
-            f"Then, tell me more about all their {display}{target_info}. ",
-            f"Could you give me all their {display}{target_info}? ",
+            f"Now, please list all related {display}{target_info}. ",
+            f"I am only interested in all related {display}{target_info}. ",
+            f"Then, tell me more about all related {display}{target_info}. ",
+            f"Could you give me all related {display}{target_info}? ",
+        ]
+    has_relative_clause = bool(re.search(r"\b(it|they)\b", display.lower()))
+    if has_relative_clause:
+        return [
+            f"Now, please look into the {display}{target_info}. ",
+            f"I am only interested in the {display}{target_info}. ",
+            f"Then, tell me more about the {display}{target_info}. ",
+            f"Could you find the {display}{target_info}? ",
         ]
     return [
         f"Now, please look into the {display}{target_info}. ",
-        f"I am only interested in the {display}{target_info}. ",
-        f"Then, tell me more about the {display}{target_info}. ",
-        f"Could you find the {display}{target_info}? ",
+        f"I am only interested in its {display}{target_info}. ",
+        f"Then, tell me more about its {display}{target_info}. ",
+        f"Could you find its {display}{target_info}? ",
     ]
 
 
@@ -350,11 +432,25 @@ def _format_filter_property(label: str) -> str:
     text = label.strip().lower()
     if not text:
         return "value"
+    p_class = classify_property(text)
     # Avoid over-transforming labels such as "mass used in experiment"
     # into odd phrases like "publication experiment".
-    if classify_property(text) == "compound_passive":
+    if p_class == "compound_passive":
         return text
-    return format_property_as_noun_phrase(text)
+    # For filter clauses we want stable noun-like forms, not question phrases.
+    if p_class == "passive_prep":
+        return text
+    formatted = format_property_as_noun_phrase(text)
+    if formatted.startswith(("who ", "what ", "where ", "how ", "which ")):
+        return text
+    return formatted
+
+def _is_relation_verb_pattern(words: list[str]) -> bool:
+    if not words:
+        return False
+    if len(words) == 1:
+        return words[0] in _RELATION_VERBS
+    return words[0] in _RELATION_VERBS and words[1] not in _PREPOSITIONS
 
 
 # ── Question composition (direct / hop) ───────────────────────────────
@@ -371,7 +467,7 @@ def compose_question(property_labels: list[str], prefix: str, article: str) -> s
     for label in property_labels:
         phrase = format_property_as_noun_phrase(label)
         p_class = classify_property(label)
-        is_question_phrase = phrase.lower().startswith(("who", "what", "where", "how"))
+        is_question_phrase = phrase.lower().startswith(("who", "what", "where", "how", "which"))
 
         if is_question_phrase:
             formatted_phrases.append((phrase, True, p_class))
@@ -387,20 +483,20 @@ def compose_question(property_labels: list[str], prefix: str, article: str) -> s
     if not is_plural:
         phrase, is_q, p_class = formatted_phrases[0]
         if is_q and p_class == "verb_prep":
-            # "what it acts on" → "what does it act on?" (proper question form)
-            # De-conjugate verb: "what it acts on" → split after "what it "
-            words = phrase.split()
-            # words = ["what", "it", "acts", "on"]
+            # "what it acts on" -> "what does it act on?"
+            # "which lot it belongs to" -> "which lot does it belong to?"
             aux = "do" if article == "their" else "does"
             subj = "they" if article == "their" else "it"
-            # De-conjugate verb (3rd word): "acts" → "act"
-            if len(words) > 2:
-                verb = words[2]
-                if verb.endswith("s") and not verb.endswith("ss"):
-                    verb = verb[:-1]
-                rest = " ".join([verb] + words[3:])
-            else:
-                rest = " ".join(words[2:])
+            m = re.match(r"^(?P<q>(?:what|which\s+.+?))\s+it\s+(?P<verb>[a-z]+)(?:\s+(?P<tail>.+))?$", phrase.lower())
+            if m:
+                qword = m.group("q")
+                verb = _deconjugate_3ps(m.group("verb"))
+                tail = (m.group("tail") or "").strip()
+                if tail:
+                    return f"{prefix}{qword} {aux} {subj} {verb} {tail}?"
+                return f"{prefix}{qword} {aux} {subj} {verb}?"
+            words = phrase.split()
+            rest = " ".join(words[2:]) if len(words) > 2 else phrase
             return f"{prefix}what {aux} {subj} {rest}?"
         elif is_q:
             return random.choice([
@@ -412,9 +508,7 @@ def compose_question(property_labels: list[str], prefix: str, article: str) -> s
             # Determine is/are based on whether the noun head looks plural
             head = phrase.split()[-1] if phrase.split() else ""
             looks_plural = (
-                head.lower().endswith("s")
-                and not head.lower().endswith("ss")
-                and head.lower() not in _MASS_NOUNS
+                _looks_plural(head)
                 and head.lower() not in ("this", "was", "is", "has")
             )
             verb = "are" if looks_plural else "is"
@@ -476,13 +570,24 @@ def compose_qb_question(
         h_op = humanize_operator(op)
         rendered_value = _format_filter_value(display_val, op)
 
+        raw_path_label = path_parts[0].strip().lower()
         p_class = classify_property(path_parts[0].strip())
+        rel_words = raw_path_label.split()
+        if op == "=" and _is_relation_verb_pattern(rel_words):
+            rel_verb = _deconjugate_3ps(rel_words[0])
+            rel_tail = " ".join(rel_words[1:])
+            if rel_tail:
+                nl_filters.append(f"they {rel_verb} {rel_tail} {rendered_value}")
+            else:
+                nl_filters.append(f"they {rel_verb} {rendered_value}")
+            continue
         if p_class == "verb_prep":
-            verb_phrase = path_parts[0].strip().lower()
-            vp_words = verb_phrase.split()
+            vp_words = raw_path_label.split()
             if vp_words and vp_words[0].endswith("s"):
                 vp_words[0] = vp_words[0][:-1]
             nl_filters.append(f"they {' '.join(vp_words)} {rendered_value}")
+        elif p_class == "passive_prep":
+            nl_filters.append(f"they are {path_parts[0].strip().lower()} {rendered_value}")
         else:
             nl_filters.append(f"the {p_label} {h_op} {rendered_value}")
 
@@ -491,11 +596,31 @@ def compose_qb_question(
     verb_projs: list[str] = []
     for l in proj_labels:
         p_class = classify_property(l)
+        rel_words = l.lower().split()
+        if (
+            len(rel_words) >= 2
+            and rel_words[0] in _RELATION_VERBS
+            and rel_words[1] not in _PREPOSITIONS
+        ):
+            rel_obj = _pluralize_noun_phrase(" ".join(rel_words[1:]))
+            rel_verb = _deconjugate_3ps(rel_words[0])
+            verb_projs.append(f"which {rel_obj} do they {rel_verb}")
+            continue
+        if p_class == "passive_by":
+            verb = l.lower().replace(" by", "").strip()
+            verb_projs.append(f"who {verb} them")
+            continue
         if p_class == "verb_prep":
             vp_words = l.lower().split()
-            if vp_words and vp_words[0].endswith("s"):
-                vp_words[0] = vp_words[0][:-1]
-            verb_projs.append(f"what do they {' '.join(vp_words)}")
+            if len(vp_words) >= 3:
+                verb = _deconjugate_3ps(vp_words[0])
+                prep = vp_words[1]
+                obj = " ".join(vp_words[2:])
+                verb_projs.append(f"which {obj} do they {verb} {prep}")
+            else:
+                if vp_words:
+                    vp_words[0] = _deconjugate_3ps(vp_words[0])
+                verb_projs.append(f"what do they {' '.join(vp_words)}")
         else:
             ph = format_property_as_noun_phrase(l)
             ph = _pluralize_noun_phrase(ph)

@@ -506,7 +506,7 @@ def make_question(data: dict):
             article = "their"
             prefix = "For each of those, "
         else:
-            article = "the"
+            article = random.choice(["the", "its"])
             prefix = random.choice([
                 "And for that, ",
                 "Then, ",

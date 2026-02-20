@@ -26,7 +26,7 @@
 \texttt{glm-4.7:cloud} & 0.889 & 0.595 & 0.717 & 0.133 & \makecell[r]{\textbf{P} 0.754\\\textbf{R} 0.836\\\textbf{F1} 0.733} & \makecell[r]{\textbf{P} 0.631\\\textbf{R} 0.869\\\textbf{F1} 0.614} \\
 \texttt{gpt-oss:120b-cloud} & 0.765 & 0.276 & 0.619 & 0.267 & \makecell[r]{\textbf{P} 0.762\\\textbf{R} 0.616\\\textbf{F1} 0.557} & \makecell[r]{\textbf{P} 0.664\\\textbf{R} 0.693\\\textbf{F1} 0.499} \\
 \texttt{kimi-k2.5:cloud} & 0.907 & 0.670 & 0.691 & 0.133 & \makecell[r]{\textbf{P} 0.753\\\textbf{R} 0.833\\\textbf{F1} 0.752} & \makecell[r]{\textbf{P} 0.630\\\textbf{R} 0.866\\\textbf{F1} 0.629} \\
-\texttt{nemotron-3-nano:30b-cloud} & 0.267 & 0.000 & 0.076 & 0.000 & \makecell[r]{\textbf{P} 0.910\\\textbf{R} 0.091\\\textbf{F1} 0.095} & \makecell[r]{\textbf{P} 0.910\\\textbf{R} 0.091\\\textbf{F1} 0.095} \\
+\texttt{nemotron-3-nano:30b-cloud} & 0.167 & 0.081 & 0.076 & 0.767 & \makecell[r]{\textbf{P} 0.919\\\textbf{R} 0.098\\\textbf{F1} 0.106} & \makecell[r]{\textbf{P} 0.889\\\textbf{R} 0.277\\\textbf{F1} 0.237} \\
 \texttt{qwen3-coder-next:cloud} & 0.470 & 0.207 & 0.399 & 0.833 & \makecell[r]{\textbf{P} 0.824\\\textbf{R} 0.408\\\textbf{F1} 0.361} & \makecell[r]{\textbf{P} 0.826\\\textbf{R} 0.525\\\textbf{F1} 0.455} \\
 \texttt{qwen3.5:cloud} & 0.591 & 0.233 & 0.400 & 0.500 & \makecell[r]{\textbf{P} 0.949\\\textbf{R} 0.413\\\textbf{F1} 0.408} & \makecell[r]{\textbf{P} 0.859\\\textbf{R} 0.530\\\textbf{F1} 0.426} \\
 \bottomrule
@@ -50,7 +50,7 @@
 \texttt{glm-4.7:cloud} & \makecell[r]{516k / 1.5m\\(34.7\%)} & \makecell[r]{791k / 2.3m\\(34.1\%)} & \makecell[r]{1.1m / 3.2m\\(34.9\%)} & \makecell[r]{548k / 1.8m\\(30.0\%)} & \makecell[r]{2.4m / 7.0m\\(34.6\%)} & \makecell[r]{3.0m / 8.9m\\(33.6\%)} \\
 \texttt{gpt-oss:120b-cloud} & \makecell[r]{623k / 1.3m\\(48.5\%)} & \makecell[r]{605k / 1.8m\\(33.6\%)} & \makecell[r]{1.6m / 3.1m\\(49.9\%)} & \makecell[r]{513k / 1.3m\\(40.3\%)} & \makecell[r]{2.8m / 6.2m\\(44.9\%)} & \makecell[r]{3.3m / 7.5m\\(44.1\%)} \\
 \texttt{kimi-k2.5:cloud} & \makecell[r]{595k / 1.1m\\(52.5\%)} & \makecell[r]{1.2m / 2.6m\\(46.7\%)} & \makecell[r]{1.7m / 3.1m\\(54.7\%)} & \makecell[r]{783k / 1.8m\\(44.7\%)} & \makecell[r]{3.5m / 6.8m\\(51.3\%)} & \makecell[r]{4.3m / 8.5m\\(50.0\%)} \\
-\texttt{nemotron-3-nano:30b-cloud} & \makecell[r]{808k / 1.0m\\(77.9\%)} & \makecell[r]{0 / 0\\(0.0\%)} & \makecell[r]{9.0m / 12.7m\\(71.1\%)} & \makecell[r]{0 / 0\\(0.0\%)} & \makecell[r]{9.8m / 13.7m\\(71.6\%)} & \makecell[r]{9.8m / 13.7m\\(71.6\%)} \\
+\texttt{nemotron-3-nano:30b-cloud} & \makecell[r]{6.2m / 8.1m\\(76.9\%)} & \makecell[r]{6.7m / 9.3m\\(71.7\%)} & \makecell[r]{9.0m / 12.7m\\(71.1\%)} & \makecell[r]{3.6m / 4.8m\\(74.3\%)} & \makecell[r]{21.9m / 30.1m\\(72.9\%)} & \makecell[r]{25.5m / 34.9m\\(73.1\%)} \\
 \texttt{qwen3-coder-next:cloud} & \makecell[r]{930k / 1.7m\\(53.2\%)} & \makecell[r]{1.1m / 1.9m\\(54.0\%)} & \makecell[r]{911k / 2.5m\\(36.0\%)} & \makecell[r]{698k / 1.4m\\(48.5\%)} & \makecell[r]{2.9m / 6.2m\\(46.5\%)} & \makecell[r]{3.6m / 7.7m\\(46.8\%)} \\
 \texttt{qwen3.5:cloud} & \makecell[r]{281k / 946k\\(29.7\%)} & \makecell[r]{165k / 700k\\(23.5\%)} & \makecell[r]{321k / 1.3m\\(25.6\%)} & \makecell[r]{202k / 779k\\(26.0\%)} & \makecell[r]{767k / 2.9m\\(26.4\%)} & \makecell[r]{969k / 3.7m\\(26.3\%)} \\
 \bottomrule

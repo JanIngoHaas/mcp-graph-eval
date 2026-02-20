@@ -225,6 +225,24 @@ def _load_eval_file(path: Path) -> tuple[str, list[RowStats]]:
     return model, parsed
 
 
+def _resolve_input_files(inputs: list[Path] | None) -> list[Path]:
+    if not inputs:
+        return sorted(Path(".").glob("eval_results_*.toml"))
+
+    resolved: list[Path] = []
+    for input_path in inputs:
+        if input_path.is_dir():
+            resolved.extend(sorted(input_path.glob("eval_results_*.toml")))
+            continue
+        if input_path.is_file():
+            resolved.append(input_path)
+            continue
+        raise ValueError(f"Input path not found: {input_path}")
+
+    # Preserve deterministic order while removing duplicates.
+    return list(dict.fromkeys(resolved))
+
+
 def _group_mean(rows: list[RowStats], attr: str) -> float:
     if not rows:
         return 0.0
@@ -805,7 +823,11 @@ def main() -> None:
         nargs="*",
         type=Path,
         default=None,
-        help="Input eval result TOML files. Default: eval_results_*.toml in cwd.",
+        help=(
+            "Input eval result TOML files and/or directories. "
+            "Directories are expanded as eval_results_*.toml. "
+            "Default: eval_results_*.toml in cwd."
+        ),
     )
     parser.add_argument(
         "--out-dir",
@@ -821,11 +843,14 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    input_files = args.inputs
+    try:
+        input_files = _resolve_input_files(args.inputs)
+    except ValueError as exc:
+        raise SystemExit(str(exc)) from exc
     if not input_files:
-        input_files = sorted(Path(".").glob("eval_results_*.toml"))
-    if not input_files:
-        raise SystemExit("No input files found.")
+        raise SystemExit(
+            "No input files found. Provide eval_results_*.toml files or directories containing them."
+        )
 
     pricing_by_model = _load_pricing(args.pricing_file)
     outputs = build_reports(
