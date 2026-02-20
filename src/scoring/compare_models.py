@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import re
 import statistics
 import tomllib
 from dataclasses import dataclass
@@ -11,6 +12,13 @@ from pathlib import Path
 from typing import Any
 
 from .metrics import compute_triple_f1
+from .reporting import (
+    render_cross_dataset_explain_latex as _render_cross_dataset_explain_latex,
+    render_cross_dataset_prf_latex as _render_cross_dataset_prf_latex,
+    render_latex_export as _render_latex_export,
+    render_markdown_table as _render_markdown_table,
+    write_pareto_svg as _write_pareto_svg,
+)
 
 RDF_TYPE_PREDICATE = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
 EXPLANATION_TOOLS = {"cite", "explain"}
@@ -225,22 +233,14 @@ def _load_eval_file(path: Path) -> tuple[str, list[RowStats]]:
     return model, parsed
 
 
-def _resolve_input_files(inputs: list[Path] | None) -> list[Path]:
-    if not inputs:
-        return sorted(Path(".").glob("eval_results_*.toml"))
+def _resolve_input_files(results_dir: Path) -> list[Path]:
+    if not results_dir.exists():
+        raise ValueError(f"Results directory not found: {results_dir}")
+    if not results_dir.is_dir():
+        raise ValueError(f"Results directory is not a directory: {results_dir}")
 
-    resolved: list[Path] = []
-    for input_path in inputs:
-        if input_path.is_dir():
-            resolved.extend(sorted(input_path.glob("eval_results_*.toml")))
-            continue
-        if input_path.is_file():
-            resolved.append(input_path)
-            continue
-        raise ValueError(f"Input path not found: {input_path}")
-
-    # Preserve deterministic order while removing duplicates.
-    return list(dict.fromkeys(resolved))
+    candidates = sorted(results_dir.glob("eval_results_*.toml"))
+    return [path for path in candidates if ".scored." not in path.name]
 
 
 def _group_mean(rows: list[RowStats], attr: str) -> float:
@@ -277,182 +277,65 @@ def _subset_for_column(rows: list[RowStats], column: str) -> list[RowStats]:
     return [r for r in rows if r.qtype == column]
 
 
-def _render_markdown_table(headers: list[str], rows: list[list[str]]) -> str:
-    lines = [
-        "| " + " | ".join(headers) + " |",
-        "| " + " | ".join(["---"] * len(headers)) + " |",
-    ]
-    for row in rows:
-        lines.append("| " + " | ".join(row) + " |")
-    return "\n".join(lines)
+def _model_size_class(model: str) -> str:
+    m = model.lower()
+    if "ministral-3:3b" in m:
+        return "3B"
+    if "ministral-3:8b" in m:
+        return "8B"
+    if "ministral-3:14b" in m:
+        return "14B"
+    if "nemotron-3-nano:30b" in m:
+        return "30B"
+    if "qwen3-coder-next" in m:
+        return "approx 80B"
+    if "devstral-2:123b" in m or "gpt-oss:120b" in m:
+        return "approx 120B"
+    if "glm-4.7" in m:
+        return "approx 300B"
+    if "kimi-k2.5" in m:
+        return "approx 1T"
+    return "Unspecified"
 
 
-def _latex_escape(text: str) -> str:
-    replacements = {
-        "\\": r"\textbackslash{}",
-        "&": r"\&",
-        "%": r"\%",
-        "$": r"\$",
-        "#": r"\#",
-        "_": r"\_",
-        "{": r"\{",
-        "}": r"\}",
-        "~": r"\textasciitilde{}",
-        "^": r"\textasciicircum{}",
+def _size_class_sort_key(size_class: str) -> int:
+    order = {
+        "3B": 0,
+        "8B": 1,
+        "14B": 2,
+        "30B": 3,
+        "approx 80B": 4,
+        "approx 120B": 5,
+        "approx 300B": 6,
+        "approx 1T": 7,
+        "Unspecified": 8,
     }
-    out = text
-    for old, new in replacements.items():
-        out = out.replace(old, new)
-    return out
+    return order.get(size_class, 99)
 
 
-def _qtype_display_name(qtype: str) -> str:
-    mapped = {
-        "direct": "Direct",
-        "hop": "Multi-hop",
-        "query_builder": "Query Builder",
-        "impossible": "Impossible",
-    }
-    if qtype in mapped:
-        return mapped[qtype]
-    return qtype.replace("_", " ").title()
-
-
-def _latex_prf_cell(prf: str) -> str:
+def _prf_f1_value(prf: str) -> float | None:
+    clean = prf.strip()
+    if not clean:
+        return None
+    if "/" not in clean:
+        try:
+            return float(clean)
+        except ValueError:
+            return None
     parts = [p.strip() for p in prf.split("/")]
     if len(parts) != 3:
-        return _latex_escape(prf)
-    p, r, f1 = (_latex_escape(parts[0]), _latex_escape(parts[1]), _latex_escape(parts[2]))
-    return rf"\makecell[r]{{\textbf{{P}} {p}\\\textbf{{R}} {r}\\\textbf{{F1}} {f1}}}"
+        return None
+    try:
+        return float(parts[2])
+    except ValueError:
+        return None
 
 
-def _latex_share_cell(share: str) -> str:
-    value_part, sep, pct_part = share.partition(" (")
-    if not sep:
-        return _latex_escape(share)
-    value_render = _latex_escape(value_part.replace("/", " / "))
-    pct_render = _latex_escape("(" + pct_part)
-    return rf"\makecell[r]{{{value_render}\\{pct_render}}}"
-
-
-def _render_latex_export(
-    qtype_cols: list[str],
-    table_a_md_rows: list[list[str]],
-    table_b_md_rows: list[list[str]],
-) -> str:
-    qtype_labels = [_qtype_display_name(q) for q in qtype_cols]
-    colspec_a = "l" + ("c" * len(qtype_cols)) + "cc"
-    colspec_b = "l" + ("c" * (len(qtype_cols) + 2))
-
-    header_a = [r"\thead{Model}"]
-    for label in qtype_labels:
-        header_a.append(rf"\thead{{{_latex_escape(label)}\\F1}}")
-    header_a.extend(
-        [
-            r"\thead{All Answerable Questions\\Precision / Recall / F1}",
-            r"\thead{All Questions (Including Impossible)\\Precision / Recall / F1}",
-        ]
-    )
-
-    header_b = [r"\thead{Model}"]
-    for label in qtype_labels:
-        header_b.append(rf"\thead{{{_latex_escape(label)} Questions\\Explain / Total (Share)}}")
-    header_b.extend(
-        [
-            r"\thead{All Answerable Questions\\Explain / Total (Share)}",
-            r"\thead{All Questions (Including Impossible)\\Explain / Total (Share)}",
-        ]
-    )
-
-    table_a_lines: list[str] = []
-    for row in table_a_md_rows:
-        model = row[0]
-        qtype_vals = row[1 : 1 + len(qtype_cols)]
-        prf_without = row[1 + len(qtype_cols)]
-        prf_with = row[2 + len(qtype_cols)]
-        rendered = [rf"\texttt{{{_latex_escape(model)}}}"]
-        rendered.extend(_latex_escape(v) for v in qtype_vals)
-        rendered.append(_latex_prf_cell(prf_without))
-        rendered.append(_latex_prf_cell(prf_with))
-        table_a_lines.append(" & ".join(rendered) + r" \\")
-
-    table_b_lines: list[str] = []
-    for row in table_b_md_rows:
-        model = row[0]
-        shares = row[1:]
-        rendered = [rf"\texttt{{{_latex_escape(model)}}}"]
-        rendered.extend(_latex_share_cell(v) for v in shares)
-        table_b_lines.append(" & ".join(rendered) + r" \\")
-
-    return "\n".join(
-        [
-            "% Auto-generated by src.scoring.compare_models",
-            "%",
-            "% Required packages in your preamble:",
-            "% \\usepackage{booktabs}",
-            "% \\usepackage{makecell}",
-            "% \\usepackage{graphicx}",
-            "% \\usepackage{adjustbox}",
-            "% \\usepackage{subcaption}",
-            "% \\usepackage{svg}",
-            "",
-            r"\renewcommand\theadfont{\bfseries}",
-            "",
-            r"\begin{table}[htbp]",
-            r"\centering",
-            r"\caption{Model quality by question type with grouped Precision/Recall/F1 columns}",
-            r"\label{tab:model_quality_by_qtype}",
-            r"\small",
-            r"\setlength{\tabcolsep}{4pt}",
-            r"\begin{adjustbox}{max width=\textwidth}",
-            rf"\begin{{tabular}}{{{colspec_a}}}",
-            r"\toprule",
-            " & ".join(header_a) + r" \\",
-            r"\midrule",
-            *table_a_lines,
-            r"\bottomrule",
-            r"\end{tabular}",
-            r"\end{adjustbox}",
-            r"\end{table}",
-            "",
-            r"\begin{table}[htbp]",
-            r"\centering",
-            r"\caption{Explanation overhead by question type}",
-            r"\label{tab:explanation_overhead_by_qtype}",
-            r"\small",
-            r"\setlength{\tabcolsep}{4pt}",
-            r"\begin{adjustbox}{max width=\textwidth}",
-            rf"\begin{{tabular}}{{{colspec_b}}}",
-            r"\toprule",
-            " & ".join(header_b) + r" \\",
-            r"\midrule",
-            *table_b_lines,
-            r"\bottomrule",
-            r"\end{tabular}",
-            r"\end{adjustbox}",
-            r"\end{table}",
-            "",
-            r"\begin{figure}[htbp]",
-            r"\centering",
-            r"\begin{subfigure}[t]{0.49\textwidth}",
-            r"\centering",
-            r"\includesvg[width=\linewidth]{chart_pareto_f1_vs_cost}",
-            r"\caption{Cost-efficiency comparison. X-axis: estimated cost per question in USD. Y-axis: F1 score on answerable questions (impossible questions excluded).}",
-            r"\label{fig:pareto_cost}",
-            r"\end{subfigure}",
-            r"\hfill",
-            r"\begin{subfigure}[t]{0.49\textwidth}",
-            r"\centering",
-            r"\includesvg[width=\linewidth]{chart_pareto_f1_vs_latency}",
-            r"\caption{Latency-efficiency comparison. X-axis: mean latency per question in seconds. Y-axis: F1 score on answerable questions (impossible questions excluded).}",
-            r"\label{fig:pareto_latency}",
-            r"\end{subfigure}",
-            r"\caption{Pareto charts with explicit axis definitions.}",
-            r"\label{fig:pareto_charts}",
-            r"\end{figure}",
-            "",
-        ]
-    )
+def _prf_f1_text(prf: str) -> str:
+    val = _prf_f1_value(prf)
+    if val is None:
+        return ""
+    return f"{val:.3f}"
 
 
 def _fmt(value: float, decimals: int = 3) -> str:
@@ -476,11 +359,292 @@ def _fmt_tokens_share(explain_tokens: float, total_tokens: float) -> str:
     return f"{_fmt_token_compact(explain_tokens)}/{_fmt_token_compact(total_tokens)} ({share:.1f}%)"
 
 
+def _compact_explain_share_text(value: str) -> str:
+    text = value.strip()
+    if not text:
+        return ""
+    m = re.match(r"^\s*([^/]+)\s*/[^()]+\s*\(([^)]+)\)\s*$", text)
+    if not m:
+        return text
+    explain = m.group(1).strip()
+    pct = m.group(2).strip()
+    unit = re.match(r"^([0-9]+(?:\.[0-9]+)?)([kKmM])$", explain)
+    if unit:
+        explain = f"{unit.group(1)}{unit.group(2).upper()}"
+    return f"{explain} ({pct})"
+
+
 def _write_csv(path: Path, headers: list[str], rows: list[list[Any]]) -> None:
     with path.open("w", newline="") as f:
         writer = csv.writer(f)
         writer.writerow(headers)
         writer.writerows(rows)
+
+
+def _load_csv_rows(path: Path) -> list[dict[str, str]]:
+    with path.open(newline="") as f:
+        return list(csv.DictReader(f))
+
+
+def _discover_dataset_report_dirs(results_root: Path, reports_root: Path) -> list[Path]:
+    if not results_root.exists() or not results_root.is_dir():
+        return []
+    report_dirs: list[Path] = []
+    for dataset_dir in sorted(p for p in results_root.iterdir() if p.is_dir()):
+        report_dir = reports_root / dataset_dir.name
+        table_a = report_dir / "table_a_f1_by_model_qtype.csv"
+        table_b = report_dir / "table_b_explain_overhead_share_by_model_qtype.csv"
+        if table_a.exists() and table_b.exists():
+            report_dirs.append(report_dir)
+    return report_dirs
+
+
+def build_combined_reports(report_dirs: list[Path], out_dir: Path) -> dict[str, Path]:
+    if not report_dirs:
+        return {}
+
+    headers = [
+        "dataset",
+        "model",
+        "direct_f1",
+        "hop_f1",
+        "query_builder_f1",
+        "impossible_f1",
+        "all_without_impossible_prf",
+        "all_with_impossible_prf",
+        "explain_direct",
+        "explain_hop",
+        "explain_query_builder",
+        "explain_impossible",
+        "explain_all_without_impossible",
+        "explain_all_with_impossible",
+    ]
+
+    csv_rows: list[list[Any]] = []
+    md_rows: list[list[str]] = []
+    table_a_by_dataset: dict[str, dict[str, dict[str, str]]] = {}
+    table_b_by_dataset: dict[str, dict[str, dict[str, str]]] = {}
+    aggregates_by_dataset: dict[str, dict[str, dict[str, str]]] = {}
+
+    for report_dir in report_dirs:
+        dataset = report_dir.name
+        table_a_rows = _load_csv_rows(report_dir / "table_a_f1_by_model_qtype.csv")
+        table_b_rows = _load_csv_rows(report_dir / "table_b_explain_overhead_share_by_model_qtype.csv")
+        aggregates_csv = report_dir / "model_aggregates.csv"
+        aggregate_rows = _load_csv_rows(aggregates_csv) if aggregates_csv.exists() else []
+
+        a_by_model = {
+            str(row.get("model", "")): row
+            for row in table_a_rows
+            if str(row.get("model", "")).strip()
+        }
+        b_by_model = {
+            str(row.get("model", "")): row
+            for row in table_b_rows
+            if str(row.get("model", "")).strip()
+        }
+        table_a_by_dataset[dataset] = a_by_model
+        table_b_by_dataset[dataset] = b_by_model
+        aggregates_by_dataset[dataset] = {
+            str(row.get("model", "")): row
+            for row in aggregate_rows
+            if str(row.get("model", "")).strip()
+        }
+
+        for model in sorted(set(a_by_model) | set(b_by_model)):
+            a = a_by_model.get(model, {})
+            b = b_by_model.get(model, {})
+            row = [
+                dataset,
+                model,
+                str(a.get("direct_f1", "")),
+                str(a.get("hop_f1", "")),
+                str(a.get("query_builder_f1", "")),
+                str(a.get("impossible_f1", "")),
+                str(a.get("all_without_impossible_prf", "")),
+                str(a.get("all_with_impossible_prf", "")),
+                str(b.get("direct", "")),
+                str(b.get("hop", "")),
+                str(b.get("query_builder", "")),
+                str(b.get("impossible", "")),
+                str(b.get("all_without_impossible", "")),
+                str(b.get("all_with_impossible", "")),
+            ]
+            csv_rows.append(row)
+            md_rows.append([str(v) for v in row])
+
+    out_dir.mkdir(parents=True, exist_ok=True)
+    combined_csv = out_dir / "combined_model_table.csv"
+    combined_md = out_dir / "combined_model_table.md"
+    cross_prf_csv = out_dir / "cross_dataset_prf_table.csv"
+    cross_prf_md = out_dir / "cross_dataset_prf_table.md"
+    cross_prf_tex = out_dir / "cross_dataset_prf_table.tex"
+    cross_explain_csv = out_dir / "cross_dataset_explain_table.csv"
+    cross_explain_md = out_dir / "cross_dataset_explain_table.md"
+    cross_explain_tex = out_dir / "cross_dataset_explain_table.tex"
+    global_pareto_cost_svg = out_dir / "chart_pareto_global_f1_vs_cost.svg"
+    global_pareto_latency_svg = out_dir / "chart_pareto_global_f1_vs_latency.svg"
+    summary_md = out_dir / "summary.md"
+
+    _write_csv(combined_csv, headers, csv_rows)
+    combined_md.write_text(
+        "# Combined Model Table\n\n"
+        + _render_markdown_table(headers, md_rows)
+        + "\n"
+    )
+
+    all_dataset_names = set(table_a_by_dataset) | set(table_b_by_dataset)
+    dataset_order = [d for d in ["hypmol", "wiproflex"] if d in all_dataset_names]
+    dataset_order.extend(sorted(d for d in all_dataset_names if d not in set(dataset_order)))
+    cross_prf_headers = ["size_class", "model"]
+    for dataset in dataset_order:
+        cross_prf_headers.append(f"{dataset}_ans_f1")
+        cross_prf_headers.append(f"{dataset}_all_f1")
+
+    cross_explain_headers = ["size_class", "model"]
+    for dataset in dataset_order:
+        cross_explain_headers.append(f"{dataset}_ans_cite_explain_share")
+        cross_explain_headers.append(f"{dataset}_all_cite_explain_share")
+
+    all_models = {
+        model
+        for per_dataset in table_a_by_dataset.values()
+        for model in per_dataset.keys()
+    }
+    sorted_models = sorted(
+        all_models,
+        key=lambda model: (_size_class_sort_key(_model_size_class(model)), model),
+    )
+
+    cross_rows: list[list[str]] = []
+    cross_explain_rows: list[list[str]] = []
+    for model in sorted_models:
+        row = [_model_size_class(model), model]
+        explain_row = [_model_size_class(model), model]
+        for dataset in dataset_order:
+            a_row = table_a_by_dataset.get(dataset, {}).get(model, {})
+            b_row = table_b_by_dataset.get(dataset, {}).get(model, {})
+            row.append(_prf_f1_text(str(a_row.get("all_without_impossible_prf", ""))))
+            row.append(_prf_f1_text(str(a_row.get("all_with_impossible_prf", ""))))
+            explain_row.append(
+                _compact_explain_share_text(str(b_row.get("all_without_impossible", "")))
+            )
+            explain_row.append(
+                _compact_explain_share_text(str(b_row.get("all_with_impossible", "")))
+            )
+        cross_rows.append(row)
+        cross_explain_rows.append(explain_row)
+
+    _write_csv(cross_prf_csv, cross_prf_headers, [[*r] for r in cross_rows])
+    cross_prf_md.write_text(
+        "# Cross-Dataset F1 Table\n\n"
+        + _render_markdown_table(cross_prf_headers, cross_rows)
+        + "\n"
+    )
+    cross_prf_tex.write_text(_render_cross_dataset_prf_latex(dataset_order, cross_rows))
+
+    _write_csv(cross_explain_csv, cross_explain_headers, [[*r] for r in cross_explain_rows])
+    cross_explain_md.write_text(
+        "# Cross-Dataset Cite + Explanation Token Share Table\n\n"
+        + _render_markdown_table(cross_explain_headers, cross_explain_rows)
+        + "\n"
+    )
+    cross_explain_tex.write_text(
+        _render_cross_dataset_explain_latex(dataset_order, cross_explain_rows)
+    )
+
+    global_acc: dict[str, dict[str, float]] = {}
+    for dataset in dataset_order:
+        for model, row in aggregates_by_dataset.get(dataset, {}).items():
+            try:
+                questions = int(float(str(row.get("questions", "")).strip()))
+                f1_without = float(str(row.get("mean_f1_without_impossible", "")).strip())
+                mean_cost = float(str(row.get("mean_est_cost_per_q_usd", "")).strip())
+                mean_latency = float(str(row.get("mean_elapsed_s_per_q", "")).strip())
+            except ValueError:
+                continue
+            if questions <= 0:
+                continue
+            acc = global_acc.setdefault(
+                model,
+                {"questions": 0.0, "f1q": 0.0, "costq": 0.0, "latq": 0.0},
+            )
+            q = float(questions)
+            acc["questions"] += q
+            acc["f1q"] += f1_without * q
+            acc["costq"] += mean_cost * q
+            acc["latq"] += mean_latency * q
+
+    global_metrics = [
+        (
+            model,
+            acc["f1q"] / acc["questions"],
+            acc["costq"] / acc["questions"],
+            acc["latq"] / acc["questions"],
+        )
+        for model, acc in sorted(
+            global_acc.items(),
+            key=lambda kv: (_size_class_sort_key(_model_size_class(kv[0])), kv[0]),
+        )
+        if acc["questions"] > 0
+    ]
+    global_pareto_points = _build_pareto_points_from_metrics(global_metrics)
+    _write_pareto_svg(
+        path=global_pareto_cost_svg,
+        points=global_pareto_points,
+        frontier_attr="cost_frontier",
+        x_attr="cost_per_question_usd",
+        x_label="Global Weighted Cost Per Question (USD)",
+        y_attr="f1_without_impossible",
+        y_label="Global Weighted F1 (without impossible questions)",
+    )
+    _write_pareto_svg(
+        path=global_pareto_latency_svg,
+        points=global_pareto_points,
+        frontier_attr="latency_frontier",
+        x_attr="mean_latency_s",
+        x_label="Global Weighted Mean Latency Per Question (s)",
+        y_attr="f1_without_impossible",
+        y_label="Global Weighted F1 (without impossible questions)",
+    )
+
+    summary_md.write_text(
+        "\n".join(
+            [
+                "# Combined Reports",
+                "",
+                "Source dataset report directories:",
+                *[f"- `{p}`" for p in report_dirs],
+                "",
+                "Generated files:",
+                f"- `{combined_csv}`",
+                f"- `{combined_md}`",
+                f"- `{cross_prf_csv}`",
+                f"- `{cross_prf_md}`",
+                f"- `{cross_prf_tex}`",
+                f"- `{cross_explain_csv}`",
+                f"- `{cross_explain_md}`",
+                f"- `{cross_explain_tex}`",
+                f"- `{global_pareto_cost_svg}`",
+                f"- `{global_pareto_latency_svg}`",
+            ]
+        )
+        + "\n"
+    )
+
+    return {
+        "combined_model_table_csv": combined_csv,
+        "combined_model_table_md": combined_md,
+        "cross_dataset_prf_table_csv": cross_prf_csv,
+        "cross_dataset_prf_table_md": cross_prf_md,
+        "cross_dataset_prf_table_tex": cross_prf_tex,
+        "cross_dataset_explain_table_csv": cross_explain_csv,
+        "cross_dataset_explain_table_md": cross_explain_md,
+        "cross_dataset_explain_table_tex": cross_explain_tex,
+        "chart_pareto_global_f1_vs_cost_svg": global_pareto_cost_svg,
+        "chart_pareto_global_f1_vs_latency_svg": global_pareto_latency_svg,
+        "combined_summary_md": summary_md,
+    }
 
 
 def _estimate_cost_usd(rows: list[RowStats], pricing: ModelPricing) -> tuple[float, float]:
@@ -506,29 +670,13 @@ def _is_dominated_2d(candidate: tuple[float, float], others: list[tuple[float, f
     return False
 
 
-def _build_pareto_points(aggregates: list[ModelAggregate]) -> list[ParetoPoint]:
-    missing_cost_models = [a.model for a in aggregates if a.mean_est_cost_per_q_usd is None]
-    if missing_cost_models:
-        raise ValueError(
-            "Missing USD cost for models (check pricing file coverage): "
-            + ", ".join(sorted(missing_cost_models))
-        )
-
-    points: list[tuple[str, float, float, float]] = []
-    for a in aggregates:
-        points.append(
-            (
-                a.model,
-                a.mean_f1_without_impossible,
-                float(a.mean_est_cost_per_q_usd),
-                a.mean_elapsed_s_per_q,
-            )
-        )
-
+def _build_pareto_points_from_metrics(
+    metrics: list[tuple[str, float, float, float]],
+) -> list[ParetoPoint]:
     out_points: list[ParetoPoint] = []
-    for model, f1, cost_val, latency in points:
-        cost_others = [(of1, ocost) for om, of1, ocost, _ in points if om != model]
-        latency_others = [(of1, olat) for om, of1, _, olat in points if om != model]
+    for model, f1, cost_val, latency in metrics:
+        cost_others = [(of1, ocost) for om, of1, ocost, _ in metrics if om != model]
+        latency_others = [(of1, olat) for om, of1, _, olat in metrics if om != model]
         cost_frontier = not _is_dominated_2d((f1, cost_val), cost_others)
         latency_frontier = not _is_dominated_2d((f1, latency), latency_others)
         out_points.append(
@@ -545,57 +693,23 @@ def _build_pareto_points(aggregates: list[ModelAggregate]) -> list[ParetoPoint]:
     return out_points
 
 
-def _write_pareto_svg(
-    path: Path,
-    points: list[ParetoPoint],
-    frontier_attr: str,
-    x_attr: str,
-    x_label: str,
-    y_attr: str,
-    y_label: str,
-) -> None:
-    try:
-        import matplotlib.pyplot as plt  # type: ignore
-    except ModuleNotFoundError as exc:
-        raise RuntimeError(
-            "matplotlib is required for Pareto rendering. "
-            "Install dependencies and rerun."
-        ) from exc
-
-    if not points:
-        path.write_text("")
-        return
-
-    frontier = [p for p in points if bool(getattr(p, frontier_attr))]
-    dominated = [p for p in points if not bool(getattr(p, frontier_attr))]
-
-    plt.figure(figsize=(10, 5.2), dpi=120)
-
-    def _plot_group(group: list[ParetoPoint], color: str, label: str) -> None:
-        if not group:
-            return
-        xs = [getattr(p, x_attr) for p in group]
-        ys = [getattr(p, y_attr) for p in group]
-        plt.scatter(xs, ys, c=color, label=label, s=50, alpha=0.9, edgecolors="none")
-        for p in group:
-            plt.annotate(
-                p.model,
-                (getattr(p, x_attr), getattr(p, y_attr)),
-                textcoords="offset points",
-                xytext=(5, 5),
-                fontsize=8,
-            )
-
-    _plot_group(frontier, "#d62728", "Pareto frontier")
-    _plot_group(dominated, "#1f77b4", "Dominated")
-
-    plt.xlabel(x_label)
-    plt.ylabel(y_label)
-    plt.grid(alpha=0.25)
-    plt.legend(loc="best")
-    plt.tight_layout()
-    plt.savefig(path, format="svg")
-    plt.close()
+def _build_pareto_points(aggregates: list[ModelAggregate]) -> list[ParetoPoint]:
+    missing_cost_models = [a.model for a in aggregates if a.mean_est_cost_per_q_usd is None]
+    if missing_cost_models:
+        raise ValueError(
+            "Missing USD cost for models (check pricing file coverage): "
+            + ", ".join(sorted(missing_cost_models))
+        )
+    metrics = [
+        (
+            a.model,
+            a.mean_f1_without_impossible,
+            float(a.mean_est_cost_per_q_usd),
+            a.mean_elapsed_s_per_q,
+        )
+        for a in aggregates
+    ]
+    return _build_pareto_points_from_metrics(metrics)
 
 
 def build_reports(
@@ -719,14 +833,36 @@ def build_reports(
     table_a_md = out_dir / "table_a_f1_by_model_qtype.md"
     table_b_csv = out_dir / "table_b_explain_overhead_share_by_model_qtype.csv"
     table_b_md = out_dir / "table_b_explain_overhead_share_by_model_qtype.md"
+    model_aggregates_csv = out_dir / "model_aggregates.csv"
     pareto_cost_svg = out_dir / "chart_pareto_f1_vs_cost.svg"
     pareto_latency_svg = out_dir / "chart_pareto_f1_vs_latency.svg"
     summary_md = out_dir / "summary.md"
-    pricing_template_csv = out_dir / "model_pricing_template.csv"
     export_latex = out_dir / "model_comparison_export.tex"
 
     _write_csv(table_a_csv, headers_a, table_a_csv_rows)
     _write_csv(table_b_csv, headers_b, table_b_csv_rows)
+    _write_csv(
+        model_aggregates_csv,
+        [
+            "model",
+            "questions",
+            "mean_f1_without_impossible",
+            "mean_f1_with_impossible",
+            "mean_est_cost_per_q_usd",
+            "mean_elapsed_s_per_q",
+        ],
+        [
+            [
+                a.model,
+                a.questions,
+                a.mean_f1_without_impossible,
+                a.mean_f1_with_impossible,
+                a.mean_est_cost_per_q_usd,
+                a.mean_elapsed_s_per_q,
+            ]
+            for a in aggregates
+        ],
+    )
 
     table_a_md.write_text(_render_markdown_table(headers_a, table_a_md_rows) + "\n")
     table_b_md.write_text(_render_markdown_table(headers_b, table_b_md_rows) + "\n")
@@ -748,13 +884,6 @@ def build_reports(
         y_attr="f1_without_impossible",
         y_label="F1 (without impossible questions)",
     )
-
-    if not pricing_template_csv.exists():
-        with pricing_template_csv.open("w", newline="") as f:
-            writer = csv.writer(f)
-            writer.writerow(["model", "input_per_1m", "output_per_1m"])
-            for model in models:
-                writer.writerow([model, "", ""])
 
     pricing_note = (
         "- Cost columns are estimated from `runtime_trace` input/output tokens "
@@ -808,59 +937,129 @@ def build_reports(
         "table_a_md": table_a_md,
         "table_b_csv": table_b_csv,
         "table_b_md": table_b_md,
+        "model_aggregates_csv": model_aggregates_csv,
         "chart_pareto_f1_vs_cost_svg": pareto_cost_svg,
         "chart_pareto_f1_vs_latency_svg": pareto_latency_svg,
         "model_comparison_export_tex": export_latex,
-        "pricing_template_csv": pricing_template_csv,
         "summary_md": summary_md,
     }
+
+
+def _run_dataset_comparison(
+    results_dir: Path,
+    pricing_by_model: dict[str, ModelPricing],
+) -> tuple[Path, dict[str, Path]]:
+    input_files = _resolve_input_files(results_dir)
+    if not input_files:
+        raise ValueError(
+            f"No input files found in directory: {results_dir}. "
+            "Expected files named eval_results_*.toml (excluding *.scored.*)."
+        )
+    out_dir = Path("reports") / results_dir.name
+    outputs = build_reports(
+        input_files=input_files,
+        out_dir=out_dir,
+        pricing_by_model=pricing_by_model,
+    )
+    return out_dir, outputs
+
+
+def _resolve_default_results_root() -> Path:
+    primary = Path("results")
+    if primary.is_dir():
+        return primary
+    fallback = Path("result")
+    if fallback.is_dir():
+        return fallback
+    return primary
+
+
+def _resolve_pricing_file(cli_pricing_file: Path | None) -> Path:
+    if cli_pricing_file is not None:
+        return cli_pricing_file
+    return Path("reports") / "model_pricing.csv"
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Compare eval result files across models.")
     parser.add_argument(
-        "--inputs",
-        nargs="*",
+        "results_dir",
+        nargs="?",
         type=Path,
-        default=None,
-        help=(
-            "Input eval result TOML files and/or directories. "
-            "Directories are expanded as eval_results_*.toml. "
-            "Default: eval_results_*.toml in cwd."
-        ),
+        help="Directory containing eval_results_*.toml files for one dataset.",
     )
     parser.add_argument(
-        "--out-dir",
-        type=Path,
-        default=Path("reports/model_comparison"),
-        help="Output directory for generated tables and CSVs.",
+        "--all",
+        action="store_true",
+        help="Run comparisons for every dataset directory under ./results.",
     )
     parser.add_argument(
         "--pricing-file",
         type=Path,
-        required=True,
-        help="CSV with columns: model,input_per_1m,output_per_1m",
+        default=None,
+        help=(
+            "Pricing CSV with columns: model,input_per_1m,output_per_1m "
+            "(default: reports/model_pricing.csv)."
+        ),
     )
     args = parser.parse_args()
+    pricing_file = _resolve_pricing_file(args.pricing_file)
+    pricing_by_model = _load_pricing(pricing_file)
 
-    try:
-        input_files = _resolve_input_files(args.inputs)
-    except ValueError as exc:
-        raise SystemExit(str(exc)) from exc
-    if not input_files:
-        raise SystemExit(
-            "No input files found. Provide eval_results_*.toml files or directories containing them."
-        )
+    if args.results_dir is None and not args.all:
+        args.all = True
 
-    pricing_by_model = _load_pricing(args.pricing_file)
-    outputs = build_reports(
-        input_files=input_files,
-        out_dir=args.out_dir,
-        pricing_by_model=pricing_by_model,
-    )
-    print("Generated reports:")
-    for key, path in outputs.items():
-        print(f"- {key}: {path}")
+    if args.all and args.results_dir is not None:
+        parser.error("Provide either a single results_dir or --all, not both.")
+
+    if args.all:
+        results_root = _resolve_default_results_root()
+        if not results_root.exists() or not results_root.is_dir():
+            raise SystemExit(
+                f"Results root not found: {results_root}. "
+                "Expected ./results (or ./result)."
+            )
+        dataset_dirs = sorted(p for p in results_root.iterdir() if p.is_dir())
+        if not dataset_dirs:
+            raise SystemExit(f"No dataset directories found under: {results_root}")
+        processed = 0
+        for dataset_dir in dataset_dirs:
+            try:
+                out_dir, outputs = _run_dataset_comparison(dataset_dir, pricing_by_model)
+            except ValueError:
+                # Skip non-dataset directories without eval files.
+                continue
+            processed += 1
+            print(f"Generated reports for dataset '{dataset_dir.name}' in {out_dir}:")
+            for key, path in outputs.items():
+                print(f"- {key}: {path}")
+        if processed == 0:
+            raise SystemExit(
+                f"No eval_results_*.toml files found in any dataset under: {results_root}"
+            )
+    else:
+        assert args.results_dir is not None
+        try:
+            out_dir, outputs = _run_dataset_comparison(args.results_dir, pricing_by_model)
+        except ValueError as exc:
+            raise SystemExit(str(exc)) from exc
+        print(f"Generated reports for dataset '{args.results_dir.name}' in {out_dir}:")
+        for key, path in outputs.items():
+            print(f"- {key}: {path}")
+
+    # Programmatically keep a cross-dataset combined table up to date.
+    reports_root = Path("reports")
+    if args.all:
+        results_root = _resolve_default_results_root()
+    else:
+        assert args.results_dir is not None
+        results_root = args.results_dir.parent
+    dataset_report_dirs = _discover_dataset_report_dirs(results_root, reports_root)
+    combined_outputs = build_combined_reports(dataset_report_dirs, reports_root / "combined")
+    if combined_outputs:
+        print("Generated combined reports:")
+        for key, path in combined_outputs.items():
+            print(f"- {key}: {path}")
 
 
 if __name__ == "__main__":

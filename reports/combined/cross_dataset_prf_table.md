@@ -1,0 +1,14 @@
+# Cross-Dataset F1 Table
+
+| size_class | model | hypmol_ans_f1 | hypmol_all_f1 | wiproflex_ans_f1 | wiproflex_all_f1 |
+| --- | --- | --- | --- | --- | --- |
+| 3B | ministral-3:3b-cloud |  |  | 0.414 | 0.391 |
+| 8B | ministral-3:8b-cloud |  |  | 0.199 | 0.352 |
+| 14B | ministral-3:14b-cloud |  |  | 0.503 | 0.542 |
+| 30B | nemotron-3-nano:30b-cloud | 0.106 | 0.237 | 0.227 | 0.328 |
+| approx 80B | qwen3-coder-next:cloud | 0.361 | 0.455 | 0.518 | 0.554 |
+| approx 120B | devstral-2:123b-cloud | 0.529 | 0.477 | 0.603 | 0.609 |
+| approx 120B | gpt-oss:120b-cloud | 0.557 | 0.499 | 0.648 | 0.579 |
+| approx 300B | glm-4.7:cloud | 0.733 | 0.614 | 0.721 | 0.644 |
+| approx 1T | kimi-k2.5:cloud | 0.752 | 0.629 | 0.738 | 0.651 |
+| Unspecified | gemini-3-flash-preview:cloud | 0.745 | 0.644 | 0.647 | 0.591 |
