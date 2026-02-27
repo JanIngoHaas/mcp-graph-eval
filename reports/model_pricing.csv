@@ -1,0 +1,11 @@
+model,input_per_1m,output_per_1m
+devstral-2:123b-cloud,0.4,2
+gemini-3-flash-preview:cloud,0.292,3.00
+glm-4.7:cloud,0.234,2.19
+gpt-oss:120b-cloud,0.145,0.526
+kimi-k2.5:cloud,0.250,2.97
+nemotron-3-nano:30b-cloud,0.05,0.2
+qwen3-coder-next:cloud,0.192,0.883
+ministral-3:3b-cloud,0.100,0.097
+ministral-3:8b-cloud,0.150,0.149
+ministral-3:14b-cloud,0.200,0.198

@@ -15,6 +15,13 @@ def generate_samples(num_samples: int):
         "answer_triples": [],
         "qtype": None,
         "qb": None,
+        "hop_bridge_predicate_uri": None,
+        "hop_target_count": None,
+        "hop_scope": None,
+        "global_seen_hop": set(), # Track (anchor_uri, bridge_predicate_uri)
+        "global_seen_direct": set(), # Track (anchor_uri, prop_uri_list)
+        "global_seen_impossible": set(), # Track (anchor_uri, prop_uri)
+        "global_seen_qb": set(), # Track (root_type, frozenset(filter_props), frozenset(project_props))
     })
     root_node = rules.root(num_samples)
 
@@ -24,7 +31,8 @@ def generate_samples(num_samples: int):
     return vm.get_ctx("samples") or []
 
 def main():
-    seed(3952356)
+    #seed(3952356)
+    seed(98273892347)
     num_samples = 150
     print(f"Generating {num_samples} samples...")
     qtype_counts = Counter()

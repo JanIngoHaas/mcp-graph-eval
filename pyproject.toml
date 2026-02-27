@@ -8,6 +8,8 @@ dependencies = [
     "requests",
     "python-dotenv",
     "rdflib",
+    "inflect>=7.4.0",
+    "lemminflect>=0.2.3",
     "langchain>=1.2.7",
     "langchain-openai>=1.1.7",
     "langchain-mcp-adapters>=0.2.1",
@@ -19,4 +21,5 @@ dependencies = [
     "tomlkit>=0.13.2",
     "flask>=3.0.0",
     "markdown>=3.6",
+    "matplotlib>=3.9.0",
 ]

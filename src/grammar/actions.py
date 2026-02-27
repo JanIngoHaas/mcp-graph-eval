@@ -1,5 +1,6 @@
 from dataclasses import dataclass, field
 import random
+import re
 from typing import Optional, List, Any, Set
 from rdflib import URIRef, Literal
 from src.grammar.ontology import OntologySampler, TypeNode, EntityNode, PropertyNode, PropertyRange
@@ -7,7 +8,7 @@ from src.grammar.language_utils import (
     classify_property, get_hop_phrases,
     format_property_as_noun_phrase, humanize_label,
     get_search_phrases, compose_question, compose_qb_question,
-    pluralize
+    pluralize, _pluralize_noun_phrase,
 )
 from src.vm.core import RetrySignal
 
@@ -21,29 +22,56 @@ def get_sampler() -> OntologySampler:
     return _sampler
 
 def _append_trace(data: dict, step: dict, required: bool = False, is_answer: bool = False) -> None:
-    """Append a trace step with evaluation metadata."""
+    """Append only answer-bearing tool calls to trace."""
+    if not is_answer:
+        return
     entry = dict(step)
     entry["required"] = required
     entry["is_answer"] = bool(is_answer)
     data["trace"].append(entry)
 
 # --- Configuration ---
-PROB_QB_DEEP_FILTER = 0.30
+PROB_QB_DEEP_FILTER = 0.05
+UNIQUE_ANCHOR_MAX_ATTEMPTS = 10
+HOPPABLE_SAMPLER_MAX_ATTEMPTS = 20
 
 # --- State Objects ---
 
 @dataclass
+class EntityRef:
+    """Canonical immutable entity identity used for working state."""
+    uri: URIRef
+    label: str
+    type_uri: URIRef
+
+    @classmethod
+    def from_node(cls, node: EntityNode) -> "EntityRef":
+        return cls(uri=node.uri, label=node.label, type_uri=node.type_uri)
+
+    def to_dict(self) -> dict:
+        return {
+            "uri": str(self.uri),
+            "label": self.label,
+            "type_uri": str(self.type_uri),
+        }
+
+
+@dataclass
 class WorkingEntity:
-    """Wraps an EntityNode with session-specific state, like seen properties."""
-    node: EntityNode
+    """Runtime wrapper around EntityRef for traversal-local mutable state."""
+    ref: EntityRef
     seen_properties: Set[URIRef] = field(default_factory=set)
-    
+
+    @classmethod
+    def from_node(cls, node: EntityNode) -> "WorkingEntity":
+        return cls(ref=EntityRef.from_node(node))
+
     @property
-    def label(self): return self.node.label
+    def label(self): return self.ref.label
     @property
-    def uri(self): return self.node.uri
+    def uri(self): return self.ref.uri
     @property
-    def type_uri(self): return self.node.type_uri
+    def type_uri(self): return self.ref.type_uri
 
 def resolve_operator_and_value(term: Any) -> tuple[str, str]:
     """Determines appropriate SPARQL operator and potentially transforms value based on type."""
@@ -60,18 +88,57 @@ def resolve_operator_and_value(term: Any) -> tuple[str, str]:
         
         # 2. String Logic
         if isinstance(py_val, str):
-            # Shorten long strings for 'contains' to look like a search snippet
+            # Shorten long strings for 'contains' to look like a meaningful snippet.
             if len(val_str) > 20:
-                words = val_str.split()
-                if len(words) > 4:
-                    # Pick a window of 2-4 words
-                    window_size = random.randint(2, 4)
-                    start = random.randint(0, len(words) - window_size)
-                    val_str = " ".join(words[start : start + window_size])
+                val_str = _extract_informative_contains_snippet(val_str)
             return "contains", val_str
              
     # 3. Object Logic (URIRef)
     return random.choice(["="]), val_str
+
+
+_SNIPPET_STOPWORDS = {
+    "a", "an", "and", "are", "as", "at", "be", "by", "for", "from", "in",
+    "into", "is", "it", "of", "on", "or", "that", "the", "their", "this",
+    "to", "was", "were", "with",
+}
+
+
+def _extract_informative_contains_snippet(text: str) -> str:
+    words = text.split()
+    if len(words) <= 4:
+        return text.strip()
+
+    best_window: list[str] | None = None
+    best_score = -1
+    max_attempts = min(24, len(words) * 2)
+
+    for _ in range(max_attempts):
+        size = random.randint(2, 4)
+        if len(words) < size:
+            continue
+        start = random.randint(0, len(words) - size)
+        window = words[start : start + size]
+
+        cleaned = [
+            re.sub(r"^[^0-9A-Za-z]+|[^0-9A-Za-z]+$", "", w).lower()
+            for w in window
+        ]
+        informative = sum(
+            1
+            for token in cleaned
+            if token and token not in _SNIPPET_STOPWORDS and len(token) >= 4
+        )
+
+        if informative > best_score:
+            best_score = informative
+            best_window = window
+            if best_score >= 2:
+                break
+
+    if best_window:
+        return " ".join(best_window).strip(" ,;:.")
+    return text.strip()
 
 @dataclass
 class QueryBuilderState:
@@ -82,83 +149,186 @@ class QueryBuilderState:
     anchor_entity: Optional[WorkingEntity] = None
 
 
+def _resolve_qb_display_value(s: OntologySampler, val_term: Any, fallback: str) -> str:
+    if isinstance(val_term, URIRef):
+        try:
+            return s.get_label(val_term)
+        except Exception:
+            return fallback
+    return fallback
+
+
+def _append_qb_filter(
+    qb: QueryBuilderState,
+    *,
+    path_uri: str | URIRef,
+    path_display: str,
+    operator: str,
+    value: str,
+    display_value: str,
+    filter_type: str,
+    path_segments: list[str],
+    target_type_uri: Optional[str] = None,
+) -> None:
+    entry = {
+        "path_uri": path_uri,
+        "path_display": path_display,
+        "operator": operator,
+        "value": value,
+        "display_value": display_value,
+        "type": filter_type,
+        "path_segments": path_segments,
+    }
+    if target_type_uri is not None:
+        entry["target_type_uri"] = target_type_uri
+    qb.filters.append(entry)
+
+
 def _peek(data: dict) -> WorkingEntity:
     stack = data.get("s_entities")
     if not stack: raise ValueError("Focal stack is empty")
     return stack[-1]
 
-# --- Oracle Functions ---
 
-def sel_random_entity(data: dict):
-    """Samples a random entity and pushes it onto the focal stack."""
+def _sample_unique_entity(require_hoppable: bool = False, type_uri: Optional[URIRef] = None) -> EntityNode:
+    """Sample an entity whose (label,type) pair is unique."""
     s = get_sampler()
-    type_node = s.get_random_type()
-    node = s.get_random_entity(type_node.uri)
-    data["s_entities"].append(WorkingEntity(node))
+    last_reason = "unknown"
+
+    for i in range(UNIQUE_ANCHOR_MAX_ATTEMPTS):
+        try:
+            if require_hoppable:
+                node = s.get_random_hoppable_entity(type_uri=type_uri, max_attempts=HOPPABLE_SAMPLER_MAX_ATTEMPTS)
+            else:
+                node = s.get_random_entity(type_uri=type_uri)
+        except RetrySignal as exc:
+            last_reason = str(exc)
+            continue
+
+        primary_type = s.get_entity_primary_type(node.uri) or node.type_uri
+        count = s.count_entities_by_label_and_type(node.label, primary_type)
+        if count == 1:
+            if primary_type != node.type_uri:
+                node = EntityNode(node.uri, node.label, primary_type)
+            return node
+        
+        if i % 20 == 0:
+            print(f"  [Sampler] Finding unique anchor for {type_uri or 'any'}... attempt {i}, non-unique label '{node.label}' ({count} matches)")
+        last_reason = f"label='{node.label}', type='{primary_type}', count={count}"
+
+    print(f"  [Sampler] FAILED to find unique anchor for {type_uri} after {UNIQUE_ANCHOR_MAX_ATTEMPTS} attempts")
+    raise RetrySignal(f"Failed to find unique anchor after {UNIQUE_ANCHOR_MAX_ATTEMPTS} attempts ({last_reason})")
+
+# --- Oracle Functions ---
+def sel_random_entity(data: dict):
+    """Samples a random entity using stratified sampling. Retries different types if unique anchors aren't found."""
+    s = get_sampler()
+    for _ in range(5):
+        try:
+            type_node = s.get_random_type()
+            node = _sample_unique_entity(require_hoppable=False, type_uri=type_node.uri)
+            data["s_entities"].append(WorkingEntity.from_node(node))
+            return
+        except RetrySignal:
+            continue
+    node = _sample_unique_entity(require_hoppable=False)
+    data["s_entities"].append(WorkingEntity.from_node(node))
+
+def sel_stratified_entity(data: dict):
+    """Backwards compatibility or specific stratified use-case."""
+    sel_random_entity(data)
 
 def sel_hoppable_entity(data: dict):
-    """Samples a random entity that has at least one outgoing object property."""
+    """Samples a random hoppable entity using stratified sampling."""
     s = get_sampler()
-    node = s.get_random_hoppable_entity()
-    data["s_entities"].append(WorkingEntity(node))
+    for _ in range(5):
+        try:
+            type_node = s.get_random_type()
+            node = _sample_unique_entity(require_hoppable=True, type_uri=type_node.uri)
+            data["s_entities"].append(WorkingEntity.from_node(node))
+            return
+        except RetrySignal:
+            continue
+    node = _sample_unique_entity(require_hoppable=True)
+    data["s_entities"].append(WorkingEntity.from_node(node))
 
 def gen_random_facts(min_facts: int = 1, max_facts: int = 3):
     """Factory that returns an action sampling [min_facts, max_facts] for the focal entity."""
     def _gen_facts_logic(data: dict) -> Any:
-        ent: WorkingEntity = _peek(data)
-        if not ent: raise RetrySignal("No focal entity to sample facts from")
-
         s = get_sampler()
-        all_props = s.get_entity_data_properties(ent.uri)
-        
-        # Filter for properties we haven't seen on THIS instance
-        candidates = [p for p in all_props if p.uri not in ent.seen_properties]
-        
-        if not candidates:
-            raise RetrySignal(f"Entity {ent.label} has no unused properties")
-            
-        # Decide how many to sample
-        upper_bound = min(max_facts, len(candidates))
-        if upper_bound < min_facts:
-            # If we can't even satisfy the minimum required facts, we fail/retry
-            raise RetrySignal(f"Entity {ent.label} has only {len(candidates)} properties, but {min_facts} are required")
+        stack = data.get("s_entities") or []
+        if not stack:
+            raise RetrySignal("No focal entity to sample facts from")
 
-        num_to_sample = random.randint(min_facts, upper_bound)
-        sampled = random.sample(candidates, num_to_sample)
-        
-        for prop in sampled:
-            # Sample value
-            val = random.choice(prop.values) if prop.values else s.sample_random_literal_value(prop.uri)
-            
-            # Optional: inspecting the property is allowed but not required.
-            _append_trace(
-                data,
-                {
-                    "tool": "inspect",
-                    "uri": str(prop.uri),
-                },
-                required=False,
-                is_answer=False,
-            )
+        # For hop questions, stack contains [anchor, target1, target2, ...].
+        # In multi-target hops we sample answer facts for all targets.
+        entities: list[WorkingEntity] = stack[1:] if len(stack) > 1 else [stack[-1]]
 
-            # Record trace
-            _append_trace(
-                data,
-                {
-                    "tool": "fact",
-                    "subject": str(ent.uri),
-                    "predicate": str(prop.uri),
-                    "object": str(val),
-                },
-                required=True,
-                is_answer=True,
-            )
-            
-            # Accumulate for question generation
-            data["s_facts"].append((prop, val))
-            
-            # Mark as seen
-            ent.seen_properties.add(prop.uri)
+        global_seen = data.get("global_seen_direct")
+        candidates_by_entity: list[list[PropertyNode]] = []
+        for ent in entities:
+            all_props = s.get_entity_properties(ent.uri)
+            # Filter by local seen properties AND global seen properties (for this specific entity)
+            candidates = []
+            for p in all_props:
+                if p.uri in ent.seen_properties:
+                    continue
+                if global_seen is not None and (ent.uri, p.uri) in global_seen:
+                    continue
+                candidates.append(p)
+
+            if not candidates:
+                raise RetrySignal(f"Entity {ent.label} has no new/unseen properties")
+            candidates_by_entity.append(candidates)
+
+        sampled_by_entity: list[list[PropertyNode]] = []
+        if len(entities) > 1:
+            # Prefer a shared property to keep "all ..." hop questions coherent.
+            common_uris = set(p.uri for p in candidates_by_entity[0])
+            for candidates in candidates_by_entity[1:]:
+                common_uris &= {p.uri for p in candidates}
+
+            if not common_uris:
+                raise RetrySignal(
+                    "Multi-target hop has no shared property across targets; retrying for coherent 'all' semantics"
+                )
+
+            chosen_uri = random.choice(list(common_uris))
+            for candidates in candidates_by_entity:
+                picked = next(p for p in candidates if p.uri == chosen_uri)
+                sampled_by_entity.append([picked])
+        else:
+            candidates = candidates_by_entity[0]
+            upper_bound = min(max_facts, len(candidates))
+            if upper_bound < min_facts:
+                raise RetrySignal(
+                    f"Entity {entities[0].label} has only {len(candidates)} properties, "
+                    f"but {min_facts} are required"
+                )
+            num_to_sample = random.randint(min_facts, upper_bound)
+            sampled_by_entity.append(random.sample(candidates, num_to_sample))
+
+        for ent, sampled_props in zip(entities, sampled_by_entity):
+            for prop in sampled_props:
+                val = random.choice(prop.values) if prop.values else s.sample_random_literal_value(prop.uri)
+
+                # Record answer-bearing fact trace.
+                _append_trace(
+                    data,
+                    {
+                        "tool": "fact",
+                        "subject": str(ent.uri),
+                        "predicate": str(prop.uri),
+                        "object": str(val),
+                    },
+                    required=True,
+                    is_answer=True,
+                )
+
+                data["s_facts"].append((prop, val))
+                ent.seen_properties.add(prop.uri)
+                if global_seen is not None:
+                    global_seen.add((ent.uri, prop.uri))
         return
     return _gen_facts_logic
 
@@ -171,12 +341,26 @@ def gen_impossible_fact(data: dict):
     if not ent: raise RetrySignal("No focal entity to sample impossible fact from")
 
     s = get_sampler()
-    # 1. Get all properties ACTUALY present on the entity
-    actual_props = s.get_entity_properties(ent.uri)
-    actual_uris = {p.uri for p in actual_props}
+    # Collect properties already present to forbid them
+    own_props = s.get_entity_properties(ent.uri)
+    forbidden = {p.uri for p in own_props}
     
-    # 2. Pick a random property from the UNIVERSE that is NOT in actual_uris
-    impossible_prop = s.get_random_property_excluding(actual_uris)
+    global_seen = data.get("global_seen_impossible")
+
+    # Retry a few times if the sampled impossible property was already used for this entity
+    prop = None
+    for _ in range(5):
+        p = s.get_neighbor_property_excluding(ent.type_uri, forbidden)
+        if global_seen is not None and (ent.uri, p.uri) in global_seen:
+             continue
+        prop = p
+        break
+    
+    if prop is None:
+        raise RetrySignal("Failed to find unique impossible property")
+
+    if global_seen is not None:
+        global_seen.add((ent.uri, prop.uri))
     
     # 3. Record trace - the agent effectively "checks" this property
     _append_trace(
@@ -184,7 +368,7 @@ def gen_impossible_fact(data: dict):
         {
             "tool": "fact",
             "subject": str(ent.uri),
-            "predicate": str(impossible_prop.uri),
+            "predicate": str(prop.uri),
             "object": "_",
         },
         required=True,
@@ -192,7 +376,7 @@ def gen_impossible_fact(data: dict):
     )
     
     # 4. Add to s_facts for question generation -> (prop, None) implies no value found
-    data["s_facts"].append((impossible_prop, None))
+    data["s_facts"].append((prop, None))
     
     # 5. NO answer_triples (or maybe an explicit "I don't know" marker if needed later)
     # The evaluator should see empty answer triples and "I don't know" in the model response
@@ -208,15 +392,29 @@ def sel_hop_target(data: dict) -> Any:
     obj_props = s.get_entity_object_properties(ent.uri)
     random.shuffle(obj_props)
 
+    global_seen = data.get("global_seen_hop")
+    
     for prop in obj_props:
-        target_candidates = list(prop.values)
+        if global_seen is not None and (ent.uri, prop.uri) in global_seen:
+            continue
+            
+        target_candidates = [uri for uri in dict.fromkeys(prop.values) if isinstance(uri, URIRef)]
+        if not target_candidates:
+            continue
+            
+        if global_seen is not None:
+            global_seen.add((ent.uri, prop.uri))
         random.shuffle(target_candidates)
+        hop_target_count = len(target_candidates)
+        hop_scope = "one" if hop_target_count == 1 else "all"
+        selected_targets = target_candidates[:1] if hop_scope == "one" else target_candidates
 
-        # Pick the first target (single-hop only; no need to check target structure)
-        for target_uri in target_candidates:
+        resolved_targets: list[EntityNode] = []
+        for target_uri in selected_targets:
             target_node = s.resolve_entity(target_uri)
+            resolved_targets.append(target_node)
 
-            # Record the connection fact first
+            # Record the bridge fact for each selected target.
             _append_trace(
                 data,
                 {
@@ -226,23 +424,20 @@ def sel_hop_target(data: dict) -> Any:
                     "object": str(target_node.uri),
                 },
                 required=True,
-                is_answer=False,
+                is_answer=True,
             )
 
-            # Optional: inspecting the linking property is allowed.
-            _append_trace(
-                data,
-                {"tool": "inspect", "uri": str(prop.uri)},
-                required=False,
-                is_answer=False,
-            )
+        # Avoid leaking concrete targets into the NL bridge.
+        data["hop_bridge_predicate_uri"] = str(prop.uri)
+        data["hop_target_count"] = hop_target_count
+        data["hop_scope"] = hop_scope
+        phrases = get_hop_phrases(prop.label, scope=hop_scope)
+        data["nl"].append(random.choice(phrases))
 
-            # Avoid leaking the answer by not injecting the target label into the question.
-            phrases = get_hop_phrases(prop.label)
-            data["nl"].append(random.choice(phrases))
-            # Push new focus
-            data["s_entities"].append(WorkingEntity(target_node))
-            return
+        # Push selected target entities to support downstream answer-fact generation.
+        for node in resolved_targets:
+            data["s_entities"].append(WorkingEntity.from_node(node))
+        return
 
     raise RetrySignal(f"Entity {ent.label} has no outgoing links (object properties) to hop to")
 
@@ -283,39 +478,46 @@ def make_question(data: dict):
     s_facts = data["s_facts"]
     nl = data["nl"]
     ent = _peek(data)
-    
+
     # Consolidate facts (lifo)
     facts = [item for item in reversed(s_facts) if isinstance(item, tuple)]
-    
-    if facts:
-        # Determine if we are "deep" in a hop to add connective particles
-        stack_depth = len(data.get("s_entities", []))
-        prefix = ""
-        if stack_depth > 1:
-            type_label = get_sampler().get_label(ent.type_uri)
-            # Avoid 'thing' for a more natural persona
-            if type_label.lower() in ["thing", "entity"]:
-                type_label = random.choice(["entry", "record", "item"])
-                
-            prefix = random.choice([
-                f"And for that {type_label}, ",
-                f"Specifically for that {type_label}, ",
-                f"Following that {type_label}, ",
-                f"Regarding that {type_label}, ",
-                f"While we are looking at that {type_label}, ",
-                "For that entry, "
-            ])
-            article = "its"
-        else:
-            article = "its"
 
-        # Consolidate phrases
-        prop_labels = [p.label for p, val in facts]
-        
-        question = compose_question(prop_labels, prefix, article)
-        nl.append(question)
-    else:
+    if not facts:
         nl.append(f"Could you provide more context for '{ent.label}'?")
+        return
+
+    # Consolidate unique property labels while keeping first-seen order.
+    prop_labels: list[str] = []
+    seen_labels: set[str] = set()
+    for p, _ in facts:
+        if p.label not in seen_labels:
+            seen_labels.add(p.label)
+            prop_labels.append(p.label)
+
+    stack_depth = len(data.get("s_entities", []))
+    is_hop = stack_depth > 1
+    hop_scope = data.get("hop_scope", "one")
+
+    if is_hop:
+        # For hop questions the NL already contains "... look into all their
+        # input parameters." We only need to append the property question
+        # about the *target* entities, connected with a proper sentence.
+        if hop_scope == "all":
+            article = "their"
+            prefix = "For each of those, "
+        else:
+            article = random.choice(["the", "its"])
+            prefix = random.choice([
+                "And for that, ",
+                "Then, ",
+                "Regarding that, ",
+            ])
+    else:
+        article = "its"
+        prefix = ""
+
+    question = compose_question(prop_labels, prefix, article)
+    nl.append(question)
 
 
 # --- Query Builder Actions ---
@@ -344,8 +546,8 @@ def qb_filter_generator(prob_deep: Optional[float] = None):
         
         # Decide on filter depth (direct vs 1-hop)
         is_deep = random.random() < p_deep
-        existing_paths = {f["path_uri"] for f in qb.filters}
-        print(f"Existing paths: {existing_paths}")
+        existing_paths = {str(f["path_uri"]) for f in qb.filters}
+
 
         if is_deep:
             # 1-Hop Filter: ent -> p1 -> ent2 -> p2 -> val
@@ -364,12 +566,12 @@ def qb_filter_generator(prob_deep: Optional[float] = None):
                 if not candidate_p1.values: continue
                 target_uri = random.choice(candidate_p1.values)
                 target_uri_selected = target_uri
-                target_props = s.get_entity_data_properties(target_uri)
+                target_props = s.get_entity_properties(target_uri)
                 
                 # Check for unique second hop
                 for candidate_p2 in target_props:
                     path_uri = f"{candidate_p1.uri} -> {candidate_p2.uri}"
-                    if path_uri not in existing_paths:
+                    if str(path_uri) not in existing_paths:
                         p1, p2 = candidate_p1, candidate_p2
                         val_term = random.choice(p2.values)
                         break
@@ -387,15 +589,21 @@ def qb_filter_generator(prob_deep: Optional[float] = None):
                 except Exception:
                     target_type_uri = None
 
-            qb.filters.append({
-                "path_uri": f"{p1.uri} -> {p2.uri}",
-                "path_display": f"{p1.label}->{p2.label}",
-                "operator": op,
-                "value": val_str,
-                "type": "deep",
-                "path_segments": [str(p1.uri), str(p2.uri)],
-                "target_type_uri": target_type_uri,
-            })
+            display_val = _resolve_qb_display_value(s, val_term, val_str)
+
+            path_display = f"{p1.label}->{p2.label}"
+            path_uri = f"{p1.uri} -> {p2.uri}"
+            _append_qb_filter(
+                qb,
+                path_uri=path_uri,
+                path_display=path_display,
+                operator=op,
+                value=val_str,
+                display_value=display_val,
+                filter_type="deep",
+                path_segments=[str(p1.uri), str(p2.uri)],
+                target_type_uri=target_type_uri,
+            )
             
         else:
             # Direct Filter: ent -> p1 -> val
@@ -403,11 +611,11 @@ def qb_filter_generator(prob_deep: Optional[float] = None):
             if not all_props: 
                 raise RetrySignal(f"Anchor {ent.label} has no properties for filter")
             
-            candidates = [p for p in all_props if p.uri not in existing_paths]
+            candidates = [p for p in all_props if str(p.uri) not in existing_paths]
             if not candidates:
                  raise RetrySignal(f"No unique properties left for filter on {ent.label}")
 
-            print(candidates)
+
             p1 = random.choice(candidates)
             if not p1.values: 
                 raise RetrySignal(f"Property {p1.label} on {ent.label} has no values")
@@ -415,14 +623,19 @@ def qb_filter_generator(prob_deep: Optional[float] = None):
             val_term = random.choice(p1.values)
             op, val_str = resolve_operator_and_value(val_term)
             
-            qb.filters.append({
-                "path_uri": p1.uri,
-                "path_display": p1.label,
-                "operator": op,
-                "value": val_str,
-                "type": "direct",
-                "path_segments": [str(p1.uri)],
-            })
+            display_val = _resolve_qb_display_value(s, val_term, val_str)
+
+            path_display = p1.label
+            _append_qb_filter(
+                qb,
+                path_uri=p1.uri,
+                path_display=path_display,
+                operator=op,
+                value=val_str,
+                display_value=display_val,
+                filter_type="direct",
+                path_segments=[str(p1.uri)],
+            )
     return _qb_add_filter_logic
 
 def qb_projection_generator():
@@ -433,16 +646,26 @@ def qb_projection_generator():
         
         s = get_sampler()
         # Randomly select a data property of the root type to project
-        all_props = s.get_entity_data_properties(qb.anchor_entity.uri)
+        all_props = s.get_entity_properties(qb.anchor_entity.uri)
         if not all_props: 
             raise RetrySignal(f"Anchor {qb.anchor_entity.label} has no data properties to project")
         
-        p = random.choice(all_props)
-        
-        # Avoid projecting the same thing twice
-        if p.uri in qb.projects:
-            return
-            
+        filter_uris = set()
+        for f in qb.filters:
+            for seg in f.get("path_segments", []):
+                filter_uris.add(URIRef(seg))
+
+        preferred_candidates = [
+            p for p in all_props
+            if p.uri not in qb.projects and p.uri not in filter_uris
+        ]
+        if not preferred_candidates:
+            raise RetrySignal(
+                f"No eligible projection properties left on {qb.anchor_entity.label} "
+                f"(all non-projected properties are already used as filters)"
+            )
+        p = random.choice(preferred_candidates)
+
         qb.projects.append(p.uri)
     return _qb_add_projection_logic
 
@@ -472,16 +695,6 @@ def qb_finalize_question(data: dict):
         is_answer=False,
     )
 
-    # Optional: inspecting a sample instance of the root type is allowed.
-    # That's probably not really necessary...
-    if qb.anchor_entity is not None:
-        _append_trace(
-            data,
-            {"tool": "inspect", "uri": str(qb.anchor_entity.uri)},
-            required=False,
-            is_answer=False,
-        )
-
     # If filters require a hop, enforce inspection of the linking property,
     # the target type, and the second-hop property.
     for f in qb.filters:
@@ -501,21 +714,8 @@ def qb_finalize_question(data: dict):
                     required=True,
                     is_answer=False,
                 )
-            # Optional: inspecting the second-hop property is allowed but not required.
-            _append_trace(
-                data,
-                {"tool": "inspect", "uri": segments[1]},
-                required=False,
-                is_answer=False,
-            )
         elif len(segments) == 1:
-            # Optional: inspecting direct filter property is allowed.
-            _append_trace(
-                data,
-                {"tool": "inspect", "uri": segments[0]},
-                required=False,
-                is_answer=False,
-            )
+            pass
     
     # Discovery NL
     discovery_phrases = [
@@ -524,17 +724,6 @@ def qb_finalize_question(data: dict):
         f"I'm curious about the {type_label} entries. "
     ]
     data["nl"].append(random.choice(discovery_phrases))
-
-    # Optional: search for filter values (can help models discover entities/terms).
-    for f in qb.filters:
-        val = f.get("value")
-        if val:
-            _append_trace(
-                data,
-                {"tool": "search", "query": str(val)},
-                required=False,
-                is_answer=False,
-            )
 
     # 1. Build JSON Tool Call
     # Map our internal state to the tool schema
@@ -552,6 +741,18 @@ def qb_finalize_question(data: dict):
         "filters": tool_filters,
         "project": [str(p) for p in qb.projects]
     }
+
+    # Check for duplicate QB query globally
+    global_seen = data.get("global_seen_qb")
+    if global_seen is not None:
+        qb_key = (
+            str(qb.root_type),
+            frozenset(f["path"] for f in tool_filters),
+            frozenset(tool_call["project"])
+        )
+        if qb_key in global_seen:
+            raise RetrySignal("Duplicate query_builder question sampled")
+        global_seen.add(qb_key)
     
     _append_trace(
         data,
@@ -560,15 +761,6 @@ def qb_finalize_question(data: dict):
         is_answer=True,
     )
 
-    # Optional: inspecting projection properties is allowed but not required.
-    for proj in qb.projects:
-        _append_trace(
-            data,
-            {"tool": "inspect", "uri": str(proj)},
-            required=False,
-            is_answer=False,
-        )
-    
     # 2. Build Natural Language Question
     root_type_node = TypeNode(qb.root_type, get_sampler().get_label(qb.root_type))
     proj_labels = [get_sampler().get_label(p) for p in qb.projects]

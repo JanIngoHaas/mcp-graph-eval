@@ -169,7 +169,7 @@ class OntologySampler:
             ?p a ?t .
         }
         """
-        results = self._query(sparql)
+        results = self._query(sparql, use_cache=True)
         
         props = []
         for row in results:
@@ -192,6 +192,98 @@ class OntologySampler:
             raise RetrySignal(msg)
             
         return random.choice(candidates)
+
+    def get_neighbor_property_excluding(
+        self, entity_type_uri: URIRef, forbidden_uris: set[URIRef]
+    ) -> PropertyNode:
+        """
+        Returns a property from a *sibling or cousin* class in the hierarchy.
+        Matches plausible mismatches by querying actual instance properties.
+        """
+        HARD_EXCLUSIONS = {
+            "severity", "locatedIn", "facilityLocation", "bayNumber",
+            "mohsHardness", "signalType", "cleanroomArea", "hasStatus",
+            "label", "comment"
+        }
+
+        # BFO Roots where we MUST stop walking up
+        BFO_ROOTS = {
+            URIRef("http://purl.obolibrary.org/obo/BFO_0000030"), # Object
+            URIRef("http://purl.obolibrary.org/obo/BFO_0000015"), # Process
+            URIRef("http://purl.obolibrary.org/obo/BFO_0000019"), # Quality
+        }
+
+        def _get_nearby_candidates(ancestor_uri: URIRef) -> list[URIRef]:
+            # Step 1: Find properties used by instances of sibling/cousin classes
+            # that are NOT present on the focal entity type.
+            sparql = f"""
+            SELECT DISTINCT ?p WHERE {{
+                ?sibling rdfs:subClassOf* <{ancestor_uri}> .
+                FILTER(?sibling != <{entity_type_uri}>)
+                FILTER NOT EXISTS {{ <{entity_type_uri}> rdfs:subClassOf* ?sibling }}
+                
+                ?instance a ?sibling .
+                ?instance ?p ?val .
+                FILTER(isIRI(?p) && ?p != rdf:type)
+            }}
+            """
+            rows = self._query(sparql, use_cache=True)
+            candidates = [cast(URIRef, r[0]) for r in rows]
+            
+            # Step 3: Hard exclusion list filtering
+            filtered = []
+            for c in candidates:
+                c_str = str(c).lower()
+                if any(term.lower() in c_str for term in HARD_EXCLUSIONS):
+                    continue
+                if c in forbidden_uris:
+                    continue
+                filtered.append(c)
+            return filtered
+
+        # Step 2: Fallback Ladder
+        # Iterate up through parents and grandparents
+        current_types = [entity_type_uri]
+        visited_ancestors = {entity_type_uri}
+        
+        # We walk up until we find candidates or hit a BFO root/Thing
+        for level in range(4):
+            all_candidates = []
+            next_types = []
+            
+            for t in current_types:
+                # 1. Get parents of current level
+                parent_sparql = f"SELECT ?p WHERE {{ <{t}> rdfs:subClassOf ?p . FILTER(isIRI(?p)) }}"
+                parents = [cast(URIRef, r[0]) for r in self._query(parent_sparql, use_cache=True)]
+                
+                for p in parents:
+                    if p in visited_ancestors:
+                        continue
+                    visited_ancestors.add(p)
+                    
+                    # 2. Collect candidates from this ancestor's branches
+                    all_candidates.extend(_get_nearby_candidates(p))
+                    
+                    # 3. Decide if we can continue walking up from here
+                    p_str = str(p).lower()
+                    if p in BFO_ROOTS or any(term in p_str for term in ["owl#thing", "rdf-schema#resource"]):
+                        # We reached a root, do not add to next_types to prevent walking higher
+                        continue
+                    
+                    next_types.append(p)
+
+            # If we found any valid candidates at this level, pick one and return
+            if all_candidates:
+                chosen_p = random.choice(list(set(all_candidates)))
+                label = self.get_label(chosen_p)
+                return PropertyNode(chosen_p, label, PropertyRange.OBJECT, values=[])
+
+            if not next_types: 
+                break
+            current_types = next_types
+
+        # Last resort fallback if hierarchy search fails completely
+        return self.get_random_property_excluding(forbidden_uris)
 
     def get_entity_properties(self, entity_uri: URIRef) -> List[PropertyNode]:
         """Returns all properties (data and object) outgoing from this entity."""
@@ -222,7 +314,7 @@ class OntologySampler:
         pattern = f"<{entity_uri}> ?p ?o" if direction == "out" else f"?s ?p <{entity_uri}>"
         
         sparql = f"SELECT DISTINCT ?p ?{'o' if direction == 'out' else 's'} WHERE {{ ?p rdfs:label ?l . {pattern} . FILTER({sparql_filter}) }}"
-        results = self._query(sparql)
+        results = self._query(sparql, use_cache=True)
         
         # Group by property
         groups = group_by_predicate(results)
@@ -247,7 +339,10 @@ class OntologySampler:
         sparql = f"""
         SELECT ?s ?type ?label WHERE {{
             ?s <{str(RDFS.label)}> ?label .
-            FILTER(isIRI(?s))
+            FILTER(isIRI(?s) && !EXISTS {{ 
+                ?s a ?schema_type . 
+                FILTER(?schema_type IN (<{OWL.Class}>, <{OWL.ObjectProperty}>, <{OWL.DatatypeProperty}>))
+            }})
             {type_clause}
         }} ORDER BY RAND() LIMIT 1
         """
@@ -276,8 +371,17 @@ class OntologySampler:
         for _ in range(max_attempts):
             chosen = random.choice(type_candidates)
             node = self.get_random_entity(chosen)
-            if self.get_entity_object_properties(node.uri):
-                return node
+            # We define a hoppable entity as one that has at least one outgoing object property
+            # AND the node that we are hopping to has at least two outgoing data properties
+            # That's kind of a hack, but necessary to avoid getting stuck in a loop
+            # And then failing. 
+            hoppable_object_properties = self.get_entity_object_properties(node.uri)
+            random.shuffle(hoppable_object_properties)
+            for prop in hoppable_object_properties:
+                for val in prop.values:
+                    if len(self.get_entity_properties(val)) >= 1:
+                        return node
+            
 
         raise RetrySignal("Failed to find a hoppable entity after retries")
 
@@ -289,7 +393,7 @@ class OntologySampler:
             OPTIONAL {{ <{uri}> rdfs:label ?label . }}
         }} LIMIT 1
         """
-        results = self._query(sparql)
+        results = self._query(sparql, use_cache=True)
         if not results:
              # Fallback if no type is found
              label = self.get_label(uri)
@@ -303,6 +407,68 @@ class OntologySampler:
         row = results[0]
         label = str(row[0]) if row[0] else self.get_label(uri)
         return EntityNode(uri, label, cast(URIRef, type_uri))
+
+    def count_entities_by_label_and_type(self, label: str, type_uri: URIRef) -> int:
+        """Count entities with exact rdfs:label and rdf:type."""
+        escaped = label.replace("\\", "\\\\").replace('"', '\\"')
+        sparql = f"""
+        PREFIX rdf: <{RDF}>
+        PREFIX rdfs: <{RDFS}>
+        SELECT (COUNT(DISTINCT ?s) AS ?count) WHERE {{
+            ?s rdf:type <{type_uri}> ;
+               rdfs:label ?label .
+            FILTER(STR(?label) = "{escaped}")
+        }}
+        """
+        rows = self._query(sparql, use_cache=True)
+        if not rows:
+            return 0
+        try:
+            return int(rows[0][0].toPython())
+        except Exception:
+            return 0
+
+    def get_entity_primary_type(self, entity_uri: URIRef) -> Optional[URIRef]:
+        """Return one non-boring rdf:type for an entity, if any."""
+        sparql = f"""
+        PREFIX rdf: <{RDF}>
+        SELECT DISTINCT ?type WHERE {{
+            <{entity_uri}> rdf:type ?type .
+        }}
+        """
+        rows = self._query(sparql, use_cache=True)
+        if not rows:
+            return None
+        type_uris = [str(row[0]) for row in rows]
+        filtered = filter_out_boring_stuff(type_uris)
+        chosen = filtered[0] if filtered else type_uris[0]
+        return URIRef(chosen) if chosen else None
+
+    def get_distinct_object_iris(self, subject_uri: URIRef, predicate_uri: URIRef) -> List[URIRef]:
+        """Return all distinct IRI objects for (subject, predicate, ?o)."""
+        sparql = f"""
+        SELECT DISTINCT ?o WHERE {{
+            <{subject_uri}> <{predicate_uri}> ?o .
+            FILTER(isIRI(?o))
+        }}
+        """
+        rows = self._query(sparql, use_cache=True)
+        out: List[URIRef] = []
+        for row in rows:
+            obj = row[0]
+            if isinstance(obj, URIRef):
+                out.append(obj)
+        return out
+
+    def get_triples_for_subject_predicate(self, subject_uri: URIRef, predicate_uri: URIRef) -> List[tuple[str, str, str]]:
+        """Return all triples for fixed subject and predicate."""
+        sparql = f"""
+        SELECT ?o WHERE {{
+            <{subject_uri}> <{predicate_uri}> ?o .
+        }}
+        """
+        rows = self._query(sparql, use_cache=True)
+        return [(str(subject_uri), str(predicate_uri), str(row[0])) for row in rows]
 
 
     def sample_random_literal_value(self, prop_uri: URIRef) -> Literal:

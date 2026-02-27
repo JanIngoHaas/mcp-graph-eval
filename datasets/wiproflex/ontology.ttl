@@ -13,26 +13,35 @@
 #################################################################
 
 <https://tucid/cpmo/schema> rdf:type owl:Ontology ;
+    rdfs:label "CMP Schema-Level Ontology"@en ;
     rdfs:comment "CMP Schema-Level Ontology aligned with BFO (TBox + schema connections)" .
 
 #################################################################
-### Core Classes (BFO Anchors) 
+### Core Classes (BFO Anchors)
 #################################################################
 
-cmpo:Equipment       rdfs:subClassOf BFO:0000030 . # BFO:object
-cmpo:Lot             rdfs:subClassOf BFO:0000030 .
-cmpo:Wafer           rdfs:subClassOf BFO:0000030 . 
-cmpo:Agent           rdfs:subClassOf BFO:0000030 . # yes. agent = object (has role)
-cmpo:CMPProcess      rdfs:subClassOf BFO:0000015 . # BFO:process
-cmpo:Measurement       rdfs:subClassOf BFO:0000015 . # BFO:process
-cmpo:Step        rdfs:subClassOf BFO:0000011 . # BFO:spatiotemporal region
-cmpo:Parameter       rdfs:subClassOf BFO:0000019 .
+cmpo:Equipment       rdfs:subClassOf BFO:0000030 ; # BFO:object
+    rdfs:label "Equipment"@en .
+cmpo:Lot             rdfs:subClassOf BFO:0000030 ;
+    rdfs:label "Lot"@en .
+cmpo:Wafer           rdfs:subClassOf BFO:0000030 ;
+    rdfs:label "Wafer"@en .
+cmpo:Agent           rdfs:subClassOf BFO:0000030 ; # yes. agent = object (has role)
+    rdfs:label "Agent"@en .
+cmpo:CMPProcess      rdfs:subClassOf BFO:0000015 ; # BFO:process
+    rdfs:label "CMP Process"@en .
+cmpo:Measurement       rdfs:subClassOf BFO:0000015 ; # BFO:process
+    rdfs:label "Measurement"@en .
+# cmpo:Step        rdfs:subClassOf BFO:0000011 ;
+#    rdfs:label "Step"@en . 
+cmpo:Parameter       rdfs:subClassOf BFO:0000019 ;
+    rdfs:label "Parameter"@en .
 
-   cmpo:Parameter    rdfs:subClassOf iao:0000030 .
+    cmpo:Parameter    rdfs:subClassOf iao:0000030 .
 
-                
-cmpo:Layout          rdfs:subClassOf BFO:0000019 .
- # BFO:quality
+cmpo:Layout          rdfs:subClassOf BFO:0000019 ;
+    rdfs:label "Layout"@en .
+    # BFO:quality
 #cmpo:Role            rdfs:subClassOf BFO:Role .
 #cmpo:Disposition     rdfs:subClassOf BFO:Disposition .
 
@@ -40,50 +49,68 @@ cmpo:Layout          rdfs:subClassOf BFO:0000019 .
 ### Equipment Hierarchy
 #################################################################
 
-cmpo:Tool            rdfs:subClassOf cmpo:Equipment .
-cmpo:CMPTool         rdfs:subClassOf cmpo:Tool .
-cmpo:OxideCMPTool    rdfs:subClassOf cmpo:CMPTool .
-cmpo:IPEC            rdfs:subClassOf cmpo:OxideCMPTool. #Instance
-cmpo:MIRRA           rdfs:subClassOf cmpo:OxideCMPTool. #Instance
+cmpo:Tool            rdfs:subClassOf cmpo:Equipment ;
+    rdfs:label "Tool"@en .
+cmpo:CMPTool         rdfs:subClassOf cmpo:Tool ;
+    rdfs:label "CMP Tool"@en .
+cmpo:OxideCMPTool    rdfs:subClassOf cmpo:CMPTool ;
+    rdfs:label "Oxide CMP Tool"@en .
+cmpo:IPEC            rdfs:subClassOf cmpo:OxideCMPTool ; #Instance
+    rdfs:label "IPEC"@en .
+cmpo:MIRRA           rdfs:subClassOf cmpo:OxideCMPTool ; #Instance
+    rdfs:label "MIRRA"@en .
 cmpo:Layout          rdfs:subClassOf BFO:0000019 .
-cmpo:Software        rdfs:subClassOf BFO:0000141 .
+cmpo:Software        rdfs:subClassOf BFO:0000141 ;
+    rdfs:label "Software"@en .
 
-cmpo:CMPToolComponent    rdfs:subClassOf cmpo:Tool . #not needed mybe just tool or CMPTool
-cmpo:Platen          rdfs:subClassOf cmpo:CMPToolComponent .
-cmpo:RetainingRing   rdfs:subClassOf cmpo:CMPToolComponent .
-cmpo:WaferHead   rdfs:subClassOf cmpo:CMPToolComponent . #also "carrier" (synonym)
-cmpo:Conditioner   rdfs:subClassOf cmpo:CMPToolComponent . 
-cmpo:Chamber   rdfs:subClassOf cmpo:CMPToolComponent . 
-cmpo:SlurryPipe   rdfs:subClassOf cmpo:CMPToolComponent . 
-cmpo:ConditionerPad   rdfs:subClassOf cmpo:CMPToolComponent . 
+cmpo:CMPToolComponent    rdfs:subClassOf cmpo:Tool ; #not needed mybe just tool or CMPTool
+    rdfs:label "CMP Tool Component"@en .
+cmpo:Platen          rdfs:subClassOf cmpo:CMPToolComponent ;
+    rdfs:label "Platen"@en .
+cmpo:RetainingRing   rdfs:subClassOf cmpo:CMPToolComponent ;
+    rdfs:label "Retaining Ring"@en .
+cmpo:WaferHead   rdfs:subClassOf cmpo:CMPToolComponent ; #also "carrier" (synonym)
+    rdfs:label "Wafer Head"@en .
+cmpo:Conditioner   rdfs:subClassOf cmpo:CMPToolComponent ;
+    rdfs:label "Conditioner"@en .
+cmpo:Chamber   rdfs:subClassOf cmpo:CMPToolComponent ;
+    rdfs:label "Chamber"@en .
+cmpo:SlurryPipe   rdfs:subClassOf cmpo:CMPToolComponent ;
+    rdfs:label "Slurry Pipe"@en .
+cmpo:ConditionerPad   rdfs:subClassOf cmpo:CMPToolComponent ;
+    rdfs:label "Conditioner Pad"@en .
 
 # is "conditioner Pad" the same as "Pad"? -- Pad as class and type of pad as an instance?
 
-cmpo:Cleaner         rdfs:subClassOf cmpo:Tool .
+cmpo:Cleaner         rdfs:subClassOf cmpo:Tool ;
+    rdfs:label "Cleaner"@en .
 
-cmpo:SpectroscopicMeasurementTool         rdfs:subClassOf cmpo:Tool .
+cmpo:SpectroscopicMeasurementTool         rdfs:subClassOf cmpo:Tool ;
+    rdfs:label "Spectroscopic Measurement Tool"@en .
 
-
-
-
-
-cmpo:PadConditioner  rdfs:subClassOf cmpo:Equipment .
-cmpo:SlurryDeliveryPipe rdfs:subClassOf cmpo:Equipment .
-
+cmpo:PadConditioner  rdfs:subClassOf cmpo:Equipment ;
+    rdfs:label "Pad Conditioner"@en .
+cmpo:SlurryDeliveryPipe rdfs:subClassOf cmpo:Equipment ;
+    rdfs:label "Slurry Delivery Pipe"@en .
 
 #################################################################
 ### Consumables
 #################################################################
 
-cmpo:Consumable   rdfs:subClassOf cmpo:Tool . 
-cmpo:PolishingPad   rdfs:subClassOf cmpo:Consumable . 
+cmpo:Consumable   rdfs:subClassOf cmpo:Tool ;
+    rdfs:label "Consumable"@en .
+cmpo:PolishingPad   rdfs:subClassOf cmpo:Consumable ;
+    rdfs:label "Polishing Pad"@en .
 
 cmpo:ConditionerPad   rdfs:subClassOf cmpo:Consumable .
 cmpo:ConditionerPad   rdfs:subClassOf cmpo:Conditioner .
-cmpo:Slurry   rdfs:subClassOf cmpo:Consumable . 
+cmpo:Slurry   rdfs:subClassOf cmpo:Consumable ;
+    rdfs:label "Slurry"@en .
 
-cmpo:SlurryType  rdfs:subClassOf cmpo:Slurry . 
-cmpo:Klebosol   rdfs:subClassOf cmpo:SlurryType . #instance
+cmpo:SlurryType  rdfs:subClassOf cmpo:Slurry ;
+    rdfs:label "Slurry Type"@en .
+cmpo:Klebosol   rdfs:subClassOf cmpo:SlurryType ; #instance
+    rdfs:label "Klebosol"@en .
 
 #################################################################
 ### Recipe and Data Source and Methodes #Information Content Entity iao:0000030
@@ -92,76 +119,88 @@ cmpo:Klebosol   rdfs:subClassOf cmpo:SlurryType . #instance
 cmpo:Recipe   rdfs:subClassOf BFO:0000031 . # generically dependent continuant
 
 cmpo:Recipe a rdfs:Class;
-rdfs:comment "recipe is collection of componants with specific (imput) parameters (conditioning pad with sweeps per minute)" .
+    rdfs:label "Recipe"@en ;
+    rdfs:comment "recipe is collection of componants with specific (imput) parameters (conditioning pad with sweeps per minute)" .
 
- cmpo:ToolBreakInRecipe   rdfs:subClassOf BFO:Recipe . 
+    cmpo:ToolBreakInRecipe   rdfs:subClassOf BFO:Recipe ;
+    rdfs:label "Tool Break-In Recipe"@en .
 
-cmpo:OxideCMPRecipe   rdfs:subClassOf BFO:Recipe .
-cmpo:CleaningRecipe   rdfs:subClassOf BFO:Recipe .
+cmpo:OxideCMPRecipe   rdfs:subClassOf BFO:Recipe ;
+    rdfs:label "Oxide CMP Recipe"@en .
+cmpo:CleaningRecipe   rdfs:subClassOf BFO:Recipe ;
+    rdfs:label "Cleaning Recipe"@en .
 
-#cmpo:DataSource   rdfs:subClassOf BFO:0000031 . 
+#cmpo:DataSource   rdfs:subClassOf BFO:0000031 .
 
-#cmpo:MES   rdfs:subClassOf cmpo:DataSource . 
-#cmpo:ProcessCard   rdfs:subClassOf cmpo:DataSource . 
+#cmpo:MES   rdfs:subClassOf cmpo:DataSource .
+#cmpo:ProcessCard   rdfs:subClassOf cmpo:DataSource .
 
-#cmpo:ProcessCard   rdfs:subClassOf iao:0000310 . 
-#cmpo:ProcessBook   rdfs:subClassOf cmpo:DataSource . 
-#cmpo:ProcessBook   rdfs:subClassOf iao:0000310 . 
+#cmpo:ProcessCard   rdfs:subClassOf iao:0000310 .
+#cmpo:ProcessBook   rdfs:subClassOf cmpo:DataSource .
+#cmpo:ProcessBook   rdfs:subClassOf iao:0000310 .
 
-
-cmpo:SpectroscopicMeasurementMethod   rdfs:subClassOf  iao:0000104  . #Plan Specification eine Unterklasse von iao:0000030 (Information Content Entity)
-cmpo:OpticalMeasurementMethod   rdfs:subClassOf  iao:0000104 . 
-cmpo:VirtualMeasurementMethod   rdfs:subClassOf  iao:0000104 . 
-
+cmpo:SpectroscopicMeasurementMethod   rdfs:subClassOf  iao:0000104 ; #Plan Specification eine Unterklasse von iao:0000030 (Information Content Entity)
+    rdfs:label "Spectroscopic Measurement Method"@en .
+cmpo:OpticalMeasurementMethod   rdfs:subClassOf  iao:0000104 ;
+    rdfs:label "Optical Measurement Method"@en .
+cmpo:VirtualMeasurementMethod   rdfs:subClassOf  iao:0000104 ;
+    rdfs:label "Virtual Measurement Method"@en .
 
 #################################################################
 ### Wafer & Properties
 #################################################################
 
-
-cmpo:DummyWafer rdfs:subClassOf cmpo:Wafer .
-cmpo:ControlWafer rdfs:subClassOf cmpo:Wafer .
-cmpo:StructuredWafer rdfs:subClassOf cmpo:Wafer .
+cmpo:DummyWafer rdfs:subClassOf cmpo:Wafer ;
+    rdfs:label "Dummy Wafer"@en .
+cmpo:ControlWafer rdfs:subClassOf cmpo:Wafer ;
+    rdfs:label "Control Wafer"@en .
+cmpo:StructuredWafer rdfs:subClassOf cmpo:Wafer ;
+    rdfs:label "Structured Wafer"@en .
 
 #cmpo:Layout   rdfs:subClassOf BFO:0000019 .  nur property
 #bis zeile 134 als klasse nicht unterklasse
-cmpo:WaferDiameter   a rdfs:Class  . # either 150 mm (6 Zoll), 200 mm (8 Zoll) und 300 mm (12 Zoll)
+cmpo:WaferDiameter   a rdfs:Class ; # either 150 mm (6 Zoll), 200 mm (8 Zoll) und 300 mm (12 Zoll)
+    rdfs:label "Wafer Diameter"@en .
 #cmpo:WaferMaterialToRemove   rdfs:subClassOf cmpo:WaferProperty .
-cmpo:WaferMaterial  a rdfs:Class . #comes from  ProcessCard in our Project its Oxid has Name and Value
-cmpo:WaferLayerThickness   a rdfs:Class . #measured with Metrology or documented in ProcessCard
+cmpo:WaferMaterial  a rdfs:Class ; #comes from  ProcessCard in our Project its Oxid has Name and Value
+    rdfs:label "Wafer Material"@en .
+cmpo:WaferLayerThickness   a rdfs:Class ; #measured with Metrology or documented in ProcessCard
+    rdfs:label "Wafer Layer Thickness"@en .
 #cmpo:WaferLayerThicknessPreProcess   rdfs:subClassOf cmpo:WaferMaterial. #measured with SpectroscopicMeasurementMethod by using FRTTool used to calculate MRR
 #cmpo:WaferLayerThicknessPostProcess   rdfs:subClassOf cmpo:WaferMaterial . #measured with SpectroscopicMeasurementMethod used to calculate MRR
 
-cmpo:WaferDefects   a rdfs:Class .
+cmpo:WaferDefects   a rdfs:Class ;
+    rdfs:label "Wafer Defects"@en .
 #cmpo:WaferLayout   rdfs:subClassOf cmpo:WaferProperty .
-cmpo:WaferRoughness  a  rdfs:Class .
-cmpo:WaferUniformity   a rdfs:Class .
+cmpo:WaferRoughness  a  rdfs:Class ;
+    rdfs:label "Wafer Roughness"@en .
+cmpo:WaferUniformity   a rdfs:Class ;
+    rdfs:label "Wafer Uniformity"@en .
 
 #cmpo:WaferPreProcess   rdfs:subClassOf BFO:0000019 . # ?
 #cmpo:WaferID   rdfs:subClassOf BFO:0000019 .
-cmpo:WaferID a rdfs:Class .#property belongs to lot
-cmpo:Lot a rdfs:Class . # every Wafer belongs to a WaferLot 
-
+cmpo:WaferID a rdfs:Class ; #property belongs to lot
+    rdfs:label "Wafer ID"@en .
+cmpo:Lot a rdfs:Class . # every Wafer belongs to a WaferLot
 
 #################################################################
 ### Process & Phases
 #################################################################
 
-cmpo:Step  rdfs:subClassOf BFO:0000015  .
-cmpo:Step a rdfs:Class;
-    rdfs:comment "One Action or Step in the Workflow of a Process. Example: get target Paramters from Process Card or Polishing Process on CMP Tool".
-cmpo:VisualInspection   rdfs:subClassOf cmpo:Step  . #for WaferDefects a Class for manual processes? 
+cmpo:VisualInspection   rdfs:subClassOf BFO:0000015 ;
+    rdfs:label "Visual Inspection"@en .
 
 cmpo:Measurement   a rdfs:Class;
-rdfs:comment "all measurments methods, tools and data" .
+    rdfs:comment "all measurments methods, tools and data" .
 
 cmpo:Metrology   rdfs:subClassOf cmpo:Measurement;
-rdfs:comment "all measurement data and methods" . 
+    rdfs:label "Metrology"@en ;
+    rdfs:comment "all measurement data and methods" .
 
 #different stages of measurement can be instances and can be idetified as pre, insitu or post by looking at the time stemp
 #cmpo:ExSituMetrology   rdfs:subClassOf cmpo:Metrology . #uses measurement methodes
 #cmpo:PostProcessMetrology   rdfs:subClassOf cmpo:ExSituMetrology . #uses SpectroscopicMeasurementMethod
-#cmpo:InSituMetrology   rdfs:subClassOf cmpo:Metrology . #uses 
+#cmpo:InSituMetrology   rdfs:subClassOf cmpo:Metrology . #uses
 
 #cmpo:ProcessInTool   rdfs:subClassOf cmpo:CMPProcess  .
 #cmpo:OxideCMPProcess   rdfs:subClassOf cmpo:ProcessInTool  .
@@ -172,21 +211,24 @@ rdfs:comment "all measurement data and methods" .
 #cmpo:Phase4Unloading    rdfs:subClassOf cmpo:CMPPhase .
 #cmpo:Phase5Cycling     rdfs:subClassOf cmpo:CMPPhase .
 #cmpo:Phase6EndingCycling    rdfs:subClassOf cmpo:CMPPhase .
-cmpo:ToolBreakIn       rdfs:subClassOf cmpo:Step . #or CMPTool
-cmpo:CleaningPhase       rdfs:subClassOf cmpo:Step .
-
+cmpo:ToolBreakIn       rdfs:subClassOf BFO:0000015 ;
+    rdfs:label "Tool Break-In"@en .
+cmpo:CleaningPhase       rdfs:subClassOf BFO:0000015 ;
+    rdfs:label "Cleaning Phase"@en .
 
 #################################################################
 ### Agents & Roles
 #################################################################
 
-cmpo:LotOwner   rdfs:subClassOf BFO:0000023  . # BFO:Role synonym contact person 
-cmpo:ToolExpert   rdfs:subClassOf BFO:0000023  . #technican
-cmpo:ProcessExpert   rdfs:subClassOf BFO:0000023  . 
+cmpo:LotOwner   rdfs:subClassOf BFO:0000023 ; # BFO:Role synonym contact person
+    rdfs:label "Lot Owner"@en .
+cmpo:ToolExpert   rdfs:subClassOf BFO:0000023 ; #technican
+    rdfs:label "Tool Expert"@en .
+cmpo:ProcessExpert   rdfs:subClassOf BFO:0000023 ;
+    rdfs:label "Process Expert"@en .
 
-cmpo:CMPExpert   rdfs:subClassOf cmpo:ProcessExpert  . 
-
-
+cmpo:CMPExpert   rdfs:subClassOf cmpo:ProcessExpert ;
+    rdfs:label "CMP Expert"@en .
 
 #cmpo:ProcessEngineer rdfs:subClassOf cmpo:Agent .
 #cmpo:Student         rdfs:subClassOf cmpo:Agent .
@@ -202,62 +244,78 @@ cmpo:CMPExpert   rdfs:subClassOf cmpo:ProcessExpert  .
 #cmpo:Parameter       rdfs:subClassOf cmpo:Parameter .
 #cmpo:Parameter       rdfs:subClassOf cmpo:Parameter .
 
-
-
 #################################################################
 ###  Parameters (Qualities)
 #################################################################
 
-# better only Parameter not , Disturbance or 
-cmpo:Pressure       rdfs:subClassOf cmpo:Parameter .
-cmpo:ProcessTime       rdfs:subClassOf cmpo:Parameter . # set in Recipe for each CMPPhase and for CleaningRecipe
-cmpo:SlurryFlow       rdfs:subClassOf cmpo:Parameter . #Data property: ml
-cmpo:SlurryType       rdfs:subClassOf cmpo:Parameter .
-cmpo:Conditioning       rdfs:subClassOf cmpo:Parameter . #Data property: Sweeps per min
-cmpo:Temperature       rdfs:subClassOf cmpo:Parameter .
-cmpo:Velocity      rdfs:subClassOf cmpo:Parameter .
+# better only Parameter not , Disturbance or
+cmpo:Pressure       rdfs:subClassOf cmpo:Parameter ;
+    rdfs:label "Pressure"@en .
+cmpo:ProcessTime       rdfs:subClassOf cmpo:Parameter ; # set in Recipe for each CMPPhase and for CleaningRecipe
+    rdfs:label "Process Time"@en .
+cmpo:SlurryFlow       rdfs:subClassOf cmpo:Parameter ; #Data property: ml
+    rdfs:label "Slurry Flow"@en .
+cmpo:SlurryType       rdfs:subClassOf cmpo:Parameter ;
+    rdfs:label "Slurry Type"@en .
+cmpo:Conditioning       rdfs:subClassOf cmpo:Parameter ; #Data property: Sweeps per min
+    rdfs:label "Conditioning"@en .
+cmpo:Temperature       rdfs:subClassOf cmpo:Parameter ;
+    rdfs:label "Temperature"@en .
+cmpo:Velocity      rdfs:subClassOf cmpo:Parameter ;
+    rdfs:label "Velocity"@en .
 
+cmpo:PolishingTime    rdfs:subClassOf cmpo:ProcessTime ;
+    rdfs:label "Polishing Time"@en .
 
-cmpo:PolishingTime    rdfs:subClassOf cmpo:ProcessTime.
+cmpo:ContitioningPressure      rdfs:subClassOf cmpo:Conditioning ; #part of the Recipe Value Sweeps per Minute, in CMPPhase2 and ToolBreakIn
+    rdfs:label "Conditioning Pressure"@en .
+cmpo:ContitioningSweeps      rdfs:subClassOf cmpo:Conditioning ; #part of the Recipe Value Sweeps per Minute, in CMPPhase2 and ToolBreakIn
+    rdfs:label "Conditioning Sweeps"@en .
 
-cmpo:ContitioningPressure      rdfs:subClassOf cmpo:Conditioning. #part of the Recipe Value Sweeps per Minute, in CMPPhase2 and ToolBreakIn
-cmpo:ContitioningSweeps      rdfs:subClassOf cmpo:Conditioning. #part of the Recipe Value Sweeps per Minute, in CMPPhase2 and ToolBreakIn
-
-cmpo:HeadPressure       rdfs:subClassOf cmpo:Pressure .
-cmpo:DownForcePressure      rdfs:subClassOf cmpo:Pressure .
-cmpo:InnerTubePressure       rdfs:subClassOf cmpo:Pressure .
+cmpo:HeadPressure       rdfs:subClassOf cmpo:Pressure ;
+    rdfs:label "Head Pressure"@en .
+cmpo:DownForcePressure      rdfs:subClassOf cmpo:Pressure ;
+    rdfs:label "Down Force Pressure"@en .
+cmpo:InnerTubePressure       rdfs:subClassOf cmpo:Pressure ;
+    rdfs:label "Inner Tube Pressure"@en .
 cmpo:RetainingRingPressure       rdfs:subClassOf cmpo:Pressure ;
+    rdfs:label "Retaining Ring Pressure"@en ;
     rdfs:comment "depenting on tool, RR-pressure can have a number of different zones and each zone could have its own pressure value" . # FIX: Changed redfs:comment to rdfs:comment (typo fix)
 
-cmpo:PadTemperature     rdfs:subClassOf cmpo:Temperature .
+cmpo:PadTemperature     rdfs:subClassOf cmpo:Temperature ;
+    rdfs:label "Pad Temperature"@en .
 
-cmpo:PlatenSpeed     rdfs:subClassOf cmpo:Velocity .
-cmpo:HeadSpeed     rdfs:subClassOf cmpo:Velocity .  #synonym CarrierSpeed 
-
-
-
+cmpo:PlatenSpeed     rdfs:subClassOf cmpo:Velocity ;
+    rdfs:label "Platen Speed"@en .
+cmpo:HeadSpeed     rdfs:subClassOf cmpo:Velocity ;  #synonym CarrierSpeed
+    rdfs:label "Head Speed"@en .
 
 #################################################################
 ###  Parameters (Qualities)
 #################################################################
 
-
 cmpo:WaferMaterial       rdfs:subClassOf cmpo:Parameter . #is a Wafer Propery and Material that has to be removed, and its connected to PreProcesses
-cmpo:WaferMaterialRemovalRate       rdfs:subClassOf cmpo:Parameter .
+cmpo:WaferMaterialRemovalRate       rdfs:subClassOf cmpo:Parameter ;
+    rdfs:label "Wafer Material Removal Rate"@en .
 cmpo:WaferUniformity       rdfs:subClassOf cmpo:Parameter .
 cmpo:WaferRoughness       rdfs:subClassOf cmpo:Parameter .
-cmpo:WaferLayerThicknessPostProcess rdfs:subClassOf cmpo:Parameter .
+cmpo:WaferLayerThicknessPostProcess rdfs:subClassOf cmpo:Parameter ;
+    rdfs:label "Wafer Layer Thickness Post Process"@en .
 
 #################################################################
 ###  Parameters (Dispositions)
 #################################################################
 
-cmpo:WaferProperty       rdfs:subClassOf cmpo:Parameter . #to general?
-cmpo:PadLifetime       rdfs:subClassOf cmpo:Parameter .
-cmpo:SlurryCharge      rdfs:subClassOf cmpo:Parameter .
-cmpo:RetainingRingLifetime       rdfs:subClassOf cmpo:Parameter .
-cmpo:MotorCurrent       rdfs:subClassOf cmpo:Parameter .
-
+cmpo:WaferProperty       rdfs:subClassOf cmpo:Parameter ; #to general?
+    rdfs:label "Wafer Property"@en .
+cmpo:PadLifetime       rdfs:subClassOf cmpo:Parameter ;
+    rdfs:label "Pad Lifetime"@en .
+cmpo:SlurryCharge      rdfs:subClassOf cmpo:Parameter ;
+    rdfs:label "Slurry Charge"@en .
+cmpo:RetainingRingLifetime       rdfs:subClassOf cmpo:Parameter ;
+    rdfs:label "Retaining Ring Lifetime"@en .
+cmpo:MotorCurrent       rdfs:subClassOf cmpo:Parameter ;
+    rdfs:label "Motor Current"@en .
 
 #################################################################
 ### Object Properties (Relations)
@@ -271,50 +329,57 @@ cmpo:MotorCurrent       rdfs:subClassOf cmpo:Parameter .
 
 ####### Equipment ######
 cmpo:hasEquipment a owl:ObjectProperty ;
+    rdfs:label "has equipment"@en ;
     rdfs:domain cmpo:Tool ;
     rdfs:range cmpo:Equipment .
-    
+
 cmpo:hasCMPToolComponent a owl:ObjectProperty ; #means the CMPTool has all subclasses of CMPToolComponent?
+    rdfs:label "has CMP tool component"@en ;
     rdfs:domain cmpo:CMPTool ;
-    rdfs:range cmpo:CMPToolComponent .    
+    rdfs:range cmpo:CMPToolComponent .
 cmpo:hasVelocity a owl:ObjectProperty ; #Data Property for Velocity
+    rdfs:label "has velocity"@en ;
     rdfs:domain cmpo:Platen ;
     rdfs:range cmpo:Velocity .
 
-
 cmpo:hasPolishingPad a owl:ObjectProperty ;
+    rdfs:label "has polishing pad"@en ;
     rdfs:domain cmpo:Platen ;
     rdfs:range cmpo:PolishingPad .
 
 cmpo:hasTemperature a owl:ObjectProperty ; #Data Property for Temperature
+    rdfs:label "has temperature"@en ;
     rdfs:domain cmpo:Pad ;
-    rdfs:range cmpo:PadTemperature .  
+    rdfs:range cmpo:PadTemperature .
 
 cmpo:hasConditionerPad a owl:ObjectProperty ;
+    rdfs:label "has conditioner pad"@en ;
     rdfs:domain cmpo:Conditioner ;
     rdfs:range cmpo:ConditionerPad .
 
 cmpo:conditionsPolishingPad a owl:ObjectProperty ; #during ToolBreakIn and Phase2Polishing
+    rdfs:label "conditions polishing pad"@en ;
     rdfs:domain cmpo:ConditionerPad ;
     rdfs:range cmpo:PolishingPad .
 
 cmpo:tansportsSlurry a owl:ObjectProperty ;
+    rdfs:label "transports slurry"@en ;
     rdfs:domain cmpo:SlurryPipe;
     rdfs:range cmpo:Slurry .
 
 cmpo:usesCleaningRecipe a owl:ObjectProperty ;
+    rdfs:label "uses cleaning recipe"@en ;
     rdfs:domain cmpo:Cleaner ;
     rdfs:range cmpo:CleaningRecipe .
-
 
 ####### Consumables  ######
 
 cmpo:usesConsumable a owl:ObjectProperty ;
+    rdfs:label "uses consumable"@en ;
     rdfs:domain cmpo:Tool ;
     rdfs:range cmpo:Consumable .
 
-
-cmpo:hasPadLifetime a owl:ObjectProperty ; #or hasPolishingPadLifetime 
+cmpo:hasPadLifetime a owl:ObjectProperty ; #or hasPolishingPadLifetime
     rdfs:domain cmpo:PolishingPad ;
     rdfs:range cmpo:PadLifetime .
 
@@ -322,95 +387,117 @@ cmpo:hasPadLifetime a owl:ObjectProperty ; # ConditionerPadLifetime
     rdfs:domain cmpo:ConditionerPad ;
     rdfs:range cmpo:PadLifetime.
 
-cmpo:hasSlurryType a owl:ObjectProperty ; 
+cmpo:hasSlurryType a owl:ObjectProperty ;
+    rdfs:label "has slurry type"@en ;
     rdfs:domain cmpo:Slurry ;
-    rdfs:range cmpo:SlurryType .    
+    rdfs:range cmpo:SlurryType .
 
-cmpo:hasSlurryCharge a owl:ObjectProperty ; # Data Property for SlurryCharge --> Value 
+cmpo:hasSlurryCharge a owl:ObjectProperty ; # Data Property for SlurryCharge --> Value
+    rdfs:label "has slurry charge"@en ;
     rdfs:domain cmpo:Slurry ;
     rdfs:range cmpo:SlurryCharge .
 
-
 ####### Recipes, Data Sources and Methods  ######
 cmpo:usesParameter a owl:ObjectProperty ;  #orCMPRecipe
+    rdfs:label "uses parameter"@en ;
     rdfs:domain cmpo:Recipe ;
     rdfs:range cmpo:Parameter .
-#cmpo:savedinTool owl:ObjectProperty ; 
-   # rdfs:domain cmpo:Recipe ;
-   # rdfs:range cmpo:Tool.
+#cmpo:savedinTool owl:ObjectProperty ;
+    # rdfs:domain cmpo:Recipe ;
+    # rdfs:range cmpo:Tool.
 
-cmpo:usesToolBreakInRecipe a owl:ObjectProperty ; 
+cmpo:usesToolBreakInRecipe a owl:ObjectProperty ;
+    rdfs:label "uses tool break-in recipe"@en ;
     rdfs:domain cmpo:ToolBreakIn ;
-    rdfs:range cmpo:ToolBreakInRecipe .  
+    rdfs:range cmpo:ToolBreakInRecipe .
 
 cmpo:usesCleaningRecipe a owl:ObjectProperty ;
     rdfs:domain cmpo:Cleaning ; #Cleaner (Class name)
-    rdfs:range cmpo:CleaningRecipe .  
+    rdfs:range cmpo:CleaningRecipe .
 
-#cmpo:providesParameter a owl:ObjectProperty ; 
+#cmpo:providesParameter a owl:ObjectProperty ;
     #rdfs:domain cmpo:MES ;
     #rdfs:range cmpo:Parameter .
 
-#cmpo:providesMaterialToBeRemoved a owl:ObjectProperty ; 
-   # rdfs:domain cmpo:ProcessCard ;
+#cmpo:providesMaterialToBeRemoved a owl:ObjectProperty ;
+    # rdfs:domain cmpo:ProcessCard ;
     #rdfs:range cmpo:MaterialToBeRemoved.
 
+#cmpo:documentsParameter a owl:ObjectProperty ;
+    # rdfs:domain cmpo:ProcessBook ;
+    # rdfs:range cmpo:Parameter.
 
-#cmpo:documentsParameter a owl:ObjectProperty ; 
-   # rdfs:domain cmpo:ProcessBook ;
-   # rdfs:range cmpo:Parameter.
-
-#cmpo:documentsObservation a owl:ObjectProperty ; 
+#cmpo:documentsObservation a owl:ObjectProperty ;
     #rdfs:domain cmpo:ProcessBook ;                    # FIX: Commented out - was orphaned without subject
     #rdfs:range cmpo:Oberservation .  #like Comments (Broken Wafer)  # FIX: Commented out - was orphaned without subject
-    
+
 #cmpo:usesSpectroscopicMeasurementMethod a owl:ObjectProperty ; #FRTTool
     #rdfs:domain cmpo:SpectroscopicMeasurementTool ;
     #rdfs:range cmpo:SpectroscopicMeasurementMethod .
 
-
 ####### Wafer  ######
 
 cmpo:hasID a owl:ObjectProperty ;
-    rdfs:domain cmpo:Wafer ; 
+    rdfs:label "has ID"@en ;
+    rdfs:domain cmpo:Wafer ;
     rdfs:range cmpo:WaferID .    #Data Property
 
-cmpo:hasLot a owl:ObjectProperty ; 
-    rdfs:domain cmpo:Wafer ; 
-    rdfs:range cmpo:WaferLot .     
+cmpo:hasLot a owl:ObjectProperty ;
+    rdfs:label "has lot"@en ;
+    rdfs:domain cmpo:Wafer ;
+    rdfs:range cmpo:WaferLot .
 
-#cmpo:hasProcessCard a owl:ObjectProperty ; 
-    #rdfs:domain cmpo:WaferLot ; 
+#cmpo:hasProcessCard a owl:ObjectProperty ;
+    #rdfs:domain cmpo:WaferLot ;
     #rdfs:range cmpo:ProcessCard .
 
-cmpo:hasPreProcess a owl:ObjectProperty ; 
-    rdfs:domain cmpo:Wafer ; 
+cmpo:hasPreProcess a owl:ObjectProperty ;
+    rdfs:label "has pre-process"@en ;
+    rdfs:domain cmpo:Wafer ;
     rdfs:range cmpo:PreProcess .
 
-#cmpo:hasWaferProperty a owl:ObjectProperty ; 
+cmpo:hasInputParameter a owl:ObjectProperty ;
+    rdfs:label "has input parameter"@en ;
+    rdfs:domain cmpo:CMPProcess ;
+    rdfs:range cmpo:Parameter .
+
+cmpo:hasOutputParameter a owl:ObjectProperty ;
+    rdfs:label "has output parameter"@en ;
+    rdfs:domain cmpo:CMPProcess ;
+    rdfs:range cmpo:Parameter .
+
+cmpo:actsOn a owl:ObjectProperty ;
+    rdfs:label "acts on"@en ;
+    rdfs:domain cmpo:CMPProcess ;
+    rdfs:range cmpo:Wafer .
+
+#cmpo:hasWaferProperty a owl:ObjectProperty ;
     #rdfs:domain cmpo:Wafer ;                          # FIX: Commented out - was orphaned without subject
     #rdfs:range cmpo:WaferProperty .                   # FIX: Commented out - was orphaned without subject
-cmpo:usesDummyWafer a owl:ObjectProperty ; 
-    rdfs:domain cmpo:ToolBreakIn ; 
+cmpo:usesDummyWafer a owl:ObjectProperty ;
+    rdfs:label "uses dummy wafer"@en ;
+    rdfs:domain cmpo:ToolBreakIn ;
     rdfs:range cmpo:DummyWafer.
 
-cmpo:usesControlWafer a owl:ObjectProperty ; 
-    rdfs:domain cmpo:Meassurement ; 
+cmpo:usesControlWafer a owl:ObjectProperty ;
+    rdfs:label "uses control wafer"@en ;
+    rdfs:domain cmpo:Meassurement ;
     rdfs:range cmpo:ControlWafer .
-
 
 #RO:0000086 a owl:ObjectProperty ;
     #rdfs:domain cmpo:Wafer ;
     #rdfs:range [
     # a owl:Class ;
-       # owl:unionOf (cmpo:WaferPreProcess cmpo:WaferID cmpo:WaferProperty)]
+    # owl:unionOf (cmpo:WaferPreProcess cmpo:WaferID cmpo:WaferProperty)]
 
 cmpo:hasLayout a owl:ObjectProperty ;
+    rdfs:label "has layout"@en ;
     rdfs:subPropertyOf RO:0000086 ;
     rdfs:domain cmpo:StructuredWafer ;
     rdfs:range cmpo:Layout .
 
 cmpo:hasMaterial a owl:ObjectProperty ;
+    rdfs:label "has material"@en ;
     rdfs:domain cmpo:Wafer ;
     rdfs:range cmpo:Material .
 
@@ -422,34 +509,32 @@ cmpo:hasMaterial a owl:ObjectProperty ;
     #rdfs:domain cmpo:ProcessCard ;
     #rdfs:range cmpo:WaferLayerThicknessPostProcess.
 
- #cmpo:measures a owl:ObjectProperty ;
-  #  rdfs:domain cmpo:SpectroscopicMeasurementMethod ;
-   # rdfs:range cmpo:WaferLayerThicknessPreProcess .
+    #cmpo:measures a owl:ObjectProperty ;
+    #  rdfs:domain cmpo:SpectroscopicMeasurementMethod ;
+    # rdfs:range cmpo:WaferLayerThicknessPreProcess .
 
 #cmpo:measures a owl:ObjectProperty ;
-   # rdfs:domain cmpo:SpectroscopicMeasurementMethod ;
-   # rdfs:range cmpo:WaferLayerThicknessPostProcess .
+    # rdfs:domain cmpo:SpectroscopicMeasurementMethod ;
+    # rdfs:range cmpo:WaferLayerThicknessPostProcess .
 
 #cmpo:measures a owl:ObjectProperty ;
-   #rdfs:domain cmpo:SpectroscopicMeasurementMethod ;
-   # rdfs:range cmpo:WaferUniformity .
+    #rdfs:domain cmpo:SpectroscopicMeasurementMethod ;
+    # rdfs:range cmpo:WaferUniformity .
 
 #cmpo:uses a owl:ObjectProperty ;
     #rdfs:domain cmpo:SpectroscopicMeasurementTool ;
     #rdfs:range cmpo:SpectroscopicMeasurementMethod .
 
-
-
 #cmpo:hasHeadPressure a owl:ObjectProperty ;
-   # rdfs:comment "value given in psi" ;
-   # rdfs:subPropertyOf RO:0000086 ;
+    # rdfs:comment "value given in psi" ;
+    # rdfs:subPropertyOf RO:0000086 ;
     #rdfs:domain cmpo:WaferHead ;
-   #
+    #
 #cmpo:hasRingPressure a owl:ObjectProperty ;
-   # rdfs:comment "value given in psi" ;
-   # rdfs:subPropertyOf RO:0000086 ;
-   # rdfs:domain cmpo:RetainingRing ;
-  #  rdfs:range cmpo:RetainingRingPressure .
+    # rdfs:comment "value given in psi" ;
+    # rdfs:subPropertyOf RO:0000086 ;
+    # rdfs:domain cmpo:RetainingRing ;
+    #  rdfs:range cmpo:RetainingRingPressure .
 
 RO:0001025 a owl:ObjectProperty ; # "located in"
     rdfs:label "located in"@en ;
@@ -462,31 +547,33 @@ RO:0000051 a owl:ObjectProperty ; # "has part"
     rdfs:range cmpo:Software .
 
 cmpo:hasPad a owl:ObjectProperty ;
+    rdfs:label "has pad"@en ;
     rdfs:comment "" ;
     rdfs:subPropertyOf RO:0000051 ; # has part
     rdfs:domain cmpo:Conditioner ;
     rdfs:range cmpo:Pad .
 
-cmpo:hasStep a owl:ObjectProperty ;
-    rdfs:comment "" ;
-    rdfs:subPropertyOf RO:0000051 ; # has part
-    rdfs:domain cmpo:OxideCMPProcess ;
-    rdfs:range cmpo:Step .
+#cmpo:hasStep a owl:ObjectProperty ;
+#    rdfs:subPropertyOf RO:0000051 ; # has part
+#    rdfs:domain cmpo:OxideCMPProcess ;
+#    rdfs:range cmpo:Step .
 
 cmpo:hasRingLifetime a owl:ObjectProperty ;
+    rdfs:label "has ring lifetime"@en ;
     rdfs:comment "" ;
     rdfs:subPropertyOf RO:0000086 ; # has part
     rdfs:domain cmpo:RetainingRing ;
     rdfs:range cmpo:RetainingRingLifetime .
 
 cmpo:hasPadLifetime a owl:ObjectProperty ;
+    rdfs:label "has pad lifetime"@en ;
     rdfs:comment "Relates a Pad to its lifetime quality (e.g., number of polishing cycles before replacement)."@en  ;
     rdfs:subPropertyOf RO:0000086   ;      # has part quality
-    #rdfs:label "has pad lifetime"@en ; # Question: usable for polishingpad and conditioning pad?
     rdfs:domain cmpo:Pad    ;
     rdfs:range cmpo:PadLifetime .
 
 cmpo:hasChargeNo a owl:ObjectProperty ;
+    rdfs:label "has charge number"@en ;
     rdfs:comment "" ;
     rdfs:subPropertyOf RO:0000086 ; # has part
     rdfs:domain cmpo:Slurry ;
@@ -503,35 +590,39 @@ RO:0000085 a owl:ObjectProperty ; # "has function"
     rdfs:comment "" .
 
 cmpo:processes a owl:ObjectProperty ;
+    rdfs:label "processes"@en ;
     rdfs:comment "" ;
     rdfs:subPropertyOf RO:0000085 ; # has function
     rdfs:domain cmpo:Tool ;
     rdfs:range cmpo:Wafer .
 
 cmpo:uses a owl:ObjectProperty ;
+    rdfs:label "uses"@en ;
     rdfs:comment "" ;
     rdfs:subPropertyOf RO:0000085 ; # has function
     rdfs:domain cmpo:Tool ;
     rdfs:range cmpo:Recipe .
 
 cmpo:holds a owl:ObjectProperty ;
+    rdfs:label "holds"@en ;
     rdfs:comment "" ;
     rdfs:subPropertyOf RO:0000085 ; # has function
     rdfs:domain cmpo:WaferHead, cmpo:RetainingRing ;
     rdfs:range cmpo:Wafer .
 
 cmpo:documents a owl:ObjectProperty ;
+    rdfs:label "documents"@en ;
     rdfs:comment "" ;
     rdfs:subPropertyOf RO:0000085 ; # has function
     rdfs:domain cmpo:DataSource ;
     rdfs:range cmpo:Parameter .
 
 cmpo:runs a owl:ObjectProperty ;
+    rdfs:label "runs"@en ;
     rdfs:comment "" ;
     rdfs:subPropertyOf RO:0000085 ; # has function
     rdfs:domain cmpo:ToolExpert, cmpo:ProcessExpert ;
     rdfs:range cmpo:CMPProcess .
-
 
 RO:0000087 a owl:ObjectProperty ; # "has part"
     rdfs:label "has role" ;
@@ -540,6 +631,7 @@ RO:0000087 a owl:ObjectProperty ; # "has part"
     rdfs:range cmpo:Parameter .
 
 cmpo:influences a owl:ObjectProperty ;
+    rdfs:label "influences"@en ;
     rdfs:comment "" ;
     rdfs:subPropertyOf RO:0000087 ; # has part
     rdfs:domain cmpo:WaferMaterialToRemove ;
@@ -547,55 +639,69 @@ cmpo:influences a owl:ObjectProperty ;
 
 #cmpo:documentedIn a owl:ObjectProperty ;
     #rdfs:comment "" ;
-   # rdfs:subPropertyOf RO:0001025 ; # has part
+    # rdfs:subPropertyOf RO:0001025 ; # has part
     #rdfs:domain cmpo:WaferDefects ;
-   # rdfs:range cmpo:ProcessCard .
+    # rdfs:range cmpo:ProcessCard .
 
 #################################################################
 ### Data Properties
 #################################################################
 
 cmpo:UniformityPercentValue rdf:type owl:DatatypeProperty ;
+    rdfs:label "uniformity percent value"@en ;
     rdfs:domain cmpo:Uniformity ;
     rdfs:comment "Value given in percent." ;
     rdfs:range xsd:float .
 
 cmpo:thicknessValue rdf:type owl:DatatypeProperty ;
+    rdfs:label "thickness value"@en ;
     rdfs:domain cmpo:WaferThickness ;
     rdfs:comment "Value given in nanometer." ;
     rdfs:range xsd:float .
 
 cmpo:diameterValue rdf:type owl:DatatypeProperty ;
+    rdfs:label "diameter value"@en ;
     rdfs:domain cmpo:WaferDiameter ;
     rdfs:comment "Value given in milimeter or inch." ;
     rdfs:range xsd:float .
 
 cmpo:machineID rdf:type owl:DatatypeProperty ;
+    rdfs:label "machine ID"@en ;
     rdfs:domain cmpo:Tool ;
     rdfs:comment "ID of the machine" ;
     rdfs:range xsd:string .
 
 cmpo:platenSpeed rdf:type owl:DatatypeProperty ;
+    rdfs:label "platen speed"@en ;
     rdfs:domain cmpo:Platen ;
     rdfs:comment "speed of platen" ;
     rdfs:range xsd:float .
 
-
-
 cmpo:lifetime rdf:type owl:DatatypeProperty ;
+    rdfs:label "lifetime"@en ;
     rdfs:domain cmpo:RetainingRing ;
     rdfs:comment "lifetime of the retaining ring" ;
     rdfs:range xsd:float .
 
+cmpo:hasNumericValue rdf:type owl:DatatypeProperty ;
+    rdfs:label "has numeric value"@en ;
+    rdfs:domain cmpo:Parameter ;
+    rdfs:range xsd:float .
 
+cmpo:hasUnit rdf:type owl:DatatypeProperty ;
+    rdfs:label "has unit"@en ;
+    rdfs:domain cmpo:Parameter ;
+    rdfs:range xsd:string .
 
-#cmpo:hasNumericValue rdf:type owl:DatatypeProperty ;
-#    rdfs:domain BFO:Quality ;
-#    rdfs:range xsd:float .
+cmpo:hasMachineData rdf:type owl:DatatypeProperty ;
+    rdfs:label "has machine data"@en ;
+    rdfs:domain cmpo:CMPProcess ;
+    rdfs:range xsd:string .
 
-#cmpo:hasUnit rdf:type owl:DatatypeProperty ;
-#    rdfs:domain BFO:Quality ;
-#    rdfs:range xsd:string .
+cmpo:hasTimestamp rdf:type owl:DatatypeProperty ;
+    rdfs:label "has timestamp"@en ;
+    rdfs:domain cmpo:CMPProcess ;
+    rdfs:range xsd:dateTime .
 
 #################################################################
 ### Schema-Level Assertions (Connections)
@@ -603,9 +709,9 @@ cmpo:lifetime rdf:type owl:DatatypeProperty ;
 
 ### CMPProcess uses  parameters
 #cmpo:CMPProcess rdfs:subClassOf [
-  #  a owl:Restriction ;
-  #  owl:onProperty cmpo:hasParameter ;
-  #  owl:someValuesFrom cmpo:Pressure
+    #  a owl:Restriction ;
+    #  owl:onProperty cmpo:hasParameter ;
+    #  owl:someValuesFrom cmpo:Pressure
 #] .
 # cmpo:CMPProcess cmpo:hasParameter cmpo:Temperature .
 # cmpo:CMPProcess cmpo:hasParameter cmpo:Velocity .

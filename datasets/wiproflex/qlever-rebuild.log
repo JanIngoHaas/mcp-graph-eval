@@ -1,0 +1,26 @@
+
+To enable autocompletion, run the following command, and consider adding it to your `.bashrc` or `.zshrc`:
+
+eval "$(register-python-argcomplete qlever)" && export QLEVER_ARGCOMPLETE_ENABLED=1
+
+
+Command: start
+
+Checking for processes matching "^qlever-server.* -p 7001"
+
+No matching process found
+
+Show all processes on this machine where the command line matches ^qlever-server.* -i [^ ]* using Python's psutil library
+
+
+docker run -d --restart=unless-stopped -u $(id -u):$(id -g) -v /etc/localtime:/etc/localtime:ro --mount type=bind,src="$(pwd)",target=/index -p 7001:7001 -w /index --name qlever.server.wiproflex --init --entrypoint bash docker.io/adfreiburg/qlever:latest -c 'qlever-server -i wiproflex -j 8 -p 7001 -m 5G -c 2G -e 1G -k 200 -s 30s -a wiproflex-secret > wiproflex.server-log.txt 2>&1'
+
+QLever server already running on http://klaus.informatik.tu-chemnitz.de:7001
+
+To kill the existing server, use `qlever stop` or `qlever start` with option --kill-existing-with-same-port`
+
+Show all processes on this machine where the command line matches ^qlever-server.* -p *7001 using Python's psutil library
+
+
+No processes found
+No processes found
