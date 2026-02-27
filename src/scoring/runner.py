@@ -33,7 +33,7 @@ def main() -> None:
     args = parser.parse_args()
 
     try:
-        outputs, kept = run(
+        outputs = run(
             args.results_dir,
             run_all=args.all,
             pricing_file=args.pricing_file,
@@ -45,10 +45,6 @@ def main() -> None:
         print("Generated combined reports:")
         for key, path in outputs.items():
             print(f"- {key}: {path}")
-    if kept:
-        print("Pruned outputs (combined artifacts only):")
-        for path in kept:
-            print(f"- {path}")
 
 
 if __name__ == "__main__":

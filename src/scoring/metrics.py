@@ -49,13 +49,6 @@ def match_triple(expected_triples: list[dict], received_triples: list[dict]) -> 
 def compute_triple_f1(expected_triples: list[dict], received_triples: list[dict]) -> TripleScore:
     expected_triples = _filter_scorable_triples(expected_triples)
     received_triples = _filter_scorable_triples(received_triples)
-    if not expected_triples and not received_triples:
-        return TripleScore(precision=1.0, recall=1.0, f1=1.0, matched=0, expected_count=0, received_count=0)
-    if not expected_triples:
-        return TripleScore(precision=0.0, recall=1.0, f1=0.0, matched=0, expected_count=0, received_count=len(received_triples))
-    if not received_triples:
-        return TripleScore(precision=1.0, recall=0.0, f1=0.0, matched=0, expected_count=len(expected_triples), received_count=0)
-
     matches = match_triple(expected_triples, received_triples)
     matched_received = set(matches.keys())
     matched_expected = {e_idx for e_list in matches.values() for e_idx in e_list}

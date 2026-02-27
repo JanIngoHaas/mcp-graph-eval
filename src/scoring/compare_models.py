@@ -1015,10 +1015,10 @@ def _resolve_pricing_file(cli_pricing_file: Path | None) -> Path:
     return Path("reports") / "model_pricing.csv"
 
 
-def _prune_to_combined_artifacts(reports_root: Path, pricing_file: Path | None) -> list[Path]:
+def _prune_to_combined_artifacts(reports_root: Path, pricing_file: Path | None) -> None:
     """Keep only canonical combined outputs (plus pricing file at reports root)."""
     if not reports_root.exists() or not reports_root.is_dir():
-        return []
+        return
 
     combined_dir = reports_root / "combined"
     keep_root_files: set[str] = set()
@@ -1054,15 +1054,12 @@ def _prune_to_combined_artifacts(reports_root: Path, pricing_file: Path | None) 
         if child.name not in allowed_combined and not is_dataset_benchmark_md:
             child.unlink(missing_ok=True)
 
-    return sorted(p for p in combined_dir.iterdir() if p.is_file())
-
-
 def run(
     results_dir: Path | None = None,
     *,
     run_all: bool = False,
     pricing_file: Path | None = None,
-) -> tuple[dict[str, Path], list[Path]]:
+) -> dict[str, Path]:
     pricing_file = _resolve_pricing_file(pricing_file)
     pricing_by_model = _load_pricing(pricing_file)
 
@@ -1119,5 +1116,5 @@ def run(
         reports_root / "combined",
         dataset_rows_by_name=dataset_rows_by_name,
     )
-    kept = _prune_to_combined_artifacts(reports_root, pricing_file)
-    return outputs, kept
+    _prune_to_combined_artifacts(reports_root, pricing_file)
+    return outputs
